@@ -216,7 +216,7 @@
     "message": "جودة MP3 (تحويل الصوت فقط)"
   },
   "mp3Missing": {
-    "message": "مرمِّز MP3 (vendor/lame.min.js) غير مثبّت. نزّل M4A/WEBM بدلًا منه."
+    "message": "مرمِّز MP3 (vendor/lame.js) غير مثبّت. نزّل M4A/WEBM بدلًا منه."
   },
   "mp3Decode": {
     "message": "تعذّر على المتصفح فك ترميز هذا الصوت. نزّل M4A/WEBM بدلًا منه."
@@ -543,7 +543,7 @@
     "message": "**مكتبة تابعة لجهة خارجية.** يُستخدم **lamejs** 1.2.1، وهو نقل بلغة JavaScript لمرمّز LAME، لتحويل الصوت إلى MP3."
   },
   "helpC2": {
-    "message": "الملف `vendor/lame.min.js` مُضمَّن دون تعديل ويمكن استبداله ببناء آخر يوفّر `lamejs.Mp3Encoder`. SHA-256: `15d285e2587b3bdbfd18a68de6ce07cc074f7480a82c3815da2dc1c348ec6df4`."
+    "message": "الملف `vendor/lame.js` مبنيّ من مصدر lamejs دون تعديل (يعيد `scripts/build-lamejs.mjs` بناءه) ويمكن استبداله ببناء آخر يوفّر `lamejs.Mp3Encoder`. SHA-256: `f7f74b09d1190d9935e776169dd76c7b66e30db7e2f51b816af88f85a44ed9a8`."
   },
   "helpC3": {
     "message": "تعمل المكتبة محليًا في المتصفح ولا تجري أي طلبات شبكة. بدونها لا يتوفر MP3، وتبقى الصيغ الأخرى تعمل."

@@ -216,7 +216,7 @@
     "message": "MP3 quality (audio-only conversion)"
   },
   "mp3Missing": {
-    "message": "MP3 encoder (vendor/lame.min.js) is not installed. Download M4A/WEBM instead."
+    "message": "MP3 encoder (vendor/lame.js) is not installed. Download M4A/WEBM instead."
   },
   "mp3Decode": {
     "message": "The browser could not decode this audio. Download M4A/WEBM instead."
@@ -543,7 +543,7 @@
     "message": "**Third-party library.** **lamejs** 1.2.1, a JavaScript port of the LAME encoder, is used to convert audio to MP3."
   },
   "helpC2": {
-    "message": "The file `vendor/lame.min.js` is included unmodified and can be replaced by another build that provides `lamejs.Mp3Encoder`. SHA-256: `15d285e2587b3bdbfd18a68de6ce07cc074f7480a82c3815da2dc1c348ec6df4`."
+    "message": "The file `vendor/lame.js` is built from the unmodified lamejs sources (`scripts/build-lamejs.mjs` rebuilds it) and can be replaced by another build that provides `lamejs.Mp3Encoder`. SHA-256: `f7f74b09d1190d9935e776169dd76c7b66e30db7e2f51b816af88f85a44ed9a8`."
   },
   "helpC3": {
     "message": "The library runs locally in the browser and makes no network requests. Without it MP3 is unavailable; other formats still work."

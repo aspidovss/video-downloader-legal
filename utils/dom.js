@@ -22,6 +22,7 @@ export function h(tag, attrs = {}, ...children) {
 }
 
 export function translatePage() {
+  markPlatform();
   try {
     document.documentElement.lang = uiLangCode();
     const dir = uiDir();
@@ -35,10 +36,19 @@ export function translatePage() {
 
 // Footer of the extension pages: copyright, build version, browser, link to the repository (icon).
 const REPO_URL = 'https://github.com/aspidovss/video-downloader-legal';
-function browserName() {
-  const ua = (globalThis.navigator && navigator.userAgent) || '';
-  if (/Firefox\//.test(ua)) return 'Firefox';
-  if (/Edg\//.test(ua)) return 'Edge';
+// Firefox for Android: no toolbar popup size, no context menu / hotkeys / notifications / sidebar API, no file manager.
+export function isAndroid(ua = (globalThis.navigator && navigator.userAgent) || '') {
+  return /\bAndroid\b/i.test(ua);
+}
+// Marks the page for the touch layout (styles/ui.css) and hides what a phone cannot do (elements with data-desktop-only).
+export function markPlatform() {
+  if (!isAndroid()) return;
+  document.documentElement.classList.add('android');
+  for (const el of document.querySelectorAll('[data-desktop-only]')) el.hidden = true;
+}
+export function browserName(ua = (globalThis.navigator && navigator.userAgent) || '') {
+  if (/Firefox\//.test(ua)) return isAndroid(ua) ? 'Firefox Android' : 'Firefox';
+  if (/\bEdg(e|A|iOS)?\//.test(ua)) return 'Edge';
   if (/OPR\//.test(ua)) return 'Opera';
   return 'Chrome';
 }

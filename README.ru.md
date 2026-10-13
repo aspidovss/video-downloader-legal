@@ -8,13 +8,13 @@
 
 [English](README.md) · [Русский](README.ru.md)
 
-![Firefox 140+](https://img.shields.io/badge/Firefox-140%2B-orange?logo=firefoxbrowser&logoColor=white) ![Chrome 116+](https://img.shields.io/badge/Chrome-116%2B-4285F4?logo=googlechrome&logoColor=white) ![Manifest V3](https://img.shields.io/badge/Manifest-V3-blue) ![License MIT](https://img.shields.io/badge/license-MIT-green) ![Telemetry none](https://img.shields.io/badge/telemetry-none-brightgreen)
+![Firefox 140+](https://img.shields.io/badge/Firefox-140%2B-orange?logo=firefoxbrowser&logoColor=white) ![Chrome 116+](https://img.shields.io/badge/Chrome-116%2B-4285F4?logo=googlechrome&logoColor=white) ![Edge 116+](https://img.shields.io/badge/Edge-116%2B-0078D7?logo=microsoftedge&logoColor=white) ![Manifest V3](https://img.shields.io/badge/Manifest-V3-blue) ![License MIT](https://img.shields.io/badge/license-MIT-green) ![Telemetry none](https://img.shields.io/badge/telemetry-none-brightgreen)
 
 <img src="docs/screenshots/ru-0-anywhere.png" alt="Скачивайте откуда угодно: YouTube, Twitch, Vimeo, TikTok" width="760">
 
 </div>
 
-Video Downloader Legal — расширение для **Firefox и Chrome** (Manifest V3; в браузерах на основе Chromium — Edge, Brave, Opera — тоже работает): показывает список видео и аудио, которые воспроизводит страница, и сохраняет выбранное. Всё работает внутри браузера: без внешних серверов, без аналитики, без программ-помощников (нет Native Messaging). Склейку видео со звуком и конвертацию MPEG-TS в MP4 делает **собственный код** расширения, без перекодирования.
+Video Downloader Legal — расширение для **Firefox, Chrome и Microsoft Edge** (Manifest V3; в других браузерах на основе Chromium — Brave, Opera — тоже работает): показывает список видео и аудио, которые воспроизводит страница, и сохраняет выбранное. Всё работает внутри браузера: без внешних серверов, без аналитики, без программ-помощников (нет Native Messaging). Склейку видео со звуком и конвертацию MPEG-TS в MP4 делает **собственный код** расширения, без перекодирования.
 
 Принцип: **DRM-защищённые потоки распознаются и не скачиваются, обхода шифрования нет**, токены, подписи и учётные данные не подделываются.
 
@@ -55,14 +55,14 @@ Video Downloader Legal — расширение для **Firefox и Chrome** (Ma
 
 После установки откройте `about:addons` → расширение → «Разрешения» и разрешите доступ ко всем сайтам, иначе сканер страницы не увидит медиа. Нужен **Firefox 140 или новее**.
 
-### Chrome и другие Chromium-браузеры (Edge, Brave, Opera) — версия в разработке
+### Chrome, Microsoft Edge и другие Chromium-браузеры (Brave, Opera) — версия в разработке
 
 Те же исходники собираются в пакет Manifest V3 для Chromium; устанавливается из GitHub в режиме разработчика (в магазине не публикуется):
 
 1. Скачайте `vdl-chrome-<версия>.zip` со страницы Releases и распакуйте, либо соберите папку сами: `node scripts/build-chrome.mjs` (с `--zip` ещё и упакует). Установка npm не нужна.
-2. `chrome://extensions` → включите «Режим разработчика» → «Загрузить распакованное» → выберите папку (`build/chrome`).
+2. `chrome://extensions` (в **Microsoft Edge:** `edge://extensions`) → включите «Режим разработчика» → «Загрузить распакованное» → выберите папку (`build/chrome`).
 
-Нужен **Chrome 116 или новее**. Отличия от Firefox: только окно-попап (боковой панели нет), фон работает как service worker. Проверено в Chromium на локальных серверах (правила заголовков, скачивание HLS, MP3) и вручную на живых сайтах в Chrome.
+Нужен **Chrome или Edge 116 или новее**. Edge запускает пакет для Chrome без изменений (заметки про Edge, имя `vdl-edge-<версия>.zip` и чек-лист магазина — в [EDGE/](EDGE/README.md)). Отличия от Firefox: только окно-попап (боковой панели нет), фон работает как service worker. Проверено в Chromium на локальных серверах (правила заголовков, скачивание HLS, MP3) и вручную на живых сайтах в Chrome.
 
 ## Как пользоваться
 
@@ -88,26 +88,27 @@ npm install
 npm run build-for-amo   # то же, что `npm run build`; пакет появится в build/
 ```
 
-`build-for-amo` — скрипт, который запускает автоматический сборщик исходников AMO; он использует `web-ext` и упаковывает ровно файлы расширения (без `platform/`, `scripts/`, `tests/`, `docs/`, `AMO/` и документов). Без npm: `zip -r video-downloader-legal-1.5.6.xpi manifest.json LICENSE LICENSES THIRD-PARTY.md _locales content icons injected lib service styles utils vendor`. Неподписанный `.xpi` ставится только временно (`about:debugging`); релизный `.xpi` подписан Mozilla.
+`build-for-amo` — скрипт, который запускает автоматический сборщик исходников AMO; он использует `web-ext` и упаковывает ровно файлы расширения (без `platform/`, `scripts/`, `tests/`, `docs/`, `AMO/` и документов). Без npm: `zip -r video-downloader-legal-1.6.0.xpi manifest.json LICENSE LICENSES THIRD-PARTY.md _locales content icons injected lib service styles utils vendor`. Неподписанный `.xpi` ставится только временно (`about:debugging`); релизный `.xpi` подписан Mozilla.
 
-### Сборка для Chrome (`.zip`)
+### Сборка для Chrome и Microsoft Edge (`.zip`)
 
 ```bash
 npm run build:chrome            # build/chrome/ и build/vdl-chrome-<версия>.zip
+npm run build:edge              # тот же пакет под именем build/vdl-edge-<версия>.zip (Edge запускает сборку для Chrome без изменений)
 node scripts/build-chrome.mjs   # только папка build/chrome/ (без zip)
 ```
 
 `scripts/build-chrome.mjs` берёт `manifest.json` для Firefox и переделывает его под Chrome: убирает `browser_specific_settings` и `sidebar_action`, ставит `minimum_chrome_version` 116, подключает фон как service worker `platform/sw.js`, заменяет `webRequestBlocking` на `declarativeNetRequest` и `offscreen`, добавляет `platform/shim.js` перед скриптами страниц. `npm install` не нужен. Для упаковки скрипт вызывает утилиту `zip`; если её нет (чистая Windows), он напишет об этом и оставит папку `build/chrome/` — упакуйте её встроенным `tar`:
 
 ```powershell
-tar -a -c -f build\vdl-chrome-1.5.6.zip -C build\chrome .
+tar -a -c -f build\vdl-chrome-1.6.0.zip -C build\chrome .
 ```
 
 Установка: `chrome://extensions` → «Режим разработчика» → «Загрузить распакованное» → папка `build/chrome`. В Chrome Web Store расширение не публикуется.
 
 ## Сторонний код и ИИ
 
-Единственный сторонний файл — `vendor/lame.min.js`: неизменённый [lamejs](https://github.com/zhuker/lamejs) 1.2.1 (LGPL-3.0, текст в [LICENSES/LGPL-3.0.txt](LICENSES/LGPL-3.0.txt)) для необязательной конвертации в MP3. Это JavaScript-порт MP3-кодировщика [LAME](https://lame.sourceforge.net/); проект использует LAME через lamejs и благодарит проект LAME. На него не распространяется MIT-лицензия проекта. См. [THIRD-PARTY.md](THIRD-PARTY.md). **Проект содержит код, сгенерированный ИИ. Все тексты, комментарии и описания сгенерированы ИИ. Все переводы сгенерированы ИИ** и нуждаются в проверке носителями языка — исправления приветствуются.
+Единственный сторонний файл — `vendor/lame.js`: [lamejs](https://github.com/zhuker/lamejs) 1.2.1 (LGPL-3.0, текст в [LICENSES/LGPL-3.0.txt](LICENSES/LGPL-3.0.txt)) для необязательной конвертации в MP3. Он собран из неизменённых исходников lamejs (тег 1.2.1) в один читаемый файл без минификации. Это JavaScript-порт MP3-кодировщика [LAME](https://lame.sourceforge.net/); проект использует LAME через lamejs и благодарит проект LAME. На него не распространяется MIT-лицензия проекта. См. [THIRD-PARTY.md](THIRD-PARTY.md). **Пересобрать самостоятельно:** `node scripts/build-lamejs.mjs` (нужны Node.js 18+ и git; скрипт скачивает lamejs 1.2.1 с GitHub, собирает файл и пишет `MATCH`, если он совпадает с `vendor/lame.js`; `--compare` дополнительно проверяет, что MP3 совпадает с результатом оригинального `lame.min.js`, `--write` перезаписывает файл). **Проект содержит код, сгенерированный ИИ. Все тексты, комментарии и описания сгенерированы ИИ. Все переводы сгенерированы ИИ** и нуждаются в проверке носителями языка — исправления приветствуются.
 
 ## Лицензия
 

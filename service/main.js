@@ -486,7 +486,7 @@ async function getState(tabId) {
 async function notify(message) {
   if (!settings.notifications) return;
   try {
-    await browser.notifications.create({
+    await browser.notifications?.create({
       type: 'basic', iconUrl: browser.runtime.getURL('icons/icon-128.png'), title: tr('appName'), message,
     });
   } catch { /* ignore */ }
@@ -566,7 +566,7 @@ async function fetchJsonTimeout(url, init, ms) {
   try { return await fetch(url, { ...init, signal: ctl.signal }); } finally { clearTimeout(timer); }
 }
 
-// ---- MP3 encoder (vendor/lame.min.js, optional) ---------------------------------
+// ---- MP3 encoder (vendor/lame.js, optional) ---------------------------------
 let lameState = 'unknown'; // unknown | yes | no
 let lamePromise = null;
 function loadLame() {
@@ -576,7 +576,7 @@ function loadLame() {
     try {
       if (typeof document === 'undefined') throw new Error('no document');
       const el = document.createElement('script');
-      el.src = browser.runtime.getURL('vendor/lame.min.js');
+      el.src = browser.runtime.getURL('vendor/lame.js');
       el.onload = () => { const l = globalThis.lamejs || null; lameState = l && l.Mp3Encoder ? 'yes' : 'no'; resolve(lameState === 'yes' ? l : null); };
       el.onerror = () => { lameState = 'no'; resolve(null); };
       (document.head || document.documentElement).appendChild(el);
@@ -757,7 +757,7 @@ async function fetchYtApiFromPage(tabId, opts = {}) {
 // ---- Bug button (1.4.5debug3): run the download test, then save the diagnostics as a file ------------
 async function notifyAlways(message) {
   try {
-    await browser.notifications.create({ type: 'basic', iconUrl: browser.runtime.getURL('icons/icon-128.png'), title: tr('appName'), message });
+    await browser.notifications?.create({ type: 'basic', iconUrl: browser.runtime.getURL('icons/icon-128.png'), title: tr('appName'), message });
   } catch { /* ignore */ }
 }
 
@@ -1025,7 +1025,7 @@ async function saveBlob(blob, filename, saveAs, onId) {
 async function toMp3(blob, title, job, tabId, kbps) {
   if (IS_CHROME) return toMp3Chrome(blob, title, job, tabId, kbps);
   const lame = await loadLame();
-  if (!lame) throw new StreamError('mp3Missing', 'MP3 encoder (vendor/lame.min.js) is not installed');
+  if (!lame) throw new StreamError('mp3Missing', 'MP3 encoder (vendor/lame.js) is not installed');
   job.fileIndex = 1;
   job.done = 0;
   job.total = 100;
@@ -1795,15 +1795,19 @@ browser.tabs.onRemoved.addListener((tabId) => {
 
 // ------------------------------------------------- menu + hotkey + install ----
 
+// Firefox for Android has no contextMenus, commands (hotkeys) and notifications API: every use is guarded,
+// so the background keeps working there (downloads are started from the popup).
 browser.runtime.onInstalled.addListener(() => {
-  browser.contextMenus.create({
-    id: 'vdl-download',
-    title: tr('menuDownload'),
-    contexts: ['video', 'audio', 'link'],
-  });
+  try {
+    browser.contextMenus?.create({
+      id: 'vdl-download',
+      title: tr('menuDownload'),
+      contexts: ['video', 'audio', 'link'],
+    });
+  } catch { /* no context menu on this platform */ }
 });
 
-browser.contextMenus.onClicked.addListener(async (info, tab) => {
+browser.contextMenus?.onClicked.addListener(async (info, tab) => {
   if (info.menuItemId !== 'vdl-download') return;
   const url = info.srcUrl || info.linkUrl;
   if (!url || !/^https?:/i.test(url) || !tab) return;
@@ -1812,7 +1816,7 @@ browser.contextMenus.onClicked.addListener(async (info, tab) => {
   if (it) startDownload({ tabId: tab.id, itemId: it.id });
 });
 
-browser.commands.onCommand.addListener(async (command) => {
+browser.commands?.onCommand.addListener(async (command) => {
   if (command !== 'default-action') return;
   await ready;
   const [tab] = await browser.tabs.query({ active: true, currentWindow: true });

@@ -1,9 +1,10 @@
 # Store screenshots
 
-1280×800 PNG. English set: `screenshots/en/`, Russian set: `screenshots/ru/`. Upload in this order (AMO shows the first one largest).
+1280×800 PNG, plus the wide cover banner `*-0-anywhere.png` (2280×915). English set: `screenshots/en/`, Russian set: `screenshots/ru/`. Upload in this order (AMO shows the first one largest); the banner is the first picture. The same banner is the cover image of the README on GitHub (`docs/screenshots/`).
 
 | # | File | Caption (EN) |
 |---|---|---|
+| 0 | `en-0-anywhere.png` | Download anywhere: windows of VDL on YouTube, Twitch, Vimeo and TikTok (cover banner) |
 | 1 | `en-1-youtube.png` | YouTube: formats, resolutions and sizes, audio as MP3 / M4A / WEBM |
 | 2 | `en-2-twitch.png` | Twitch and other live streams: record in MP4 (default) or TS |
 | 3 | `en-3-recording.png` | Live recording: one card, elapsed time and size, Stop |

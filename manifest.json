@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "Video Downloader Legal",
-  "version": "1.5.6",
-  "version_name": "1.5.6",
+  "version": "1.6.0",
+  "version_name": "1.6.0dev",
   "description": "__MSG_appDesc__",
   "default_locale": "en",
   "author": "AspidovSS",
@@ -200,6 +200,9 @@
           "none"
         ]
       }
+    },
+    "gecko_android": {
+      "strict_min_version": "142.0"
     }
   }
 }

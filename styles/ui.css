@@ -234,3 +234,13 @@ fieldset.foldable.folded { padding-top: 0; padding-bottom: 2px; }
 .log-tools .btns { display: flex; gap: 6px; flex-wrap: wrap; margin: 6px 0; }
 .log-tools textarea { margin-top: 6px; font-family: ui-monospace, Consolas, monospace; font-size: 11px; white-space: pre; }
 .log-tools a.btn.disabled { pointer-events: none; opacity: .5; }
+
+/* Firefox for Android (class set by utils/dom.js markPlatform) and any touch screen: the popup fills the screen, targets are finger sized */
+html.android body.popup { width: auto; max-height: none; min-height: 100vh; font-size: 15px; }
+html.android main { padding: 12px 14px 18px; }
+@media (pointer: coarse) {
+  button, select, input[type="text"], input[type="number"] { min-height: 44px; }
+  button.small { font-size: 14px; padding: 8px 12px; }
+  button.icon, footer.toolbar button.icon { min-width: 44px; }
+  footer.toolbar { justify-content: space-around; }
+}

@@ -216,7 +216,7 @@
     "message": "Qualidade MP3 (conversão de áudio)"
   },
   "mp3Missing": {
-    "message": "O codificador MP3 (vendor/lame.min.js) não está instalado. Baixe M4A/WEBM."
+    "message": "O codificador MP3 (vendor/lame.js) não está instalado. Baixe M4A/WEBM."
   },
   "mp3Decode": {
     "message": "O navegador não conseguiu decodificar este áudio. Baixe M4A/WEBM."
@@ -543,7 +543,7 @@
     "message": "**Biblioteca de terceiros.** Para converter áudio em MP3 é usada a **lamejs** 1.2.1, um port em JavaScript do codificador LAME."
   },
   "helpC2": {
-    "message": "O arquivo `vendor/lame.min.js` é incluído sem modificações e pode ser substituído por outra compilação que forneça `lamejs.Mp3Encoder`. SHA-256: `15d285e2587b3bdbfd18a68de6ce07cc074f7480a82c3815da2dc1c348ec6df4`."
+    "message": "O arquivo `vendor/lame.js` é gerado a partir do código-fonte do lamejs sem modificações (`scripts/build-lamejs.mjs` o reconstrói) e pode ser substituído por outra compilação que forneça `lamejs.Mp3Encoder`. SHA-256: `f7f74b09d1190d9935e776169dd76c7b66e30db7e2f51b816af88f85a44ed9a8`."
   },
   "helpC3": {
     "message": "A biblioteca roda localmente no navegador e não faz requisições de rede. Sem ela, o MP3 fica indisponível; os outros formatos continuam funcionando."

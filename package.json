@@ -1,6 +1,6 @@
 {
   "name": "video-downloader-legal",
-  "version": "1.5.6",
+  "version": "1.6.0",
   "private": true,
   "type": "module",
   "description": "Firefox and Chrome extension: detect and download videos (direct files, HLS, DASH). No DRM circumvention.",
@@ -10,8 +10,11 @@
     "test": "node --test --test-force-exit tests/*.test.js",
     "lint": "web-ext lint --source-dir . --ignore-files tests package.json package-lock.json node_modules README.md",
     "build:chrome": "node scripts/build-chrome.mjs --zip",
+    "build:edge": "node scripts/build-chrome.mjs --zip --edge",
+    "build-lamejs": "node scripts/build-lamejs.mjs",
+    "verify-lamejs": "node scripts/build-lamejs.mjs --compare",
     "run": "web-ext run --source-dir . --ignore-files tests package.json",
-    "build": "web-ext build --source-dir . --overwrite-dest --artifacts-dir build --ignore-files tests AMO docs scripts platform .github .gitignore build dist node_modules package.json package-lock.json README.md README.ru.md CHANGELOG.md CONTRIBUTING.md DONATE.md PRIVACY.md SECURITY.md",
+    "build": "web-ext build --source-dir . --overwrite-dest --artifacts-dir build --ignore-files tests AMO EDGE docs scripts platform .github .gitignore build dist node_modules package.json package-lock.json README.md README.ru.md CHANGELOG.md CONTRIBUTING.md DONATE.md PRIVACY.md SECURITY.md",
     "build-for-amo": "npm run build"
   },
   "devDependencies": {

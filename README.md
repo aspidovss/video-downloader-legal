@@ -8,13 +8,13 @@
 
 [English](README.md) · [Русский](README.ru.md)
 
-![Firefox 140+](https://img.shields.io/badge/Firefox-140%2B-orange?logo=firefoxbrowser&logoColor=white) ![Chrome 116+](https://img.shields.io/badge/Chrome-116%2B-4285F4?logo=googlechrome&logoColor=white) ![Manifest V3](https://img.shields.io/badge/Manifest-V3-blue) ![License MIT](https://img.shields.io/badge/license-MIT-green) ![Telemetry none](https://img.shields.io/badge/telemetry-none-brightgreen)
+![Firefox 140+](https://img.shields.io/badge/Firefox-140%2B-orange?logo=firefoxbrowser&logoColor=white) ![Firefox Android 142+](https://img.shields.io/badge/Firefox%20Android-142%2B-orange?logo=firefoxbrowser&logoColor=white) ![Chrome 116+](https://img.shields.io/badge/Chrome-116%2B-4285F4?logo=googlechrome&logoColor=white) ![Edge 116+](https://img.shields.io/badge/Edge-116%2B-0078D7?logo=microsoftedge&logoColor=white) ![Manifest V3](https://img.shields.io/badge/Manifest-V3-blue) ![License MIT](https://img.shields.io/badge/license-MIT-green) ![Telemetry none](https://img.shields.io/badge/telemetry-none-brightgreen)
 
 <img src="docs/screenshots/en-0-anywhere.png" alt="Download anywhere: YouTube, Twitch, Vimeo, TikTok" width="760">
 
 </div>
 
-Video Downloader Legal is a Firefox extension (Manifest V3) that lists the videos and audio the open page plays and saves the one you choose. Everything runs inside your browser: there are no external servers, no analytics, no helper programs to install (no Native Messaging). The extension joins video and audio and converts MPEG-TS to MP4 with its **own** code, without re-encoding.
+Video Downloader Legal is a **Firefox, Chrome and Microsoft Edge** extension (Manifest V3; other Chromium browsers such as Brave and Opera work too) that lists the videos and audio the open page plays and saves the one you choose. It also works in **Firefox for Android** (142+): open the extension from the menu *Extensions*; the popup fills the screen, downloads go to the phone's Downloads folder (no context menu, hotkeys, notifications or sidebar on Android). Everything runs inside your browser: there are no external servers, no analytics, no helper programs to install (no Native Messaging). The extension joins video and audio and converts MPEG-TS to MP4 with its **own** code, without re-encoding.
 
 It is built to stay on the right side of the line: **DRM-protected streams are detected and refused, never decrypted**, and no tokens, signatures or credentials are forged.
 
@@ -67,14 +67,14 @@ After installing, Firefox may ask for access to websites: open `about:addons` �
 
 Requires **Firefox 140 or newer**.
 
-### Chrome and other Chromium browsers (Edge, Brave, Opera) — development build
+### Chrome, Microsoft Edge and other Chromium browsers (Brave, Opera) — development build
 
 The same sources build a Manifest V3 package for Chromium. It is installed from GitHub in developer mode (it is not published in a store):
 
 1. Get the `vdl-chrome-<version>.zip` from the [Releases](https://github.com/aspidovss/video-downloader-legal/releases) page and unpack it, or build the folder yourself: `node scripts/build-chrome.mjs` (add `--zip` to also pack it). No npm install is needed.
-2. Open `chrome://extensions`, turn on *Developer mode*, press *Load unpacked* and pick the unpacked folder (`build/chrome`).
+2. Open `chrome://extensions` (in **Microsoft Edge:** `edge://extensions`), turn on *Developer mode*, press *Load unpacked* and pick the unpacked folder (`build/chrome`).
 
-Needs **Chrome 116 or newer**. Differences from Firefox: the toolbar popup only (no sidebar), and the background runs as a service worker. Request headers are set with `declarativeNetRequest`, and the MP3 conversion and the download links are made in an offscreen document. Tested on Chromium with local servers (header rules, HLS download, MP3 conversion) and checked by hand on live sites in Chrome.
+Needs **Chrome or Edge 116 or newer**. Edge runs the Chrome package unchanged (Edge-specific notes, the `vdl-edge-<version>.zip` name and the store checklist are in [EDGE/](EDGE/README.md)). Differences from Firefox: the toolbar popup only (no sidebar), and the background runs as a service worker. Request headers are set with `declarativeNetRequest`, and the MP3 conversion and the download links are made in an offscreen document. Tested on Chromium with local servers (header rules, HLS download, MP3 conversion) and checked by hand on live sites in Chrome.
 
 ## How to use
 
@@ -112,13 +112,13 @@ Contributions are welcome — see [CONTRIBUTING.md](CONTRIBUTING.md). Want to su
 
 ## Project structure
 
-Everything is plain ES modules / scripts loaded directly by `manifest.json`; there is no generated or minified code except the third-party `vendor/lame.min.js`.
+Everything is plain ES modules / scripts loaded directly by `manifest.json`; there is no generated or minified code. The only third-party file, `vendor/lame.js`, is built from the unmodified lamejs sources by `scripts/build-lamejs.mjs` (see [Third-party code](#third-party-code)).
 
 ```
 video-downloader-legal/
 ├── manifest.json            MV3 manifest: permissions, content scripts, popup, options
 ├── LICENSE                  MIT + notice about the third-party component
-├── LICENSES/LGPL-3.0.txt    full LGPL-3.0 text (for vendor/lame.min.js)
+├── LICENSES/LGPL-3.0.txt    full LGPL-3.0 text (for vendor/lame.js)
 │
 ├── service/
 │   ├── main.js              background (Firefox event page / Chrome service worker): media detection,
@@ -131,7 +131,8 @@ video-downloader-legal/
 │   ├── shim.js              gives Chrome the `browser` namespace, Promise answers for onMessage
 │   └── offscreen.html / .js offscreen document: blob: URLs for downloads, audio → MP3
 │
-├── scripts/build-chrome.mjs  builds the Chrome package (manifest, shim in pages and content scripts)
+├── scripts/build-chrome.mjs  builds the Chrome / Edge package (manifest, shim in pages and content scripts, offscreen client)
+├── scripts/build-lamejs.mjs  builds vendor/lame.js from the lamejs sources and checks it against the file in the repository
 │
 ├── lib/                     logic without browser APIs (unit-tested in Node)
 │   ├── hls.js               HLS (m3u8) parser: master/media playlists, EXT-X-MAP, byte ranges, AES-128
@@ -182,12 +183,13 @@ video-downloader-legal/
 ├── styles/ui.css            one stylesheet, light / dark by prefers-color-scheme
 ├── _locales/                10 languages: ar, de, en, es, fr, hi, ja, pt_BR, ru, zh_CN (identical keys)
 ├── icons/                   icon-48.png, icon-128.png
-├── vendor/                  lame.min.js (unmodified lamejs 1.2.1, LGPL-3.0) + README with SHA-256
+├── vendor/                  lame.js (lamejs 1.2.1 built from its unmodified sources, LGPL-3.0) + README with SHA-256
 │
 ├── tests/                   node:test unit tests (parsers, downloader, muxers, background on a fake browser API)
 │   └── helpers/xml.js
 ├── docs/                    screenshots, built-in help text, development log (Russian)
 ├── AMO/                     add-on listing texts, reviewer notes, privacy policy, store screenshots
+├── EDGE/                    Microsoft Edge: install, build and Edge Add-ons store checklist
 ├── .github/ISSUE_TEMPLATE/  bug report and site request forms
 └── README.md, README.ru.md, CHANGELOG.md, CONTRIBUTING.md, DONATE.md, PRIVACY.md, SECURITY.md, THIRD-PARTY.md
 ```
@@ -196,7 +198,7 @@ The sources are plain JavaScript (ES modules) with no bundling. Two packages are
 
 ### Firefox package (`.xpi`)
 
-The `.xpi` contains `manifest.json`, `LICENSE`, `LICENSES`, `THIRD-PARTY.md`, `_locales`, `content`, `icons`, `injected`, `lib`, `service`, `styles`, `utils` and `vendor`. `platform/`, `scripts/`, `tests/`, `docs/`, `AMO/`, `.github/` and the documents are repository-only (`platform/` and `scripts/` belong to the Chrome build).
+The `.xpi` contains `manifest.json`, `LICENSE`, `LICENSES`, `THIRD-PARTY.md`, `_locales`, `content`, `icons`, `injected`, `lib`, `service`, `styles`, `utils` and `vendor`. `platform/`, `scripts/`, `tests/`, `docs/`, `AMO/`, `EDGE/`, `.github/` and the documents are repository-only (`platform/` and `scripts/` belong to the Chrome build).
 
 With npm (works on Windows, macOS and Linux):
 
@@ -210,31 +212,32 @@ npm run build-for-amo   # same as `npm run build`; the package appears in build/
 Or by hand, without npm:
 
 ```bash
-zip -r video-downloader-legal-1.5.6.xpi manifest.json LICENSE LICENSES THIRD-PARTY.md _locales content icons injected lib service styles utils vendor
+zip -r video-downloader-legal-1.6.0.xpi manifest.json LICENSE LICENSES THIRD-PARTY.md _locales content icons injected lib service styles utils vendor
 ```
 
 An unsigned `.xpi` loads only as a temporary add-on (`about:debugging`) or in Firefox Developer Edition / Nightly with `xpinstall.signatures.required` set to `false`. The release `.xpi` is signed by Mozilla.
 
-### Chrome package (`.zip`)
+### Chrome and Microsoft Edge package (`.zip`)
 
 The Chrome package is made from the same sources by `scripts/build-chrome.mjs`. It takes the Firefox `manifest.json` and changes it: removes `browser_specific_settings` and `sidebar_action`, sets `minimum_chrome_version` to 116, switches the background to the service worker `platform/sw.js`, replaces `webRequestBlocking` with `declarativeNetRequest` and `offscreen`, and puts `platform/shim.js` in front of the content scripts and the extension pages. No npm install is needed (the script uses only Node's standard library).
 
 ```bash
 npm run build:chrome            # build/chrome/ and build/vdl-chrome-<version>.zip
+npm run build:edge              # the same package named build/vdl-edge-<version>.zip (Edge runs the Chrome build unchanged)
 node scripts/build-chrome.mjs   # only the folder build/chrome/ (no zip)
 ```
 
 The zip step calls the `zip` tool. If it is not installed (plain Windows), the script says so and leaves the folder `build/chrome/`; pack it with the built-in `tar`:
 
 ```powershell
-tar -a -c -f build\vdl-chrome-1.5.6.zip -C build\chrome .
+tar -a -c -f build\vdl-chrome-1.6.0.zip -C build\chrome .
 ```
 
 Load the result in `chrome://extensions` → *Developer mode* → *Load unpacked* → the folder `build/chrome` (or the unpacked zip). It is not published in the Chrome Web Store.
 
 ## Third-party code
 
-The only third-party file is `vendor/lame.min.js` — unmodified [lamejs](https://github.com/zhuker/lamejs) 1.2.1 (LGPL-3.0, text in [LICENSES/LGPL-3.0.txt](LICENSES/LGPL-3.0.txt)), used for the optional MP3 conversion. It is a JavaScript port of the [LAME](https://lame.sourceforge.net/) MP3 encoder; this project uses LAME through lamejs and thanks the LAME project. It is not covered by the MIT license of this project. See [THIRD-PARTY.md](THIRD-PARTY.md). **This project contains code generated by AI. All texts, comments and descriptions are AI-generated. All translations are AI-generated** and should be reviewed by native speakers — corrections are welcome.
+The only third-party file is `vendor/lame.js` — [lamejs](https://github.com/zhuker/lamejs) 1.2.1 (LGPL-3.0, text in [LICENSES/LGPL-3.0.txt](LICENSES/LGPL-3.0.txt)), used for the optional MP3 conversion. It is built from the unmodified lamejs sources (tag 1.2.1) into one readable, non-minified file. It is a JavaScript port of the [LAME](https://lame.sourceforge.net/) MP3 encoder; this project uses LAME through lamejs and thanks the LAME project. It is not covered by the MIT license of this project. See [THIRD-PARTY.md](THIRD-PARTY.md). **Rebuild it yourself:** `node scripts/build-lamejs.mjs` (Node.js 18+ and git; it fetches lamejs 1.2.1 from GitHub, rebuilds the file and prints `MATCH` when it is identical to `vendor/lame.js`; `--compare` also checks that the MP3 output equals the one of upstream's own `lame.min.js`, `--write` overwrites the file). **This project contains code generated by AI. All texts, comments and descriptions are AI-generated. All translations are AI-generated** and should be reviewed by native speakers — corrections are welcome.
 
 ## License
 

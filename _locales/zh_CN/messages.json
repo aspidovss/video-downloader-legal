@@ -216,7 +216,7 @@
     "message": "MP3 质量（仅音频转换）"
   },
   "mp3Missing": {
-    "message": "未安装 MP3 编码器 (vendor/lame.min.js)。请改为下载 M4A/WEBM。"
+    "message": "未安装 MP3 编码器 (vendor/lame.js)。请改为下载 M4A/WEBM。"
   },
   "mp3Decode": {
     "message": "浏览器无法解码此音频。请改为下载 M4A/WEBM。"
@@ -543,7 +543,7 @@
     "message": "**第三方库。** 音频转 MP3 使用 **lamejs** 1.2.1（LAME 编码器的 JavaScript 移植版）。"
   },
   "helpC2": {
-    "message": "`vendor/lame.min.js` 未经修改，可替换为提供 `lamejs.Mp3Encoder` 的其他构建。SHA-256：`15d285e2587b3bdbfd18a68de6ce07cc074f7480a82c3815da2dc1c348ec6df4`。"
+    "message": "`vendor/lame.js` 由未经修改的 lamejs 源码构建（可用 `scripts/build-lamejs.mjs` 重新构建），可替换为提供 `lamejs.Mp3Encoder` 的其他构建。SHA-256：`f7f74b09d1190d9935e776169dd76c7b66e30db7e2f51b816af88f85a44ed9a8`。"
   },
   "helpC3": {
     "message": "该库在浏览器中本地运行，不发起任何网络请求。没有它时 MP3 不可用，其他格式仍可使用。"

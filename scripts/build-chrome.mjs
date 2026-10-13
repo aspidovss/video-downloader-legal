@@ -1,6 +1,8 @@
 // Builds the Chrome (Manifest V3, service worker) package from the same sources as Firefox.
 //   node scripts/build-chrome.mjs        -> build/chrome/            (load unpacked in chrome://extensions)
-//   node scripts/build-chrome.mjs --zip  -> build/vdl-chrome-<version>.zip   (needs the `zip` tool)
+//   node scripts/build-chrome.mjs --zip  -> build/vdl-chrome-<version>.zip   (`zip` tool; on Windows the built-in `tar` is the fallback)
+//   node scripts/build-chrome.mjs --zip --edge -> build/vdl-edge-<version>.zip  (the same package: Microsoft Edge runs the Chrome build unchanged;
+//                                                the name only tells the two store uploads apart)
 import fs from 'node:fs';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
@@ -35,10 +37,11 @@ export function build() {
   fs.rmSync(out, { recursive: true, force: true });
   fs.mkdirSync(out, { recursive: true });
   for (const d of DIRS) copyDir(path.join(root, d), path.join(out, d));
+  // the real offscreen client is Chrome-only: it replaces the stub that the Firefox package ships in service/
+  fs.renameSync(path.join(out, 'platform', 'offscreen-client.js'), path.join(out, 'service', 'offscreen-client.js'));
   fs.copyFileSync(path.join(root, 'LICENSE'), path.join(out, 'LICENSE'));
   fs.copyFileSync(path.join(root, 'THIRD-PARTY.md'), path.join(out, 'THIRD-PARTY.md'));
-  fs.mkdirSync(path.join(out, 'LICENSES'), { recursive: true });
-  fs.copyFileSync(path.join(root, 'LICENSES', 'LGPL-3.0.txt'), path.join(out, 'LICENSES', 'LGPL-3.0.txt'));
+  copyDir(path.join(root, 'LICENSES'), path.join(out, 'LICENSES'));
   const src = JSON.parse(fs.readFileSync(path.join(root, 'manifest.json'), 'utf8'));
   fs.writeFileSync(path.join(out, 'manifest.json'), `${JSON.stringify(chromeManifest(src), null, 2)}\n`);
   // extension pages: load the shim before their module scripts
@@ -50,13 +53,25 @@ export function build() {
   return { dir: out, version: src.version_name || src.version };
 }
 
+export const packageName = (version, edge = false) => `vdl-${edge ? 'edge' : 'chrome'}-${version}.zip`;
+
+// zip tool first; on Windows (no `zip` by default) the built-in bsdtar writes a normal zip with `tar -a`.
+export function packFolder(dir, zip, platform = process.platform) {
+  fs.rmSync(zip, { force: true });
+  const tools = [['zip', ['-qr', zip, '.']]];
+  if (platform === 'win32') tools.push(['tar', ['-a', '-c', '-f', zip, '-C', dir, '.']]);
+  for (const [cmd, args] of tools) {
+    const r = spawnSync(cmd, args, { cwd: dir, stdio: 'inherit' });
+    if (r.status === 0) return true;
+  }
+  return false;
+}
+
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
   const { dir, version } = build();
   console.log(`Chrome build: ${dir}`);
   if (process.argv.includes('--zip')) {
-    const zip = path.join(root, 'build', `vdl-chrome-${version}.zip`);
-    fs.rmSync(zip, { force: true });
-    const r = spawnSync('zip', ['-qr', zip, '.'], { cwd: dir, stdio: 'inherit' });
-    console.log(r.status === 0 ? `Zip: ${zip}` : 'zip tool not found: pack the folder manually');
+    const zip = path.join(root, 'build', packageName(version, process.argv.includes('--edge')));
+    console.log(packFolder(dir, zip) ? `Zip: ${zip}` : 'No zip or tar tool found: pack the folder build/chrome yourself (the files must be at the archive root)');
   }
 }

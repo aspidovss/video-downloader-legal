@@ -60,10 +60,10 @@ test('id3Tag: a real decoder reads the title back (UTF-16, non-ASCII, emoji)', {
   assert.equal(r.stdout.toString().trim(), title);
 });
 
-test('vendor/lame.min.js: the real encoder produces a valid stereo MP3 at the requested bitrate with the ID3 title', { skip: !fs.existsSync(new URL('../vendor/lame.min.js', import.meta.url)) || spawnSync('ffprobe', ['-version']).status !== 0 }, async () => {
+test('vendor/lame.js: the real encoder produces a valid stereo MP3 at the requested bitrate with the ID3 title', { skip: !fs.existsSync(new URL('../vendor/lame.js', import.meta.url)) || spawnSync('ffprobe', ['-version']).status !== 0 }, async () => {
   const vm = await import('node:vm');
   const ctx = {}; ctx.globalThis = ctx; vm.createContext(ctx);
-  vm.runInContext(fs.readFileSync(new URL('../vendor/lame.min.js', import.meta.url), 'utf8'), ctx);
+  vm.runInContext(fs.readFileSync(new URL('../vendor/lame.js', import.meta.url), 'utf8'), ctx);
   const rate = 44100, n = rate * 3;
   const L = new Float32Array(n), R = new Float32Array(n);
   for (let i = 0; i < n; i++) { L[i] = 0.4 * Math.sin(2 * Math.PI * 440 * i / rate); R[i] = 0.4 * Math.sin(2 * Math.PI * 660 * i / rate); }

@@ -216,7 +216,7 @@
     "message": "MP3 品質（音声のみ変換）"
   },
   "mp3Missing": {
-    "message": "MP3 エンコーダー (vendor/lame.min.js) がインストールされていません。代わりに M4A/WEBM をダウンロードしてください。"
+    "message": "MP3 エンコーダー (vendor/lame.js) がインストールされていません。代わりに M4A/WEBM をダウンロードしてください。"
   },
   "mp3Decode": {
     "message": "ブラウザーがこの音声をデコードできませんでした。代わりに M4A/WEBM をダウンロードしてください。"
@@ -543,7 +543,7 @@
     "message": "**サードパーティ製ライブラリ：** 音声を MP3 に変換するために、LAME エンコーダーの JavaScript 移植版である **lamejs** 1.2.1 を使用しています。"
   },
   "helpC2": {
-    "message": "`vendor/lame.min.js` は無改変で同梱しており、`lamejs.Mp3Encoder` を提供する別のビルドに差し替えられます。SHA-256：`15d285e2587b3bdbfd18a68de6ce07cc074f7480a82c3815da2dc1c348ec6df4`。"
+    "message": "`vendor/lame.js` は lamejs の無改変ソースからビルドしたもので（`scripts/build-lamejs.mjs` で再ビルドできます）、`lamejs.Mp3Encoder` を提供する別のビルドに差し替えられます。SHA-256：`f7f74b09d1190d9935e776169dd76c7b66e30db7e2f51b816af88f85a44ed9a8`。"
   },
   "helpC3": {
     "message": "このライブラリはブラウザー内でローカルに動作し、ネットワーク通信は行いません。なくても MP3 が使えないだけで、他の形式は動作します。"

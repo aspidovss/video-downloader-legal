@@ -2,6 +2,20 @@
 
 Added features per version (fixes and internal changes are not listed). Version history before 1.5 is condensed from the development log; the full log (in Russian) is in [docs/DEVLOG-ru.md](docs/DEVLOG-ru.md).
 
+## 1.6.0dev
+
+### Added
+* **Firefox for Android:** the toolbar popup fills the screen and has finger-sized buttons; what the phone does not have is skipped: context menu, hotkeys, notifications and the sidebar (the background no longer fails on the missing `contextMenus` / `commands` APIs), the folder buttons and the "Save as" / notification options are hidden. Needs Firefox for Android 142+. The footer shows `Firefox Android`.
+* **Microsoft Edge:** the Chrome build runs in Edge 116+ unchanged; `npm run build:edge` names the package `vdl-edge-<version>.zip`; the folder `EDGE/` has the install steps and the Edge Add-ons checklist; Edge is recognised in the page footer and in the bug-report template.
+* **Rebuild the MP3 encoder yourself:** `node scripts/build-lamejs.mjs` fetches lamejs 1.2.1 from GitHub, bundles it into `vendor/lame.js` and checks it against the file in the repository (`--compare`: same MP3 bytes as upstream's `lame.min.js`).
+* The "Download anywhere" banner is part of the store screenshots (`AMO/screenshots`).
+
+### Changed
+* Copyright notices for lamejs / LAME: the original authors are named in `THIRD-PARTY.md` and `LICENSE`, the licensing notes of lamejs are shipped (`LICENSES/lamejs-LICENSE.txt`), and the header of `vendor/lame.js` states that the code is not modified, only assembled.
+* `vendor/lame.min.js` is replaced by `vendor/lame.js`: the unmodified lamejs sources in one readable, non-minified file (clears the two `no-unsanitized` validator warnings).
+* Chrome-only code (offscreen document client) moved out of the Firefox package (clears the `offscreen.createDocument` warning); the Chrome build puts it back.
+* `gecko_android.strict_min_version` 142.0 (clears the Android warning about `data_collection_permissions`).
+
 ## 1.5.6
 
 ### Added
