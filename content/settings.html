@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Settings</title>
+  <link rel="stylesheet" href="../styles/ui.css">
+</head>
+<body class="page">
+  <header>
+    <img src="../icons/icon-48.png" width="24" height="24" alt="">
+    <h1 data-i18n="settingsTitle"></h1>
+  </header>
+  <div id="savebar" class="savebar" hidden>
+    <span id="savebar-text" data-i18n="unsavedChanges"></span>
+    <button type="button" id="savebar-save" class="primary" data-i18n="save"></button>
+    <button type="button" id="savebar-cancel" data-i18n="cancel"></button>
+    <span id="saved" hidden data-i18n="saved"></span>
+  </div>
+  <main>
+    <form id="form">
+      <fieldset class="prefs">
+        <legend data-i18n="optDefaultsTitle"></legend>
+        <label class="field">
+          <span data-i18n="optDefaultQuality"></span>
+          <select name="defaultQuality">
+            <option value="best" data-i18n="qualityBest"></option>
+            <option value="1080">1080p</option>
+            <option value="720">720p</option>
+            <option value="480">480p</option>
+          </select>
+        </label>
+        <label class="field">
+          <span data-i18n="optDefaultType"></span>
+          <select name="defaultType">
+            <option value="auto" data-i18n="typeAuto"></option>
+            <option value="mp4">MP4 (H.264)</option>
+            <option value="mp4-av1">MP4 AV1</option>
+            <option value="webm">WEBM (VP9)</option>
+          </select>
+        </label>
+        <div class="check-row has-field">
+          <label class="field">
+            <span data-i18n="optDefaultAudioFormat"></span>
+            <select name="defaultAudioFormat">
+              <option value="mp3">MP3</option>
+              <option value="m4a">M4A (AAC)</option>
+              <option value="webm">WEBM (Opus)</option>
+            </select>
+          </label>
+          <button type="button" class="info" aria-expanded="false" data-i18n-title="hintToggle" data-i18n-aria="hintToggle">?</button>
+          <div class="hint" hidden data-i18n="hintDefaultAudioFormat"></div>
+        </div>
+        <label class="field">
+          <span data-i18n="optDefaultAudioQuality"></span>
+          <select name="defaultAudioQuality">
+            <option value="best" data-i18n="qualityBest"></option>
+            <option value="192">192 kbps</option>
+            <option value="128">128 kbps</option>
+          </select>
+        </label>
+      </fieldset>
+
+      <fieldset class="prefs">
+        <legend data-i18n="optGeneralTitle"></legend>
+        <label class="field">
+          <span data-i18n="optLanguage"></span>
+          <select name="uiLang" id="ui-lang"></select>
+        </label>
+        <div class="check-row">
+          <label class="check"><input type="checkbox" name="notifications"> <span data-i18n="optNotifications"></span></label>
+          <button type="button" class="info" aria-expanded="false" data-i18n-title="hintToggle" data-i18n-aria="hintToggle">?</button>
+          <div class="hint" hidden data-i18n="hintNotifications"></div>
+        </div>
+        <div class="check-row">
+          <label class="check"><input type="checkbox" name="history"> <span data-i18n="optHistory"></span></label>
+          <button type="button" class="info" aria-expanded="false" data-i18n-title="hintToggle" data-i18n-aria="hintToggle">?</button>
+          <div class="hint" hidden data-i18n="hintHistory"></div>
+        </div>
+        <div class="check-row">
+          <label class="check"><input type="checkbox" name="saveAs"> <span data-i18n="optSaveAs"></span></label>
+          <button type="button" class="info" aria-expanded="false" data-i18n-title="hintToggle" data-i18n-aria="hintToggle">?</button>
+          <div class="hint" hidden data-i18n="hintSaveAs"></div>
+        </div>
+      <div class="check-row has-field">
+        <label class="field"><span data-i18n="optTemplate"></span><input type="text" name="template" spellcheck="false" placeholder="{title} {site} {date}"></label>
+        <button type="button" class="info" aria-expanded="false" data-i18n-title="hintToggle" data-i18n-aria="hintToggle">?</button>
+        <div class="hint" hidden data-i18n="hintTemplate"></div>
+      </div>
+      <div class="check-row has-field">
+        <label class="field"><span data-i18n="optMinSize"></span><input type="number" name="minSizeKB" min="0" step="1"></label>
+        <button type="button" class="info" aria-expanded="false" data-i18n-title="hintToggle" data-i18n-aria="hintToggle">?</button>
+        <div class="hint" hidden data-i18n="hintMinSize"></div>
+      </div>
+      </fieldset>
+
+      <fieldset class="prefs">
+        <legend data-i18n="optDownloadTitle"></legend>
+      <div class="check-row has-field">
+        <label class="field"><span data-i18n="optConcurrency"></span><input type="number" name="concurrency" min="1" max="12"></label>
+        <button type="button" class="info" aria-expanded="false" data-i18n-title="hintToggle" data-i18n-aria="hintToggle">?</button>
+        <div class="hint" hidden data-i18n="hintConcurrency"></div>
+      </div>
+      <div class="check-row has-field">
+        <label class="field"><span data-i18n="optLiveMax"></span><input type="number" name="liveMaxMinutes" min="1" max="720" step="1"></label>
+        <button type="button" class="info" aria-expanded="false" data-i18n-title="hintToggle" data-i18n-aria="hintToggle">?</button>
+        <div class="hint" hidden data-i18n="hintLiveMax"></div>
+      </div>
+      <div class="check-row">
+        <label class="check"><input type="checkbox" name="tsToMp4"> <span data-i18n="optTsToMp4"></span></label>
+        <button type="button" class="info" aria-expanded="false" data-i18n-title="hintToggle" data-i18n-aria="hintToggle">?</button>
+        <div class="hint" hidden data-i18n="hintTsToMp4"></div>
+      </div>
+      <div class="check-row has-field">
+        <label class="field"><span data-i18n="optMaxStream"></span><input type="number" name="maxStreamMB" min="64" step="64"></label>
+        <button type="button" class="info" aria-expanded="false" data-i18n-title="hintToggle" data-i18n-aria="hintToggle">?</button>
+        <div class="hint" hidden data-i18n="hintMaxStream"></div>
+      </div>
+      </fieldset>
+
+      <fieldset class="prefs">
+        <legend data-i18n="optYtTitle"></legend>
+        <div class="check-row">
+          <label class="check"><input type="checkbox" name="ytSequential"> <span data-i18n="optYtSequential"></span></label>
+          <button type="button" class="info" aria-expanded="false" data-i18n-title="hintToggle" data-i18n-aria="hintToggle">?</button>
+          <div class="hint" hidden data-i18n="hintYtSequential"></div>
+        </div>
+        <div class="check-row">
+          <label class="check"><input type="checkbox" name="ytCpn"> <span data-i18n="optYtCpn"></span></label>
+          <button type="button" class="info" aria-expanded="false" data-i18n-title="hintToggle" data-i18n-aria="hintToggle">?</button>
+          <div class="hint" hidden data-i18n="hintYtCpn"></div>
+        </div>
+        <div class="check-row">
+          <label class="check"><input type="checkbox" name="ytHeaders"> <span data-i18n="optYtHeaders"></span></label>
+          <button type="button" class="info" aria-expanded="false" data-i18n-title="hintToggle" data-i18n-aria="hintToggle">?</button>
+          <div class="hint" hidden data-i18n="hintYtHeaders"></div>
+        </div>
+        <div class="check-row">
+          <label class="check"><input type="checkbox" name="ytApi"> <span data-i18n="optYtApi"></span></label>
+          <button type="button" class="info" aria-expanded="false" data-i18n-title="hintToggle" data-i18n-aria="hintToggle">?</button>
+          <div class="hint" hidden data-i18n="hintYtApi"></div>
+        </div>
+        <div class="check-row has-field">
+          <label class="field">
+        <span data-i18n="optYtMethod"></span>
+        <select name="ytMethod">
+          <option value="auto" data-i18n="optYtMethodAuto"></option>
+          <option value="page" data-i18n="optYtMethodPage"></option>
+          <option value="background" data-i18n="optYtMethodBg"></option>
+        </select>
+        </label>
+          <button type="button" class="info" aria-expanded="false" data-i18n-title="hintToggle" data-i18n-aria="hintToggle">?</button>
+          <div class="hint" hidden data-i18n="hintYtMethod"></div>
+        </div>
+        <label class="field">
+        <span data-i18n="optYtClients"></span>
+        <input type="text" name="ytClients" spellcheck="false">
+        <small data-i18n="optYtClientsHint"></small>
+        </label>
+        <label class="field">
+        <span data-i18n="optYtOverrides"></span>
+        <textarea name="ytClientOverrides" rows="3" spellcheck="false" placeholder='{"IOS":{"version":"20.11.6","ua":"..."}}'></textarea>
+        <small data-i18n="optYtOverridesHint"></small>
+        </label>
+        <div class="check-row">
+          <label class="check"><input type="checkbox" name="ytCcOnly"> <span data-i18n="optYtCcOnly"></span></label>
+          <button type="button" class="info" aria-expanded="false" data-i18n-title="hintToggle" data-i18n-aria="hintToggle">?</button>
+          <div class="hint" hidden data-i18n="hintYtCcOnly"></div>
+        </div>
+        <fieldset class="prefs sub">
+          <legend data-i18n="optYtRecordTitle"></legend>
+          <div class="check-row">
+        <label class="check"><input type="checkbox" name="ytRecordUi"> <span data-i18n="optYtRecordUi"></span></label>
+        <button type="button" class="info" aria-expanded="false" data-i18n-title="hintToggle" data-i18n-aria="hintToggle">?</button>
+        <div class="hint" hidden data-i18n="hintYtRecordUi"></div>
+      </div>
+          <div class="check-row has-field">
+        <label class="field"><span data-i18n="optYtRecordSpeed"></span><input type="number" name="ytRecordSpeed" min="1" max="4" step="1"></label>
+        <button type="button" class="info" aria-expanded="false" data-i18n-title="hintToggle" data-i18n-aria="hintToggle">?</button>
+        <div class="hint" hidden data-i18n="hintYtRecordSpeed"></div>
+      </div>
+        </fieldset>
+      </fieldset>
+
+      <fieldset class="prefs">
+        <legend data-i18n="optDiagTitle"></legend>
+        <div class="check-row">
+          <label class="check"><input type="checkbox" name="diagFullUrls"> <span data-i18n="optDiagFullUrls"></span></label>
+          <button type="button" class="info" aria-expanded="false" data-i18n-title="hintToggle" data-i18n-aria="hintToggle">?</button>
+          <div class="hint" hidden data-i18n="hintDiagFullUrls"></div>
+        </div>
+        <div class="check-row">
+          <label class="check"><input type="checkbox" name="debugLog"> <span data-i18n="optDebugLog"></span></label>
+          <button type="button" class="info" aria-expanded="false" data-i18n-title="hintToggle" data-i18n-aria="hintToggle">?</button>
+          <div class="hint" hidden data-i18n="hintDebugLog"></div>
+        </div>
+        <div id="log-tools" class="log-tools">
+          <div class="row">
+            <span id="log-count" class="faint"></span>
+          </div>
+          <div class="btns">
+            <button type="button" id="log-view" data-i18n="logView"></button>
+            <button type="button" id="log-copy" data-i18n="bugCopy"></button>
+            <button type="button" id="log-save" data-i18n="logSave"></button>
+            <a id="log-gh" class="btn" target="_blank" rel="noopener" data-i18n="bugGithub"></a>
+            <a id="log-mail" class="btn" data-i18n="bugEmail"></a>
+            <button type="button" id="log-clear" data-i18n="logClear"></button>
+          </div>
+          <div id="log-panel" hidden>
+            <textarea id="log-text" class="bugjson" rows="14" readonly spellcheck="false"></textarea>
+          </div>
+          <div class="note" data-i18n="logAttachHint"></div>
+        </div>
+      </fieldset>
+
+    </form>
+    <fieldset class="prefs reset-box">
+      <legend data-i18n="optResetTitle"></legend>
+      <p data-i18n="optResetText"></p>
+      <div class="row">
+        <button type="button" id="reset-btn" data-i18n="optResetButton"></button>
+        <span id="reset-confirm" hidden>
+          <span data-i18n="optResetConfirm"></span>
+          <button type="button" id="reset-yes" class="primary" data-i18n="optResetYes"></button>
+          <button type="button" id="reset-no" data-i18n="cancel"></button>
+        </span>
+        <span id="reset-done" hidden data-i18n="optResetDone"></span>
+      </div>
+    </fieldset>
+    <fieldset class="prefs consent-box">
+      <legend data-i18n="consentSettingsTitle"></legend>
+      <p data-i18n="consentIntro"></p>
+      <p data-i18n="consentRights"></p>
+      <p data-i18n="consentCc"></p>
+      <p id="cc-off-status" class="cc-off" hidden></p>
+      <p data-i18n="consentLiability"></p>
+      <p id="consent-status"></p>
+      <p class="faint" data-i18n="consentLocalOnly"></p>
+      <div class="row"><button type="button" id="consent-revoke" data-i18n="consentRevoke"></button></div>
+    </fieldset>
+    <p class="legal"><span data-i18n="legalNotice1"></span><br><span data-i18n="legalNotice2"></span></p>
+    <footer class="site-footer" id="site-footer"></footer>
+  </main>
+  <script src="settings.js" type="module"></script>
+</body>
+</html>

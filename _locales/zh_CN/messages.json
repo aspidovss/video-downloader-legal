@@ -1,0 +1,758 @@
+{
+  "appName": {
+    "message": "Video Downloader Legal"
+  },
+  "appDesc": {
+    "message": "检测网页中的视频并保存。支持直链文件、HLS 和 DASH。无跟踪，不绕过 DRM。"
+  },
+  "history": {
+    "message": "历史记录"
+  },
+  "settings": {
+    "message": "设置"
+  },
+  "noMediaTitle": {
+    "message": "未找到视频"
+  },
+  "noMediaText": {
+    "message": "请在页面上播放视频——加载时会检测到视频流。"
+  },
+  "reload": {
+    "message": "重新加载页面"
+  },
+  "download": {
+    "message": "下载"
+  },
+  "quality": {
+    "message": "画质"
+  },
+  "twoFiles": {
+    "message": "2 个文件：视频 + 音频"
+  },
+  "drm": {
+    "message": "受 DRM 保护——不支持"
+  },
+  "liveStream": {
+    "message": "直播——不支持"
+  },
+  "parseError": {
+    "message": "无法读取流清单"
+  },
+  "parsing": {
+    "message": "正在读取清单…"
+  },
+  "done": {
+    "message": "完成"
+  },
+  "canceled": {
+    "message": "已取消"
+  },
+  "failed": {
+    "message": "失败"
+  },
+  "cancel": {
+    "message": "取消"
+  },
+  "clearHistory": {
+    "message": "清除历史记录"
+  },
+  "historyEmpty": {
+    "message": "暂无下载。"
+  },
+  "remove": {
+    "message": "移除"
+  },
+  "settingsTitle": {
+    "message": "Video Downloader Legal – 设置"
+  },
+  "optNotifications": {
+    "message": "显示通知"
+  },
+  "optHistory": {
+    "message": "保留下载历史"
+  },
+  "optSaveAs": {
+    "message": "每个文件都询问保存位置"
+  },
+  "optTemplate": {
+    "message": "文件名模板"
+  },
+  "optMinSize": {
+    "message": "忽略小于此大小的文件 (KB)"
+  },
+  "optConcurrency": {
+    "message": "并行下载分段数 (1-12)"
+  },
+  "optMaxStream": {
+    "message": "HLS/DASH 最大大小 (MB)"
+  },
+  "save": {
+    "message": "保存"
+  },
+  "saved": {
+    "message": "已保存"
+  },
+  "menuDownload": {
+    "message": "使用 Video Downloader Legal 下载"
+  },
+  "cmdDefault": {
+    "message": "下载检测到的第一个视频"
+  },
+  "ytNone": {
+    "message": "YouTube 未返回下载链接。请使用“播放时录制”。"
+  },
+  "ytUnavailable": {
+    "message": "YouTube 未提供此视频（需要登录、年龄或地区限制）。"
+  },
+  "ytCcBlocked": {
+    "message": "已阻止：仅允许 Creative Commons 视频（见设置）。"
+  },
+  "ytDiagButton": {
+    "message": "复制 YouTube 诊断信息"
+  },
+  "ytDiagCopied": {
+    "message": "已复制。不包含链接、标题或 ID。"
+  },
+  "ytDiagManual": {
+    "message": "请手动复制下面的文本。"
+  },
+  "optYtCcOnly": {
+    "message": "YouTube：仅允许 Creative Commons 视频"
+  },
+  "ytDirectBlocked": {
+    "message": "YouTube 拒绝向扩展提供此链接 (HTTP 403)。请改用“播放时录制”。"
+  },
+  "ytRecord": {
+    "message": "备用方式：播放时录制"
+  },
+  "ytRecordHint": {
+    "message": "将重新加载页面，并以静音、较快的速度播放视频。结束前请保持此标签页打开。"
+  },
+  "ytRecording": {
+    "message": "正在录制"
+  },
+  "ytRecDone": {
+    "message": "录制已完成"
+  },
+  "ytRecSave": {
+    "message": "保存录制"
+  },
+  "ytRecSaveAudio": {
+    "message": "仅音频"
+  },
+  "ytRecSaved": {
+    "message": "已发送到下载。"
+  },
+  "ytRecError": {
+    "message": "录制失败"
+  },
+  "ytRecErrDrm": {
+    "message": "该视频已加密 (DRM)，无法录制。"
+  },
+  "ytRecErrTooLarge": {
+    "message": "录制超出了设置中的大小限制。"
+  },
+  "optYtRecordSpeed": {
+    "message": "YouTube：录制速度 (1-4x)"
+  },
+  "optYtApi": {
+    "message": "YouTube：像手机应用一样获取链接（主要方式）"
+  },
+  "optYtClients": {
+    "message": "YouTube：客户端顺序"
+  },
+  "optYtClientsHint": {
+    "message": "IOS、IOS_VDL、VISIONOS、ANDROID_VR。第一个 URL 能完整打开的客户端优先；否则使用提供最多的那个。"
+  },
+  "optYtOverrides": {
+    "message": "YouTube：客户端覆盖 (JSON，可选)"
+  },
+  "optYtOverridesHint": {
+    "message": "更改客户端版本/User-Agent 或添加自己的：{\"MYCLIENT\":{\"id\":9,\"version\":\"1.0\",\"ua\":\"…\",\"clientName\":\"X\"}}。无需更新扩展。"
+  },
+  "ytLimited": {
+    "message": "YouTube 只向此客户端提供该文件的开头部分。请选择较小的版本或使用“播放时录制”。"
+  },
+  "ytLimitedNote": {
+    "message": "YouTube 仅提供文件的前约 {mb} MB（无令牌）。更大的版本已标记；请对其使用录制。"
+  },
+  "ytTestButton": {
+    "message": "下载测试"
+  },
+  "ytTestRunning": {
+    "message": "测试中…最多需要几分钟，请保持此标签页打开。"
+  },
+  "ytTestDone": {
+    "message": "完成。现在请点击“复制 YouTube 诊断信息”。"
+  },
+  "ytTestNone": {
+    "message": "暂无可测试的 YouTube 链接。"
+  },
+  "optYtSequential": {
+    "message": "YouTube：一次下载一块"
+  },
+  "optYtCpn": {
+    "message": "YouTube：在下载链接中添加 cpn"
+  },
+  "optYtHeaders": {
+    "message": "YouTube：下载时发送 Origin/Referer/DNT"
+  },
+  "ytRecInterrupted": {
+    "message": "录制提前停止：播放器切换到了其他视频或广告。已捕获的部分可以保存。"
+  },
+  "audioOnly": {
+    "message": "仅音频"
+  },
+  "downloadAudio": {
+    "message": "下载音频"
+  },
+  "mp3Unavailable": {
+    "message": "未安装编码器"
+  },
+  "mp3TooLongShort": {
+    "message": "太长"
+  },
+  "optMp3Bitrate": {
+    "message": "MP3 质量（仅音频转换）"
+  },
+  "mp3Missing": {
+    "message": "未安装 MP3 编码器 (vendor/lame.min.js)。请改为下载 M4A/WEBM。"
+  },
+  "mp3Decode": {
+    "message": "浏览器无法解码此音频。请改为下载 M4A/WEBM。"
+  },
+  "mp3TooLong": {
+    "message": "音频太长，无法在浏览器中转换为 MP3（上限 30 分钟）。请改为下载 M4A/WEBM。"
+  },
+  "ytPageButton": {
+    "message": "方法 2：从页面"
+  },
+  "ytPageRunning": {
+    "message": "正在从 YouTube 页面请求…"
+  },
+  "ytPageDone": {
+    "message": "完成：画质列表已更新。请选择画质并下载。"
+  },
+  "ytPageNone": {
+    "message": "方法 2 未返回链接。请点击“复制 YouTube 诊断信息”并发送给我们。"
+  },
+  "optYtMethod": {
+    "message": "YouTube：链接获取方式"
+  },
+  "optYtMethodAuto": {
+    "message": "自动（从页面，后台作为备用）"
+  },
+  "optYtMethodPage": {
+    "message": "首选：从页面"
+  },
+  "optYtMethodBg": {
+    "message": "备用：从后台"
+  },
+  "iconFolder": {
+    "message": "下载文件夹"
+  },
+  "iconHelp": {
+    "message": "帮助"
+  },
+  "iconBug": {
+    "message": "自动诊断"
+  },
+  "helpTitle": {
+    "message": "帮助"
+  },
+  "ytApiLoading": {
+    "message": "正在获取画质列表…"
+  },
+  "bugNotifStart": {
+    "message": "下载测试正在进行。请不要关闭标签页，最多需要几分钟。"
+  },
+  "bugNotifDone": {
+    "message": "诊断已保存到下载："
+  },
+  "bugNotifError": {
+    "message": "无法生成诊断信息，请重试。"
+  },
+  "bugRunningTitle": {
+    "message": "下载测试正在进行…"
+  },
+  "bugRunningText": {
+    "message": "请不要关闭此标签页或切换视频。最多需要几分钟，之后诊断文件会自动保存。"
+  },
+  "bugDoneTitle": {
+    "message": "诊断已就绪"
+  },
+  "bugDoneText": {
+    "message": "文件已保存到您的下载文件夹："
+  },
+  "bugPrivacy": {
+    "message": "文件不包含视频链接、Cookie 或访客标识——只有格式和响应的技术信息。"
+  },
+  "bugSendIntro": {
+    "message": "请把文件发给开发者，并附上下面的文本（填写两个空行）："
+  },
+  "bugCopy": {
+    "message": "复制文本"
+  },
+  "bugCopied": {
+    "message": "已复制"
+  },
+  "bugCopyFail": {
+    "message": "复制失败"
+  },
+  "bugGithub": {
+    "message": "打开 GitHub issue"
+  },
+  "bugEmail": {
+    "message": "发送电子邮件"
+  },
+  "bugAttachHint": {
+    "message": "请手动将诊断文件附加到 issue 或邮件中（拖入窗口）。"
+  },
+  "bugTplVersion": {
+    "message": "扩展版本"
+  },
+  "bugTplSystem": {
+    "message": "系统"
+  },
+  "bugTplDid": {
+    "message": "我做了什么（画质、MP3、录制）"
+  },
+  "bugTplHappened": {
+    "message": "发生了什么"
+  },
+  "bugTplFile": {
+    "message": "诊断文件"
+  },
+  "popupTitle": {
+    "message": "VDL – Video Downloader Legal"
+  },
+  "videoType": {
+    "message": "视频类型"
+  },
+  "optDefaultQuality": {
+    "message": "默认画质（视频）"
+  },
+  "qualityBest": {
+    "message": "最高"
+  },
+  "downloadAudioShort": {
+    "message": "音频"
+  },
+  "optDefaultsTitle": {
+    "message": "默认设置"
+  },
+  "optDefaultType": {
+    "message": "默认视频类型"
+  },
+  "typeAuto": {
+    "message": "自动（按分辨率）"
+  },
+  "optDefaultAudioFormat": {
+    "message": "默认音频格式"
+  },
+  "optDefaultAudioQuality": {
+    "message": "默认音频质量（MP3：“最高”= 256 kbps）"
+  },
+  "optDiagFullUrls": {
+    "message": "诊断：包含完整链接（默认仅主机和路径，不含参数）"
+  },
+  "moreFiles": {
+    "message": "更多"
+  },
+  "bugTplSite": {
+    "message": "网站"
+  },
+  "mergeFailedTwoFiles": {
+    "message": "无法将视频和音频合并为一个文件：已保存两个文件（视频和 .audio）。"
+  },
+  "openFolder": {
+    "message": "打开文件夹"
+  },
+  "dismiss": {
+    "message": "关闭"
+  },
+  "bugJsonTitle": {
+    "message": "诊断文件内容"
+  },
+  "bugCopyJson": {
+    "message": "复制文件内容"
+  },
+  "liveRecord": {
+    "message": "录制"
+  },
+  "liveStop": {
+    "message": "停止"
+  },
+  "liveRecording": {
+    "message": "录制中"
+  },
+  "liveNote": {
+    "message": "直播：现在开始录制，直到您点击停止或直播结束。"
+  },
+  "optLiveMax": {
+    "message": "直播录制上限（分钟）"
+  },
+  "perMinute": {
+    "message": "分钟"
+  },
+  "busyHint": {
+    "message": "可能原因：您的账号或网络下载活动过于频繁。请等待一段时间（几分钟到一小时），或清除此网站的 Cookie 后重新加载页面。"
+  },
+  "ytLiveNote": {
+    "message": "直播（测试版）：通过播放器实时录制。"
+  },
+  "ytLiveRecord": {
+    "message": "录制直播（测试版）"
+  },
+  "ytLiveHint": {
+    "message": "无需刷新页面，立即开始录制。在点击“停止”之前，请保持此标签页打开且播放器持续播放。"
+  },
+  "ytLiveFinishing": {
+    "message": "正在收尾：等待音频与视频对齐（最多 25 秒）…"
+  },
+  "optYtTitle": {
+    "message": "YouTube 设置"
+  },
+  "hintToggle": {
+    "message": "这是做什么的"
+  },
+  "hintYtSequential": {
+    "message": "YouTube 会限速或中断并行请求。文件按播放器的方式，以几 MB 为单位依次下载。速度较慢但更可靠。仅在测试时关闭。"
+  },
+  "hintYtCpn": {
+    "message": "cpn 是播放器自己在请求中携带的播放会话 ID。缺少它时，部分链接会返回 403 错误。扩展会把它加到下载链接中。"
+  },
+  "hintYtHeaders": {
+    "message": "下载请求会附带 Origin、Referer 和 DNT 头，与来自 YouTube 页面的普通请求一致。当服务器拒绝缺少这些头的请求时有帮助。不会发送账号数据。"
+  },
+  "hintYtApi": {
+    "message": "扩展以移动应用的方式（下方列出的客户端）向 YouTube 请求视频数据，通常能得到所有格式的直链。关闭后只使用页面上已有的数据，往往不够用。"
+  },
+  "helpLead": {
+    "message": "一款在当前页面中查找视频和音频并保存到电脑的扩展。完全在本地运行：无外部服务器、无遥测、无需安装第三方程序。"
+  },
+  "helpLabelCode": {
+    "message": "源代码"
+  },
+  "helpS1": {
+    "message": "使用方法"
+  },
+  "helpS1a": {
+    "message": "打开含视频的页面并开始播放（部分网站在播放后才会出现视频流）。"
+  },
+  "helpS1b": {
+    "message": "点击工具栏上的 VDL 图标，列表中会显示找到的视频。"
+  },
+  "helpS1c": {
+    "message": "选择类型和画质后点击“下载”。音频在单独一行：MP3、M4A 或 WEBM。"
+  },
+  "helpS1d": {
+    "message": "完成的文件可在“历史记录”（时钟图标）和下载文件夹（文件夹图标）中查看。"
+  },
+  "helpS1q": {
+    "message": "快捷方式：快捷键 Alt+↓ 和右键菜单项。"
+  },
+  "helpS2": {
+    "message": "已实现的功能"
+  },
+  "helpF1": {
+    "message": "**直接文件**（mp4、webm、mp3 等）。"
+  },
+  "helpF2": {
+    "message": "**HLS (m3u8) 和 DASH (mpd)：** 可选画质、独立音轨、AES-128 加密，视频与音频无需重新编码即可合并为一个文件。"
+  },
+  "helpF3": {
+    "message": "**YouTube：** 可选类型（MP4、WEBM、AV1）和分辨率，可下载音频（MP3、M4A、WEBM），视频与音频合并为一个文件。无法获取直链时，可改用播放器录制。"
+  },
+  "helpF4": {
+    "message": "**YouTube 直播（测试版）：** 无需刷新页面，通过播放器实时录制。点击“停止”结束录制，并将视频与音频合并为 .mkv 文件。不支持单独下载音频。"
+  },
+  "helpF5": {
+    "message": "**其他网站：** Vimeo、Dailymotion、Instagram、Facebook、X (Twitter)、Twitch、TikTok、Bilibili、Canva、OK.ru、VK；其余网站通过通用的流检测。部分网站的效果取决于页面提供的信息。"
+  },
+  "helpF6": {
+    "message": "**其他网站的直播（HLS）：** 点击“录制”按钮开始，可手动停止或在达到时间上限时停止。"
+  },
+  "helpS3": {
+    "message": "设置"
+  },
+  "helpP1": {
+    "message": "**默认偏好：** 视频画质和类型、音频格式和音质。"
+  },
+  "helpP2": {
+    "message": "**常规：** 通知、历史记录、“另存为”、文件名模板（{title} {site} {quality} {date} {time}）、最小文件大小、分片并行下载数、直播录制上限。"
+  },
+  "helpP3": {
+    "message": "**YouTube 设置：**逐块下载、添加 cpn、Origin/Referer/DNT 请求头、与移动应用相同的链接获取、链接方法、客户端顺序与覆盖、“仅限 Creative Commons”（默认开启）以及 Beta 功能“从播放器录制”。点击选项旁的“?”查看说明。"
+  },
+  "helpS4": {
+    "message": "遇到问题时"
+  },
+  "helpT1": {
+    "message": "允许扩展访问所有网站：`about:addons` → VDL →“权限”。"
+  },
+  "helpT2": {
+    "message": "如果没有链接，请使用播放器录制。"
+  },
+  "helpT3": {
+    "message": "点击 🐞：扩展会生成诊断文件和现成的反馈文本。文件中不含视频链接、Cookie 和访客标识。请将文件附在邮件或 GitHub Issue 中。"
+  },
+  "helpS5": {
+    "message": "限制"
+  },
+  "helpL1": {
+    "message": "受 DRM 保护的流（Widevine、FairPlay 等）不会被下载，也不会绕过 DRM。"
+  },
+  "helpL2": {
+    "message": "YouTube：不支持加密格式和 SABR 流，也不会伪造令牌和签名。"
+  },
+  "helpL3": {
+    "message": "请仅下载你有权保存的内容。遵守各网站的规则是你自己的责任。"
+  },
+  "helpL4": {
+    "message": "不支持：格式转换、批量下载、播放列表、字幕。"
+  },
+  "helpS6": {
+    "message": "隐私"
+  },
+  "helpV1": {
+    "message": "扩展不会向开发者发送任何内容。数据（历史记录、设置）保存在你的浏览器中。诊断信息仅在你点击时生成，且只能由你自己发送。"
+  },
+  "helpS7": {
+    "message": "链接与联系方式"
+  },
+  "helpLabelIssues": {
+    "message": "源代码与问题反馈"
+  },
+  "helpLabelMail": {
+    "message": "邮箱"
+  },
+  "helpLabelAuthor": {
+    "message": "作者"
+  },
+  "helpLabelLicense": {
+    "message": "许可证"
+  },
+  "helpLabelLink": {
+    "message": "链接"
+  },
+  "helpS8": {
+    "message": "所用组件"
+  },
+  "helpC1": {
+    "message": "**第三方库。** 音频转 MP3 使用 **lamejs** 1.2.1（LAME 编码器的 JavaScript 移植版）。"
+  },
+  "helpC2": {
+    "message": "`vendor/lame.min.js` 未经修改，可替换为提供 `lamejs.Mp3Encoder` 的其他构建。SHA-256：`15d285e2587b3bdbfd18a68de6ce07cc074f7480a82c3815da2dc1c348ec6df4`。"
+  },
+  "helpC3": {
+    "message": "该库在浏览器中本地运行，不发起任何网络请求。没有它时 MP3 不可用，其他格式仍可使用。"
+  },
+  "helpC4": {
+    "message": "视频处理（解析流，以及无需重新编码的音视频合并）使用 VDL 自己的混流器 `lib/mux.js`。"
+  },
+  "helpC5": {
+    "message": "本项目包含由 AI 生成的代码或其部分内容。文本、注释和本地化内容均由 AI 生成。"
+  },
+  "optTsToMp4": {
+    "message": "下载或录制后将 TS 转换为 MP4"
+  },
+  "hintTsToMp4": {
+    "message": "TS 格式的流会无需重新编码直接保存为普通 MP4（H.264 + AAC），可在任何播放器中播放。如果流使用其他编解码器，或大小超过约 700 MB，则按原样保存 TS 文件。"
+  },
+  "consentTitle": {
+    "message": "使用条款"
+  },
+  "consentIntro": {
+    "message": "VDL 只是一个工具，按“现状”（AS IS）提供，不附带任何保证。"
+  },
+  "consentRights": {
+    "message": "您承诺仅下载您依法有权下载的内容。"
+  },
+  "consentLiability": {
+    "message": "因使用 VDL 产生的全部责任和一切法律费用均由您自行承担。扩展作者不承担任何责任。"
+  },
+  "consentAccept": {
+    "message": "我接受"
+  },
+  "consentDecline": {
+    "message": "我拒绝"
+  },
+  "consentNeeded": {
+    "message": "请先在 VDL 窗口中接受使用条款，然后重试。"
+  },
+  "consentSettingsTitle": {
+    "message": "使用条款"
+  },
+  "consentAcceptedOn": {
+    "message": "接受时间：{date}。"
+  },
+  "consentMissing": {
+    "message": "未接受：下载已禁用。"
+  },
+  "consentRevoke": {
+    "message": "撤回同意"
+  },
+  "consentLocalOnly": {
+    "message": "此同意不会被传输，仅保存在本地。"
+  },
+  "optGeneralTitle": {
+    "message": "常规"
+  },
+  "optDownloadTitle": {
+    "message": "下载与录制"
+  },
+  "optDiagTitle": {
+    "message": "诊断"
+  },
+  "optYtRecordTitle": {
+    "message": "从播放器录制（Beta）"
+  },
+  "optYtRecordUi": {
+    "message": "显示“从播放器录制”选项"
+  },
+  "ytRecordDisabledHint": {
+    "message": "无法获取下载链接。您可以在设置中开启“从播放器录制”。"
+  },
+  "optLanguage": {
+    "message": "界面语言"
+  },
+  "langAuto": {
+    "message": "自动（浏览器语言）"
+  },
+  "optResetTitle": {
+    "message": "恢复默认设置"
+  },
+  "optResetText": {
+    "message": "将所有选项恢复为默认值。下载历史和已接受的条款不受影响。"
+  },
+  "optResetButton": {
+    "message": "恢复默认"
+  },
+  "optResetConfirm": {
+    "message": "恢复默认设置？"
+  },
+  "optResetYes": {
+    "message": "恢复"
+  },
+  "optResetDone": {
+    "message": "已恢复默认设置。"
+  },
+  "hintTemplate": {
+    "message": "已保存文件的命名方式。变量：{title} {site} {quality} {date} {time}。示例：{title} ({quality}) 会生成 我的视频 (720p).mp4。扩展名会自动添加。模板必须包含 {title}；留空会恢复为 {title} {site} {date}。"
+  },
+  "hintMinSize": {
+    "message": "小于此大小的直接文件不会列出（微小图片、像素、跟踪文件）。不影响 HLS、DASH 和 YouTube。输入 0 则显示全部。"
+  },
+  "hintConcurrency": {
+    "message": "同时下载 HLS 或 DASH 流的多少个分段。数值越大越快，但会增加网站和网络负担；网站报错时请调低。录制直播时也使用此值。"
+  },
+  "hintLiveMax": {
+    "message": "直播录制在此时间后自动停止并保存文件。适用于 Twitch、其他 HLS 直播以及从 YouTube 播放器录制。"
+  },
+  "hintMaxStream": {
+    "message": "单次 HLS/DASH 下载或录制的上限。数据在保存前保存在内存中，因此该上限用于保护浏览器：达到此大小时下载或录制会停止。内存充足时才建议调高。"
+  },
+  "hintYtRecordUi": {
+    "message": "为普通 YouTube 视频显示“从播放器录制”按钮，在无法获得直接链接时作为最后手段。不影响直播和正在进行的录制。默认关闭。"
+  },
+  "hintYtRecordSpeed": {
+    "message": "从播放器录制普通视频时的播放速度。录制时长为视频时长除以此速度；配置较低的电脑上速度过高可能丢帧。直播始终以 1 倍速录制。"
+  },
+  "hintDefaultAudioFormat": {
+    "message": "仅保存音频时预先选中的格式：MP3 通用（在浏览器中转换）；M4A (AAC) 和 WEBM (Opus) 保留原始音质，无需转换。"
+  },
+  "hintNotifications": {
+    "message": "下载或录制完成或失败时显示系统通知。"
+  },
+  "hintHistory": {
+    "message": "在本机保存已完成下载的列表（标题、网站、日期），显示在“历史”页面。关闭后不再添加新记录。"
+  },
+  "hintSaveAs": {
+    "message": "每次下载都会打开浏览器的“另存为”对话框，由你选择文件夹和名称。关闭时文件直接进入下载文件夹。"
+  },
+  "hintYtMethod": {
+    "message": "从哪里发起 YouTube 链接请求。“自动”先尝试页面，后台作为备用。仅在排查问题原因时更改。"
+  },
+  "hintYtCcOnly": {
+    "message": "默认开启。仅允许下载 YouTube 标注为 Creative Commons 许可的视频；其他视频会显示提示。只有当你是视频所有者或有权下载时才关闭。"
+  },
+  "hintDiagFullUrls": {
+    "message": "诊断文件中的链接会缩短为主机和路径。仅在开发者要求时开启：完整链接可能包含地址中的标识信息。文件绝不会自动发送。"
+  },
+  "ccNoticeTitle": {
+    "message": "不允许下载"
+  },
+  "ccNoticeText": {
+    "message": "你正在尝试下载没有 Creative Commons 许可的视频。默认情况下 VDL 仅允许 Creative Commons 视频。如果你是该视频的所有者，或有权下载它，请关闭此限制。关闭即表示你确认有权下载你所保存的视频。此消息只显示一次。"
+  },
+  "ccNoticeOff": {
+    "message": "关闭限制"
+  },
+  "ccNoticeKeep": {
+    "message": "保持限制"
+  },
+  "consentCc": {
+    "message": "如果你关闭 YouTube 的“仅限 Creative Commons”限制，即表示你确认有权下载你所保存的视频。"
+  },
+  "ccNoticeLink": {
+    "message": "关于 Creative Commons 许可"
+  },
+  "ccOffByUser": {
+    "message": "用户已关闭限制："
+  },
+  "legalNotice1": {
+    "message": "请仅将本扩展用于你有权保存的内容。"
+  },
+  "legalNotice2": {
+    "message": "遵守法律是你的责任。"
+  },
+  "ytRecordEnable": {
+    "message": "开启从播放器录制"
+  },
+  "ytRecErrStart": {
+    "message": "无法从视频开头开始录制。请重试。"
+  },
+  "unsavedChanges": {
+    "message": "有未保存的更改"
+  },
+  "helpLame": {
+    "message": "**LAME 致谢。** MP3 转换使用 LAME 编码器（通过 lamejs，LGPL-3.0）。感谢 LAME 项目："
+  },
+  "optDebugLog": {
+    "message": "调试日志：记录扩展的所有操作（用于排查问题）"
+  },
+  "hintDebugLog": {
+    "message": "以文本形式记录 VDL 的工作：发现的媒体流、下载、错误、YouTube 请求、录制状态。日志保存在此浏览器中（最近 1500 行，约 250 KB），不会自动发送。链接只保留主机和路径（仅在上面的选项开启时保留完整链接）；不含标题和 Cookie。点击“保存”后开始记录。不再需要时请关闭此选项并点击“清除日志”。"
+  },
+  "logView": {
+    "message": "显示日志"
+  },
+  "logHide": {
+    "message": "隐藏日志"
+  },
+  "logSave": {
+    "message": "保存为文件"
+  },
+  "logClear": {
+    "message": "清除日志"
+  },
+  "logCount": {
+    "message": "条目：{count}（约 {kb} KB）"
+  },
+  "logEmpty": {
+    "message": "日志为空。"
+  },
+  "logEntries": {
+    "message": "条目"
+  },
+  "logTitle": {
+    "message": "调试日志"
+  },
+  "logAttachHint": {
+    "message": "请将日志保存为文件，并附在 GitHub issue 或邮件中（链接中只包含最后几行）。"
+  },
+  "helpT4": {
+    "message": "问题难以重现？请在设置（诊断）中开启“调试日志”，重现问题后在那里查看、复制、保存或发送日志。自动诊断的结果也会加入其中。日志保存在浏览器中，不会自动发送。"
+  }
+}

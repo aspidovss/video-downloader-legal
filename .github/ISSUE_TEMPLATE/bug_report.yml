@@ -1,0 +1,34 @@
+name: Bug report
+description: Something does not download, records wrongly or looks broken
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Press the 🐞 button in the extension window first — it creates a diagnostics file (links masked) and a report text. Attach the file below. Do not post cookies, tokens or links to private content.
+  - type: input
+    id: version
+    attributes:
+      label: Extension version
+      placeholder: "1.5.2"
+    validations:
+      required: true
+  - type: input
+    id: site
+    attributes:
+      label: Site / page type
+      placeholder: "twitch.tv live, youtube.com watch, tiktok.com feed …"
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What did you do and what happened?
+      description: Quality / type chosen, MP3 or record, what you expected.
+    validations:
+      required: true
+  - type: textarea
+    id: diag
+    attributes:
+      label: Diagnostics
+      description: Drag the diagnostics .json file here, or paste the report text from the 🐞 panel.

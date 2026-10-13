@@ -1,0 +1,758 @@
+{
+  "appName": {
+    "message": "Video Downloader Legal"
+  },
+  "appDesc": {
+    "message": "Webページ上の動画を検出して保存します。直接ファイル、HLS、DASH 対応。トラッキングなし、DRM の回避はしません。"
+  },
+  "history": {
+    "message": "履歴"
+  },
+  "settings": {
+    "message": "設定"
+  },
+  "noMediaTitle": {
+    "message": "動画が見つかりません"
+  },
+  "noMediaText": {
+    "message": "ページで動画を再生してください。読み込み中にストリームが検出されます。"
+  },
+  "reload": {
+    "message": "ページを再読み込み"
+  },
+  "download": {
+    "message": "ダウンロード"
+  },
+  "quality": {
+    "message": "画質"
+  },
+  "twoFiles": {
+    "message": "2 ファイル：映像 + 音声"
+  },
+  "drm": {
+    "message": "DRM で保護されています – 非対応"
+  },
+  "liveStream": {
+    "message": "ライブ配信 – 非対応"
+  },
+  "parseError": {
+    "message": "ストリームのマニフェストを読み取れませんでした"
+  },
+  "parsing": {
+    "message": "マニフェストを読み込み中…"
+  },
+  "done": {
+    "message": "完了"
+  },
+  "canceled": {
+    "message": "キャンセルしました"
+  },
+  "failed": {
+    "message": "失敗"
+  },
+  "cancel": {
+    "message": "キャンセル"
+  },
+  "clearHistory": {
+    "message": "履歴を消去"
+  },
+  "historyEmpty": {
+    "message": "ダウンロードはまだありません。"
+  },
+  "remove": {
+    "message": "削除"
+  },
+  "settingsTitle": {
+    "message": "Video Downloader Legal – 設定"
+  },
+  "optNotifications": {
+    "message": "通知を表示する"
+  },
+  "optHistory": {
+    "message": "ダウンロード履歴を保存する"
+  },
+  "optSaveAs": {
+    "message": "ファイルごとに保存先を確認する"
+  },
+  "optTemplate": {
+    "message": "ファイル名テンプレート"
+  },
+  "optMinSize": {
+    "message": "次のサイズ未満のファイルを無視 (KB)"
+  },
+  "optConcurrency": {
+    "message": "セグメントの並列ダウンロード数 (1-12)"
+  },
+  "optMaxStream": {
+    "message": "HLS/DASH の最大サイズ (MB)"
+  },
+  "save": {
+    "message": "保存"
+  },
+  "saved": {
+    "message": "保存しました"
+  },
+  "menuDownload": {
+    "message": "Video Downloader Legal でダウンロード"
+  },
+  "cmdDefault": {
+    "message": "最初に検出した動画をダウンロード"
+  },
+  "ytNone": {
+    "message": "YouTube がダウンロードリンクを返しませんでした。「再生しながら録画」をお使いください。"
+  },
+  "ytUnavailable": {
+    "message": "YouTube がこの動画を提供しませんでした（ログイン、年齢、地域の制限）。"
+  },
+  "ytCcBlocked": {
+    "message": "ブロックされました：クリエイティブ・コモンズの動画のみ許可されています（設定を参照）。"
+  },
+  "ytDiagButton": {
+    "message": "YouTube 診断をコピー"
+  },
+  "ytDiagCopied": {
+    "message": "コピーしました。リンク、タイトル、ID は含まれません。"
+  },
+  "ytDiagManual": {
+    "message": "下のテキストを手動でコピーしてください。"
+  },
+  "optYtCcOnly": {
+    "message": "YouTube：Creative Commons の動画のみ許可"
+  },
+  "ytDirectBlocked": {
+    "message": "YouTube がこの拡張機能へのこのリンクを拒否しました (HTTP 403)。代わりに「再生しながら録画」をお使いください。"
+  },
+  "ytRecord": {
+    "message": "代替手段：再生しながら録画"
+  },
+  "ytRecordHint": {
+    "message": "ページを再読み込みし、動画をミュートで高速再生します。終わるまでこのタブを開いたままにしてください。"
+  },
+  "ytRecording": {
+    "message": "録画中"
+  },
+  "ytRecDone": {
+    "message": "録画が完了しました"
+  },
+  "ytRecSave": {
+    "message": "録画を保存"
+  },
+  "ytRecSaveAudio": {
+    "message": "音声のみ"
+  },
+  "ytRecSaved": {
+    "message": "ダウンロードに送信しました。"
+  },
+  "ytRecError": {
+    "message": "録画に失敗しました"
+  },
+  "ytRecErrDrm": {
+    "message": "動画は暗号化 (DRM) されており、録画できません。"
+  },
+  "ytRecErrTooLarge": {
+    "message": "録画が設定のサイズ上限を超えました。"
+  },
+  "optYtRecordSpeed": {
+    "message": "YouTube：録画速度 (1-4x)"
+  },
+  "optYtApi": {
+    "message": "YouTube：モバイルアプリのようにリンクを取得（主な方法）"
+  },
+  "optYtClients": {
+    "message": "YouTube：クライアントの順序"
+  },
+  "optYtClientsHint": {
+    "message": "IOS, IOS_VDL, VISIONOS, ANDROID_VR。URL が完全に開ける最初のクライアントを採用し、なければ最も多く提供するものを使います。"
+  },
+  "optYtOverrides": {
+    "message": "YouTube：クライアントの上書き (JSON、任意)"
+  },
+  "optYtOverridesHint": {
+    "message": "クライアントのバージョン/User-Agent を変更するか独自に追加：{\"MYCLIENT\":{\"id\":9,\"version\":\"1.0\",\"ua\":\"…\",\"clientName\":\"X\"}}。拡張機能の更新は不要です。"
+  },
+  "ytLimited": {
+    "message": "YouTube はこのクライアントにこのファイルの先頭部分しか提供しません。小さい形式か「再生しながら録画」を選んでください。"
+  },
+  "ytLimitedNote": {
+    "message": "YouTube はファイルを約 {mb} MB までしか提供しません（トークンなし）。大きい形式には印が付きます。その場合は録画をお使いください。"
+  },
+  "ytTestButton": {
+    "message": "ダウンロードテスト"
+  },
+  "ytTestRunning": {
+    "message": "テスト中… 数分かかることがあります。このタブを開いたままにしてください。"
+  },
+  "ytTestDone": {
+    "message": "完了しました。「YouTube 診断をコピー」を押してください。"
+  },
+  "ytTestNone": {
+    "message": "テストできる YouTube リンクがまだありません。"
+  },
+  "optYtSequential": {
+    "message": "YouTube：1 つずつダウンロード"
+  },
+  "optYtCpn": {
+    "message": "YouTube：ダウンロードリンクに cpn を追加"
+  },
+  "optYtHeaders": {
+    "message": "YouTube：ダウンロード時に Origin/Referer/DNT を送信"
+  },
+  "ytRecInterrupted": {
+    "message": "録画が途中で停止しました：プレーヤーが別の動画または広告に切り替わりました。ここまでに取得した分は保存できます。"
+  },
+  "audioOnly": {
+    "message": "音声のみ"
+  },
+  "downloadAudio": {
+    "message": "音声をダウンロード"
+  },
+  "mp3Unavailable": {
+    "message": "エンコーダー未インストール"
+  },
+  "mp3TooLongShort": {
+    "message": "長すぎます"
+  },
+  "optMp3Bitrate": {
+    "message": "MP3 品質（音声のみ変換）"
+  },
+  "mp3Missing": {
+    "message": "MP3 エンコーダー (vendor/lame.min.js) がインストールされていません。代わりに M4A/WEBM をダウンロードしてください。"
+  },
+  "mp3Decode": {
+    "message": "ブラウザーがこの音声をデコードできませんでした。代わりに M4A/WEBM をダウンロードしてください。"
+  },
+  "mp3TooLong": {
+    "message": "音声が長すぎてブラウザー内で MP3 に変換できません（上限 30 分）。代わりに M4A/WEBM をダウンロードしてください。"
+  },
+  "ytPageButton": {
+    "message": "方法 2：ページから"
+  },
+  "ytPageRunning": {
+    "message": "YouTube ページからリクエスト中…"
+  },
+  "ytPageDone": {
+    "message": "完了：画質リストを更新しました。画質を選んでダウンロードしてください。"
+  },
+  "ytPageNone": {
+    "message": "方法 2 ではリンクが得られませんでした。「YouTube 診断をコピー」を押して送ってください。"
+  },
+  "optYtMethod": {
+    "message": "YouTube：リンク取得方法"
+  },
+  "optYtMethodAuto": {
+    "message": "自動（ページから、予備としてバックグラウンド）"
+  },
+  "optYtMethodPage": {
+    "message": "優先：ページから"
+  },
+  "optYtMethodBg": {
+    "message": "予備：バックグラウンドから"
+  },
+  "iconFolder": {
+    "message": "ダウンロードフォルダー"
+  },
+  "iconHelp": {
+    "message": "ヘルプ"
+  },
+  "iconBug": {
+    "message": "自動診断"
+  },
+  "helpTitle": {
+    "message": "ヘルプ"
+  },
+  "ytApiLoading": {
+    "message": "画質リストを取得中…"
+  },
+  "bugNotifStart": {
+    "message": "ダウンロードテストを実行中です。タブを閉じないでください。数分かかることがあります。"
+  },
+  "bugNotifDone": {
+    "message": "診断をダウンロードに保存しました："
+  },
+  "bugNotifError": {
+    "message": "診断を準備できませんでした。もう一度お試しください。"
+  },
+  "bugRunningTitle": {
+    "message": "ダウンロードテストを実行中…"
+  },
+  "bugRunningText": {
+    "message": "このタブを閉じたり、動画を切り替えたりしないでください。数分かかり、その後診断ファイルが自動で保存されます。"
+  },
+  "bugDoneTitle": {
+    "message": "診断の準備ができました"
+  },
+  "bugDoneText": {
+    "message": "ファイルをダウンロードフォルダーに保存しました："
+  },
+  "bugPrivacy": {
+    "message": "ファイルには動画リンク、Cookie、訪問者 ID は含まれません。形式と応答に関する技術情報のみです。"
+  },
+  "bugSendIntro": {
+    "message": "ファイルを開発者に送り、次のテキストを添えてください（空の 2 行を埋めてください）："
+  },
+  "bugCopy": {
+    "message": "テキストをコピー"
+  },
+  "bugCopied": {
+    "message": "コピーしました"
+  },
+  "bugCopyFail": {
+    "message": "コピーに失敗しました"
+  },
+  "bugGithub": {
+    "message": "GitHub の issue を開く"
+  },
+  "bugEmail": {
+    "message": "メールを送る"
+  },
+  "bugAttachHint": {
+    "message": "診断ファイルを issue またはメールに手動で添付してください（ウィンドウにドラッグ）。"
+  },
+  "bugTplVersion": {
+    "message": "拡張機能のバージョン"
+  },
+  "bugTplSystem": {
+    "message": "システム"
+  },
+  "bugTplDid": {
+    "message": "行ったこと（画質、MP3、録画）"
+  },
+  "bugTplHappened": {
+    "message": "起きたこと"
+  },
+  "bugTplFile": {
+    "message": "診断ファイル"
+  },
+  "popupTitle": {
+    "message": "VDL – Video Downloader Legal"
+  },
+  "videoType": {
+    "message": "動画の種類"
+  },
+  "optDefaultQuality": {
+    "message": "既定の画質（動画）"
+  },
+  "qualityBest": {
+    "message": "最高"
+  },
+  "downloadAudioShort": {
+    "message": "音声"
+  },
+  "optDefaultsTitle": {
+    "message": "既定値"
+  },
+  "optDefaultType": {
+    "message": "既定の動画の種類"
+  },
+  "typeAuto": {
+    "message": "自動（解像度順）"
+  },
+  "optDefaultAudioFormat": {
+    "message": "既定の音声形式"
+  },
+  "optDefaultAudioQuality": {
+    "message": "既定の音声品質（MP3：「最高」= 256 kbps）"
+  },
+  "optDiagFullUrls": {
+    "message": "診断：完全なリンクを含める（既定ではホストとパスのみ、パラメーターなし）"
+  },
+  "moreFiles": {
+    "message": "その他"
+  },
+  "bugTplSite": {
+    "message": "サイト"
+  },
+  "mergeFailedTwoFiles": {
+    "message": "映像と音声を 1 つのファイルに結合できませんでした。2 つのファイル（映像と .audio）を保存しました。"
+  },
+  "openFolder": {
+    "message": "フォルダーを開く"
+  },
+  "dismiss": {
+    "message": "閉じる"
+  },
+  "bugJsonTitle": {
+    "message": "診断ファイルの内容"
+  },
+  "bugCopyJson": {
+    "message": "ファイルの内容をコピー"
+  },
+  "liveRecord": {
+    "message": "録画"
+  },
+  "liveStop": {
+    "message": "停止"
+  },
+  "liveRecording": {
+    "message": "録画中"
+  },
+  "liveNote": {
+    "message": "ライブ配信：今から録画を開始し、停止を押すか配信が終わるまで続けます。"
+  },
+  "optLiveMax": {
+    "message": "ライブ録画の上限（分）"
+  },
+  "perMinute": {
+    "message": "分"
+  },
+  "busyHint": {
+    "message": "考えられる原因：お使いのアカウントまたはネットワークからのダウンロードが多すぎます。しばらく（数分〜1時間）待つか、このサイトのCookieを削除してからページを再読み込みしてください。"
+  },
+  "ytLiveNote": {
+    "message": "ライブ配信（ベータ）：プレーヤーからリアルタイムで録画します。"
+  },
+  "ytLiveRecord": {
+    "message": "ライブを録画（ベータ）"
+  },
+  "ytLiveHint": {
+    "message": "ページを再読み込みせず、すぐに録画を開始します。「停止」を押すまで、タブを開いたままプレーヤーを動かし続けてください。"
+  },
+  "ytLiveFinishing": {
+    "message": "終了処理中：音声と映像がそろうまで待っています（最大25秒）…"
+  },
+  "optYtTitle": {
+    "message": "YouTube の設定"
+  },
+  "hintToggle": {
+    "message": "これは何のため？"
+  },
+  "hintYtSequential": {
+    "message": "YouTube は並列リクエストを制限したり切断したりします。プレーヤーと同じく、数 MB ずつ順番にダウンロードします。遅くなりますが確実です。テスト以外ではオフにしないでください。"
+  },
+  "hintYtCpn": {
+    "message": "cpn はプレーヤー自身がリクエストに付ける再生セッション ID です。これがないと一部のリンクが 403 エラーを返します。拡張機能がダウンロード用リンクに付加します。"
+  },
+  "hintYtHeaders": {
+    "message": "YouTube のページからの通常のリクエストと同じく、ダウンロード要求に Origin・Referer・DNT ヘッダーを付けます。これらがないとサーバーが拒否する場合に有効です。アカウント情報は送信されません。"
+  },
+  "hintYtApi": {
+    "message": "拡張機能はモバイルアプリと同じ方法（下に挙げたクライアント）で動画データを YouTube に問い合わせます。通常、すべての形式への直接リンクが得られます。オフにするとページ上のデータだけを使いますが、足りないことが多いです。"
+  },
+  "helpLead": {
+    "message": "開いているページの動画と音声を見つけてパソコンに保存する拡張機能です。ローカルで動作し、外部サーバー、テレメトリ、追加ソフトは不要です。"
+  },
+  "helpLabelCode": {
+    "message": "ソースコード"
+  },
+  "helpS1": {
+    "message": "使い方"
+  },
+  "helpS1a": {
+    "message": "動画のあるページを開いて再生を始めます（サイトによっては再生開始後に初めてストリームが見つかります）。"
+  },
+  "helpS1b": {
+    "message": "ツールバーの VDL アイコンをクリックすると、見つかった動画が一覧表示されます。"
+  },
+  "helpS1c": {
+    "message": "種類と画質を選んで「ダウンロード」を押します。音声のみは別の行から選べます（MP3、M4A、WEBM）。"
+  },
+  "helpS1d": {
+    "message": "完了したファイルは「履歴」（時計アイコン）とダウンロードフォルダー（フォルダーアイコン）で確認できます。"
+  },
+  "helpS1q": {
+    "message": "ショートカット：Alt+↓ キーと右クリックメニューの項目。"
+  },
+  "helpS2": {
+    "message": "機能"
+  },
+  "helpF1": {
+    "message": "**直接ファイル**（mp4、webm、mp3 など）。"
+  },
+  "helpF2": {
+    "message": "**HLS (m3u8) と DASH (mpd)：** 画質の選択、別の音声トラック、AES-128 暗号化、再エンコードなしで映像と音声を 1 ファイルに結合。"
+  },
+  "helpF3": {
+    "message": "**YouTube：** 種類（MP4、WEBM、AV1）と解像度の選択、音声のダウンロード（MP3、M4A、WEBM）、映像と音声を 1 ファイルに結合。直接リンクが使えない場合は、プレーヤーからの録画という代替手段があります。"
+  },
+  "helpF4": {
+    "message": "**YouTube ライブ配信（ベータ）：** ページを再読み込みせず、プレーヤーからリアルタイムで録画します。「停止」で録画を終了し、映像と音声を .mkv に結合します。音声だけのダウンロードはできません。"
+  },
+  "helpF5": {
+    "message": "**その他のサイト：** Vimeo、Dailymotion、Instagram、Facebook、X (Twitter)、Twitch、TikTok、Bilibili、Canva、OK.ru、VK。その他は汎用のストリーム検出で対応します。サイトによっては、ページが提供する情報の範囲に限られます。"
+  },
+  "helpF6": {
+    "message": "**他サイトのライブ配信（HLS）：** 「録画」ボタンで録画し、手動または時間制限で停止します。"
+  },
+  "helpS3": {
+    "message": "設定"
+  },
+  "helpP1": {
+    "message": "**既定の設定：** 動画の画質と種類、音声の形式と音質。"
+  },
+  "helpP2": {
+    "message": "**全般：** 通知、履歴、「名前を付けて保存」、ファイル名テンプレート（{title} {site} {quality} {date} {time}）、最小ファイルサイズ、セグメントの並列ダウンロード数、ライブ録画の上限。"
+  },
+  "helpP3": {
+    "message": "**YouTube の設定：**1 つずつダウンロード、cpn の追加、Origin/Referer/DNT ヘッダー、モバイルアプリ方式のリンク取得、リンク取得方法、クライアントの順序と上書き、「クリエイティブ・コモンズのみ」（初期設定でオン）、Beta 機能「プレーヤーからの録画」。各項目の「?」をクリックすると説明が表示されます。"
+  },
+  "helpS4": {
+    "message": "うまく動かないとき"
+  },
+  "helpT1": {
+    "message": "すべてのサイトへのアクセスを拡張機能に許可してください：`about:addons` → VDL →「権限」。"
+  },
+  "helpT2": {
+    "message": "リンクが見つからない場合は、プレーヤーからの録画を使ってください。"
+  },
+  "helpT3": {
+    "message": "🐞 を押すと、診断ファイルと報告用の文面が作成されます。ファイルに動画のリンク、Cookie、訪問者の識別子は含まれません。メールまたは GitHub の Issue に添付してください。"
+  },
+  "helpS5": {
+    "message": "制限事項"
+  },
+  "helpL1": {
+    "message": "DRM で保護されたストリーム（Widevine、FairPlay など）はダウンロードできず、DRM の回避も行いません。"
+  },
+  "helpL2": {
+    "message": "YouTube：暗号化された形式と SABR ストリームには対応していません。トークンや署名の偽造は行いません。"
+  },
+  "helpL3": {
+    "message": "保存が許可されているものだけをダウンロードしてください。各サイトの規約を守る責任は利用者にあります。"
+  },
+  "helpL4": {
+    "message": "非対応：形式変換、一括ダウンロード、プレイリスト、字幕。"
+  },
+  "helpS6": {
+    "message": "プライバシー"
+  },
+  "helpV1": {
+    "message": "この拡張機能が開発者へデータを送信することはありません。データ（履歴・設定）はブラウザー内に保存されます。診断情報はボタンを押したときだけ作成され、送信するのは利用者自身だけです。"
+  },
+  "helpS7": {
+    "message": "リンクと連絡先"
+  },
+  "helpLabelIssues": {
+    "message": "ソースコードと不具合報告"
+  },
+  "helpLabelMail": {
+    "message": "メール"
+  },
+  "helpLabelAuthor": {
+    "message": "作者"
+  },
+  "helpLabelLicense": {
+    "message": "ライセンス"
+  },
+  "helpLabelLink": {
+    "message": "リンク"
+  },
+  "helpS8": {
+    "message": "使用しているコンポーネント"
+  },
+  "helpC1": {
+    "message": "**サードパーティ製ライブラリ：** 音声を MP3 に変換するために、LAME エンコーダーの JavaScript 移植版である **lamejs** 1.2.1 を使用しています。"
+  },
+  "helpC2": {
+    "message": "`vendor/lame.min.js` は無改変で同梱しており、`lamejs.Mp3Encoder` を提供する別のビルドに差し替えられます。SHA-256：`15d285e2587b3bdbfd18a68de6ce07cc074f7480a82c3815da2dc1c348ec6df4`。"
+  },
+  "helpC3": {
+    "message": "このライブラリはブラウザー内でローカルに動作し、ネットワーク通信は行いません。なくても MP3 が使えないだけで、他の形式は動作します。"
+  },
+  "helpC4": {
+    "message": "動画の処理（ストリームの解析、再エンコードなしでの映像と音声の結合）には、VDL 独自のマルチプレクサ `lib/mux.js` を使用しています。"
+  },
+  "helpC5": {
+    "message": "このプロジェクトには、AI が生成したコード（またはその一部）が含まれています。文章、コメント、ローカライズも AI が生成したものです。"
+  },
+  "optTsToMp4": {
+    "message": "ダウンロードや録画の後に TS を MP4 に変換"
+  },
+  "hintTsToMp4": {
+    "message": "TS 形式のストリームは再エンコードせずに通常の MP4（H.264 + AAC）として保存されるため、どのプレーヤーでも再生できます。別のコーデックの場合や約 700 MB を超える場合は、TS ファイルのまま保存されます。"
+  },
+  "consentTitle": {
+    "message": "利用規約"
+  },
+  "consentIntro": {
+    "message": "VDL は単なるツールです。「現状有姿」（AS IS）で提供され、いかなる保証もありません。"
+  },
+  "consentRights": {
+    "message": "ご自身に権利があり、法令に従って利用できるコンテンツのみをダウンロードすることに同意します。"
+  },
+  "consentLiability": {
+    "message": "VDL の利用に関するすべての責任および法的費用は利用者が負います。拡張機能の作者は一切の責任を負いません。"
+  },
+  "consentAccept": {
+    "message": "同意する"
+  },
+  "consentDecline": {
+    "message": "同意しない"
+  },
+  "consentNeeded": {
+    "message": "先に VDL のウィンドウで利用規約に同意してから、もう一度お試しください。"
+  },
+  "consentSettingsTitle": {
+    "message": "利用規約"
+  },
+  "consentAcceptedOn": {
+    "message": "同意日：{date}"
+  },
+  "consentMissing": {
+    "message": "未同意：ダウンロードは無効です。"
+  },
+  "consentRevoke": {
+    "message": "同意を撤回"
+  },
+  "consentLocalOnly": {
+    "message": "この同意は送信されず、ローカルにのみ保存されます。"
+  },
+  "optGeneralTitle": {
+    "message": "一般"
+  },
+  "optDownloadTitle": {
+    "message": "ダウンロードと録画"
+  },
+  "optDiagTitle": {
+    "message": "診断"
+  },
+  "optYtRecordTitle": {
+    "message": "プレーヤーからの録画（Beta）"
+  },
+  "optYtRecordUi": {
+    "message": "プレーヤーから録画するオプションを表示する"
+  },
+  "ytRecordDisabledHint": {
+    "message": "ダウンロードリンクを取得できませんでした。設定でプレーヤーからの録画を有効にできます。"
+  },
+  "optLanguage": {
+    "message": "表示言語"
+  },
+  "langAuto": {
+    "message": "自動（ブラウザーの言語）"
+  },
+  "optResetTitle": {
+    "message": "設定を初期値に戻す"
+  },
+  "optResetText": {
+    "message": "すべての設定を初期値に戻します。ダウンロード履歴と同意済みの利用規約は変更されません。"
+  },
+  "optResetButton": {
+    "message": "初期値に戻す"
+  },
+  "optResetConfirm": {
+    "message": "初期値に戻しますか？"
+  },
+  "optResetYes": {
+    "message": "戻す"
+  },
+  "optResetDone": {
+    "message": "初期値に戻しました。"
+  },
+  "hintTemplate": {
+    "message": "保存ファイルの名前の付け方です。変数：{title} {site} {quality} {date} {time}。例：{title} ({quality}) は「私の動画 (720p).mp4」になります。拡張子は自動で付きます。テンプレートには {title} が必要で、空欄にすると {title} {site} {date} に戻ります。"
+  },
+  "hintMinSize": {
+    "message": "このサイズ未満の直接ファイルは一覧に表示されません（小さな画像、ピクセル、トラッキング用ファイル）。HLS、DASH、YouTube には影響しません。0 にするとすべて表示します。"
+  },
+  "hintConcurrency": {
+    "message": "HLS や DASH ストリームの何個のパーツ（セグメント）を同時にダウンロードするかです。大きいほど速くなりますが、サイトと回線への負荷が増えます。サイトがエラーを返す場合は減らしてください。ライブ録画でも使われます。"
+  },
+  "hintLiveMax": {
+    "message": "ライブ録画はこの時間が経つと自動で停止し、ファイルが保存されます。Twitch、その他の HLS ライブ、YouTube プレーヤーからの録画に適用されます。"
+  },
+  "hintMaxStream": {
+    "message": "1 回の HLS/DASH ダウンロードまたは録画の上限です。データは保存までメモリに保持されるため、この上限でブラウザーを保護します。このサイズに達するとダウンロードや録画は停止します。メモリに余裕がある場合のみ引き上げてください。"
+  },
+  "hintYtRecordUi": {
+    "message": "直接リンクが使えない場合の最後の手段として、通常の YouTube 動画に「プレーヤーから録画」ボタンを表示します。ライブ配信や進行中の録画には影響しません。初期設定ではオフです。"
+  },
+  "hintYtRecordSpeed": {
+    "message": "通常の動画をプレーヤーから録画している間の再生速度です。録画時間は動画の長さをこの速度で割った長さになります。低性能なパソコンでは速度が高いとコマ落ちすることがあります。ライブ配信は常に 1 倍速で録画されます。"
+  },
+  "hintDefaultAudioFormat": {
+    "message": "音声のみ保存するときに最初に選択される形式です。MP3 はどこでも再生できます（ブラウザー内で変換）。M4A (AAC) と WEBM (Opus) は変換せず元の音質のまま保存されます。"
+  },
+  "hintNotifications": {
+    "message": "ダウンロードや録画が完了または失敗したときにシステム通知を表示します。"
+  },
+  "hintHistory": {
+    "message": "完了したダウンロード（タイトル、サイト、日付）の一覧をこのコンピューターに保存し、履歴ページに表示します。オフにすると新しい項目は追加されません。"
+  },
+  "hintSaveAs": {
+    "message": "ダウンロードごとにブラウザーの「名前を付けて保存」ダイアログを開き、フォルダーと名前を選べます。オフの場合、ファイルは直接ダウンロードフォルダーに保存されます。"
+  },
+  "hintYtMethod": {
+    "message": "YouTube のリンク取得リクエストをどこから行うかです。自動はまずページから、予備としてバックグラウンドから試します。問題の原因を調べるときだけ変更してください。"
+  },
+  "hintYtCcOnly": {
+    "message": "初期設定ではオンです。YouTube がクリエイティブ・コモンズ ライセンスと表示している動画だけダウンロードできます。それ以外では通知が表示されます。動画の所有者である場合、またはダウンロードする権利がある場合のみオフにしてください。"
+  },
+  "hintDiagFullUrls": {
+    "message": "診断ファイルではリンクがホストとパスに短縮されます。開発者に求められた場合のみオンにしてください。完全なリンクにはアドレス内の識別子が含まれることがあります。ファイルが自動送信されることはありません。"
+  },
+  "ccNoticeTitle": {
+    "message": "ダウンロードは許可されていません"
+  },
+  "ccNoticeText": {
+    "message": "クリエイティブ・コモンズ ライセンスではない動画をダウンロードしようとしています。VDL は初期設定でクリエイティブ・コモンズの動画のみ許可します。この動画の所有者である場合、またはダウンロードする権利がある場合は、この制限をオフにしてください。オフにすることで、保存する動画をダウンロードする権利があることを確認したものとみなされます。このメッセージは一度だけ表示されます。"
+  },
+  "ccNoticeOff": {
+    "message": "制限をオフにする"
+  },
+  "ccNoticeKeep": {
+    "message": "制限を維持する"
+  },
+  "consentCc": {
+    "message": "YouTube の「クリエイティブ・コモンズのみ」の制限をオフにすると、保存する動画をダウンロードする権利があることを確認したものとみなされます。"
+  },
+  "ccNoticeLink": {
+    "message": "クリエイティブ・コモンズ ライセンスについて"
+  },
+  "ccOffByUser": {
+    "message": "ユーザーが制限をオフにしました："
+  },
+  "legalNotice1": {
+    "message": "この拡張機能は、保存することが許可されているコンテンツにのみ使用してください。"
+  },
+  "legalNotice2": {
+    "message": "法律の遵守はあなたの責任です。"
+  },
+  "ytRecordEnable": {
+    "message": "プレーヤーからの録画をオンにする"
+  },
+  "ytRecErrStart": {
+    "message": "動画を最初から録画できませんでした。もう一度お試しください。"
+  },
+  "unsavedChanges": {
+    "message": "未保存の変更があります"
+  },
+  "helpLame": {
+    "message": "**LAME への謝辞。** MP3 変換には LAME エンコーダー（lamejs 経由、LGPL-3.0）を使用しています。LAME プロジェクトに感謝します："
+  },
+  "optDebugLog": {
+    "message": "デバッグログ：拡張機能の動作をすべて記録（問題の調査用）"
+  },
+  "hintDebugLog": {
+    "message": "VDL の動作をテキストで記録します：検出したストリーム、ダウンロード、エラー、YouTube へのリクエスト、録画の状態。ログはこのブラウザー内に保存され（直近 1500 行、約 250 KB）、自動で送信されることはありません。リンクはホストとパスのみに短縮されます（上のオプションがオンの場合のみ完全なリンク）。タイトルや Cookie は含みません。「保存」を押すと記録が始まります。不要になったらオフにして「ログを消去」を押してください。"
+  },
+  "logView": {
+    "message": "ログを表示"
+  },
+  "logHide": {
+    "message": "ログを隠す"
+  },
+  "logSave": {
+    "message": "ファイルに保存"
+  },
+  "logClear": {
+    "message": "ログを消去"
+  },
+  "logCount": {
+    "message": "件数：{count}（約 {kb} KB）"
+  },
+  "logEmpty": {
+    "message": "ログは空です。"
+  },
+  "logEntries": {
+    "message": "件数"
+  },
+  "logTitle": {
+    "message": "デバッグログ"
+  },
+  "logAttachHint": {
+    "message": "ログをファイルに保存し、GitHub の issue またはメールに添付してください（リンクには最後の数行だけが入ります）。"
+  },
+  "helpT4": {
+    "message": "再現しにくい場合は、設定（診断）で「デバッグログ」をオンにして問題を再現し、同じ画面でログを表示・コピー・保存・送信してください。自動診断の結果もログに追加されます。ログはブラウザー内にのみ保存され、自動送信されません。"
+  }
+}

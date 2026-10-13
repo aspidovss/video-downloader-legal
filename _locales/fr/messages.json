@@ -1,0 +1,758 @@
+{
+  "appName": {
+    "message": "Video Downloader Legal"
+  },
+  "appDesc": {
+    "message": "Détecte les vidéos des pages web et les enregistre. Fichiers, HLS, DASH. Sans suivi, sans contournement du DRM."
+  },
+  "history": {
+    "message": "Historique"
+  },
+  "settings": {
+    "message": "Paramètres"
+  },
+  "noMediaTitle": {
+    "message": "Aucune vidéo trouvée"
+  },
+  "noMediaText": {
+    "message": "Lancez la vidéo sur la page : les flux sont détectés pendant leur chargement."
+  },
+  "reload": {
+    "message": "Recharger la page"
+  },
+  "download": {
+    "message": "Télécharger"
+  },
+  "quality": {
+    "message": "Qualité"
+  },
+  "twoFiles": {
+    "message": "2 fichiers : vidéo + audio"
+  },
+  "drm": {
+    "message": "Protégé par DRM – non pris en charge"
+  },
+  "liveStream": {
+    "message": "Flux en direct – non pris en charge"
+  },
+  "parseError": {
+    "message": "Impossible de lire le manifeste du flux"
+  },
+  "parsing": {
+    "message": "Lecture du manifeste…"
+  },
+  "done": {
+    "message": "Terminé"
+  },
+  "canceled": {
+    "message": "Annulé"
+  },
+  "failed": {
+    "message": "Échec"
+  },
+  "cancel": {
+    "message": "Annuler"
+  },
+  "clearHistory": {
+    "message": "Effacer l’historique"
+  },
+  "historyEmpty": {
+    "message": "Aucun téléchargement pour l’instant."
+  },
+  "remove": {
+    "message": "Supprimer"
+  },
+  "settingsTitle": {
+    "message": "Video Downloader Legal – Paramètres"
+  },
+  "optNotifications": {
+    "message": "Afficher les notifications"
+  },
+  "optHistory": {
+    "message": "Conserver l’historique des téléchargements"
+  },
+  "optSaveAs": {
+    "message": "Demander où enregistrer chaque fichier"
+  },
+  "optTemplate": {
+    "message": "Modèle de nom de fichier"
+  },
+  "optMinSize": {
+    "message": "Ignorer les fichiers de moins de (Ko)"
+  },
+  "optConcurrency": {
+    "message": "Téléchargements de segments en parallèle (1-12)"
+  },
+  "optMaxStream": {
+    "message": "Taille maximale HLS/DASH (Mo)"
+  },
+  "save": {
+    "message": "Enregistrer"
+  },
+  "saved": {
+    "message": "Enregistré"
+  },
+  "menuDownload": {
+    "message": "Télécharger avec Video Downloader Legal"
+  },
+  "cmdDefault": {
+    "message": "Télécharger la première vidéo détectée"
+  },
+  "ytNone": {
+    "message": "YouTube n’a fourni aucun lien de téléchargement. Utilisez « Enregistrer pendant la lecture »."
+  },
+  "ytUnavailable": {
+    "message": "YouTube n’a pas fourni cette vidéo (connexion, âge ou restriction régionale)."
+  },
+  "ytCcBlocked": {
+    "message": "Bloqué : seules les vidéos Creative Commons sont autorisées (voir les paramètres)."
+  },
+  "ytDiagButton": {
+    "message": "Copier le diagnostic YouTube"
+  },
+  "ytDiagCopied": {
+    "message": "Copié. Il ne contient ni liens, ni titres, ni identifiants."
+  },
+  "ytDiagManual": {
+    "message": "Copiez le texte ci-dessous manuellement."
+  },
+  "optYtCcOnly": {
+    "message": "YouTube : n’autoriser que les vidéos Creative Commons"
+  },
+  "ytDirectBlocked": {
+    "message": "YouTube refuse ce lien pour l’extension (HTTP 403). Utilisez plutôt « Enregistrer pendant la lecture »."
+  },
+  "ytRecord": {
+    "message": "Solution de secours : enregistrer pendant la lecture"
+  },
+  "ytRecordHint": {
+    "message": "Recharge la page et lit la vidéo en sourdine, plus vite. Gardez cet onglet ouvert jusqu’à la fin."
+  },
+  "ytRecording": {
+    "message": "Enregistrement"
+  },
+  "ytRecDone": {
+    "message": "Enregistrement terminé"
+  },
+  "ytRecSave": {
+    "message": "Enregistrer"
+  },
+  "ytRecSaveAudio": {
+    "message": "Audio uniquement"
+  },
+  "ytRecSaved": {
+    "message": "Envoyé aux téléchargements."
+  },
+  "ytRecError": {
+    "message": "Échec de l’enregistrement"
+  },
+  "ytRecErrDrm": {
+    "message": "La vidéo est chiffrée (DRM) et ne peut pas être enregistrée."
+  },
+  "ytRecErrTooLarge": {
+    "message": "L’enregistrement a dépassé la limite de taille des paramètres."
+  },
+  "optYtRecordSpeed": {
+    "message": "YouTube : vitesse d’enregistrement (1-4x)"
+  },
+  "optYtApi": {
+    "message": "YouTube : récupérer les liens comme l’appli mobile (méthode principale)"
+  },
+  "optYtClients": {
+    "message": "YouTube : clients dans l’ordre"
+  },
+  "optYtClientsHint": {
+    "message": "IOS, IOS_VDL, VISIONOS, ANDROID_VR. Le premier client dont les URL s’ouvrent entièrement l’emporte ; sinon on prend celui qui en fournit le plus."
+  },
+  "optYtOverrides": {
+    "message": "YouTube : remplacements de clients (JSON, facultatif)"
+  },
+  "optYtOverridesHint": {
+    "message": "Changez la version/le User-Agent d’un client ou ajoutez le vôtre : {\"MYCLIENT\":{\"id\":9,\"version\":\"1.0\",\"ua\":\"…\",\"clientName\":\"X\"}}. Aucune mise à jour de l’extension nécessaire."
+  },
+  "ytLimited": {
+    "message": "YouTube ne fournit que le début de ce fichier à ce client. Choisissez une variante plus petite ou « Enregistrer pendant la lecture »."
+  },
+  "ytLimitedNote": {
+    "message": "YouTube ne fournit le fichier que jusqu’à ~{mb} Mo (sans jeton). Les variantes plus grandes sont signalées ; utilisez l’enregistrement."
+  },
+  "ytTestButton": {
+    "message": "Test de téléchargement"
+  },
+  "ytTestRunning": {
+    "message": "Test en cours… jusqu’à quelques minutes, gardez cet onglet ouvert."
+  },
+  "ytTestDone": {
+    "message": "Terminé. Appuyez maintenant sur « Copier le diagnostic YouTube »."
+  },
+  "ytTestNone": {
+    "message": "Aucun lien YouTube à tester pour l’instant."
+  },
+  "optYtSequential": {
+    "message": "YouTube : télécharger un morceau à la fois"
+  },
+  "optYtCpn": {
+    "message": "YouTube : ajouter cpn aux liens de téléchargement"
+  },
+  "optYtHeaders": {
+    "message": "YouTube : envoyer Origin/Referer/DNT avec les téléchargements"
+  },
+  "ytRecInterrupted": {
+    "message": "Enregistrement interrompu : le lecteur est passé à une autre vidéo ou à une publicité. Ce qui a été capturé peut être enregistré."
+  },
+  "audioOnly": {
+    "message": "Audio uniquement"
+  },
+  "downloadAudio": {
+    "message": "Télécharger l’audio"
+  },
+  "mp3Unavailable": {
+    "message": "encodeur non installé"
+  },
+  "mp3TooLongShort": {
+    "message": "trop long"
+  },
+  "optMp3Bitrate": {
+    "message": "Qualité MP3 (conversion audio)"
+  },
+  "mp3Missing": {
+    "message": "L’encodeur MP3 (vendor/lame.min.js) n’est pas installé. Téléchargez plutôt en M4A/WEBM."
+  },
+  "mp3Decode": {
+    "message": "Le navigateur n’a pas pu décoder cet audio. Téléchargez plutôt en M4A/WEBM."
+  },
+  "mp3TooLong": {
+    "message": "L’audio est trop long pour la conversion MP3 dans le navigateur (limite 30 min). Téléchargez plutôt en M4A/WEBM."
+  },
+  "ytPageButton": {
+    "message": "Méthode 2 : depuis la page"
+  },
+  "ytPageRunning": {
+    "message": "Requête depuis la page YouTube…"
+  },
+  "ytPageDone": {
+    "message": "Terminé : liste des qualités mise à jour. Choisissez une qualité et téléchargez."
+  },
+  "ytPageNone": {
+    "message": "La méthode 2 n’a renvoyé aucun lien. Appuyez sur « Copier le diagnostic YouTube » et envoyez-le."
+  },
+  "optYtMethod": {
+    "message": "YouTube : méthode des liens"
+  },
+  "optYtMethodAuto": {
+    "message": "Auto (depuis la page, arrière-plan en secours)"
+  },
+  "optYtMethodPage": {
+    "message": "Principale : depuis la page"
+  },
+  "optYtMethodBg": {
+    "message": "Secours : depuis l’arrière-plan"
+  },
+  "iconFolder": {
+    "message": "Dossier de téléchargements"
+  },
+  "iconHelp": {
+    "message": "Aide"
+  },
+  "iconBug": {
+    "message": "Autodiagnostic"
+  },
+  "helpTitle": {
+    "message": "Aide"
+  },
+  "ytApiLoading": {
+    "message": "Récupération de la liste des qualités…"
+  },
+  "bugNotifStart": {
+    "message": "Le test de téléchargement est en cours. Ne fermez pas l’onglet, cela prend jusqu’à quelques minutes."
+  },
+  "bugNotifDone": {
+    "message": "Diagnostic enregistré dans les téléchargements :"
+  },
+  "bugNotifError": {
+    "message": "Impossible de préparer le diagnostic. Veuillez réessayer."
+  },
+  "bugRunningTitle": {
+    "message": "Test de téléchargement en cours…"
+  },
+  "bugRunningText": {
+    "message": "Ne fermez pas cet onglet et ne changez pas de vidéo. Cela prend jusqu’à quelques minutes ; le fichier de diagnostic est ensuite enregistré automatiquement."
+  },
+  "bugDoneTitle": {
+    "message": "Diagnostic prêt"
+  },
+  "bugDoneText": {
+    "message": "Le fichier a été enregistré dans votre dossier de téléchargements :"
+  },
+  "bugPrivacy": {
+    "message": "Le fichier ne contient ni liens vidéo, ni cookies, ni identifiants de visiteur – uniquement des détails techniques sur les formats et les réponses."
+  },
+  "bugSendIntro": {
+    "message": "Envoyez le fichier au développeur avec le texte ci-dessous (remplissez les deux lignes vides) :"
+  },
+  "bugCopy": {
+    "message": "Copier le texte"
+  },
+  "bugCopied": {
+    "message": "Copié"
+  },
+  "bugCopyFail": {
+    "message": "Échec de la copie"
+  },
+  "bugGithub": {
+    "message": "Ouvrir une issue GitHub"
+  },
+  "bugEmail": {
+    "message": "Envoyer un e-mail"
+  },
+  "bugAttachHint": {
+    "message": "Joignez le fichier de diagnostic à l’issue ou à l’e-mail manuellement (glissez-le dans la fenêtre)."
+  },
+  "bugTplVersion": {
+    "message": "Version de l’extension"
+  },
+  "bugTplSystem": {
+    "message": "système"
+  },
+  "bugTplDid": {
+    "message": "Ce que j’ai fait (qualité, MP3, enregistrement)"
+  },
+  "bugTplHappened": {
+    "message": "Ce qui s’est passé"
+  },
+  "bugTplFile": {
+    "message": "Fichier de diagnostic"
+  },
+  "popupTitle": {
+    "message": "VDL – Video Downloader Legal"
+  },
+  "videoType": {
+    "message": "Type de vidéo"
+  },
+  "optDefaultQuality": {
+    "message": "Qualité par défaut (vidéo)"
+  },
+  "qualityBest": {
+    "message": "La plus haute"
+  },
+  "downloadAudioShort": {
+    "message": "Audio"
+  },
+  "optDefaultsTitle": {
+    "message": "Valeurs par défaut"
+  },
+  "optDefaultType": {
+    "message": "Type de vidéo par défaut"
+  },
+  "typeAuto": {
+    "message": "Auto (selon la résolution)"
+  },
+  "optDefaultAudioFormat": {
+    "message": "Format audio par défaut"
+  },
+  "optDefaultAudioQuality": {
+    "message": "Qualité audio par défaut (MP3 : « la plus haute » = 256 kbps)"
+  },
+  "optDiagFullUrls": {
+    "message": "Diagnostic : inclure les liens complets (par défaut hôte et chemin seulement, sans paramètres)"
+  },
+  "moreFiles": {
+    "message": "Plus"
+  },
+  "bugTplSite": {
+    "message": "Site"
+  },
+  "mergeFailedTwoFiles": {
+    "message": "Impossible de fusionner la vidéo et l’audio en un seul fichier : deux fichiers ont été enregistrés (vidéo et .audio)."
+  },
+  "openFolder": {
+    "message": "Ouvrir le dossier"
+  },
+  "dismiss": {
+    "message": "Fermer"
+  },
+  "bugJsonTitle": {
+    "message": "Contenu du fichier de diagnostic"
+  },
+  "bugCopyJson": {
+    "message": "Copier le contenu du fichier"
+  },
+  "liveRecord": {
+    "message": "Enregistrer"
+  },
+  "liveStop": {
+    "message": "Arrêter"
+  },
+  "liveRecording": {
+    "message": "Enregistrement"
+  },
+  "liveNote": {
+    "message": "Flux en direct : l’enregistrement démarre maintenant et dure jusqu’à l’arrêt ou la fin du flux."
+  },
+  "optLiveMax": {
+    "message": "Limite d’enregistrement en direct (minutes)"
+  },
+  "perMinute": {
+    "message": "min"
+  },
+  "busyHint": {
+    "message": "Cause possible : trop d’activité de téléchargement depuis votre compte ou votre réseau. Patientez (de quelques minutes à une heure) ou supprimez les cookies de ce site, puis rechargez la page."
+  },
+  "ytLiveNote": {
+    "message": "Direct (bêta) : l’enregistrement se fait depuis le lecteur, en temps réel."
+  },
+  "ytLiveRecord": {
+    "message": "Enregistrer le direct (bêta)"
+  },
+  "ytLiveHint": {
+    "message": "L’enregistrement démarre tout de suite, sans recharger la page. Gardez l’onglet ouvert et le lecteur actif jusqu’à « Arrêter »."
+  },
+  "ytLiveFinishing": {
+    "message": "Finalisation : synchronisation de l’audio et de la vidéo (jusqu’à 25 s)…"
+  },
+  "optYtTitle": {
+    "message": "Réglages YouTube"
+  },
+  "hintToggle": {
+    "message": "À quoi ça sert"
+  },
+  "hintYtSequential": {
+    "message": "YouTube limite ou coupe les requêtes parallèles. Le fichier est téléchargé morceau par morceau (quelques Mo chacun), comme le fait le lecteur. Plus lent, mais plus fiable. À désactiver seulement pour tester."
+  },
+  "hintYtCpn": {
+    "message": "cpn est l’identifiant de session de lecture que le lecteur envoie dans ses propres requêtes. Sans lui, certains liens répondent par une erreur 403. L’extension l’ajoute aux liens de téléchargement."
+  },
+  "hintYtHeaders": {
+    "message": "Les en-têtes Origin, Referer et DNT sont ajoutés aux requêtes de téléchargement, comme pour une requête normale depuis une page YouTube. Utile quand le serveur refuse les requêtes sans eux. Aucune donnée de compte n’est envoyée."
+  },
+  "hintYtApi": {
+    "message": "L’extension demande à YouTube les données de la vidéo comme le fait l’application mobile (les clients listés ci-dessous). On obtient ainsi en général des liens directs vers tous les formats. Désactivée, seules les données de la page sont utilisées, souvent insuffisantes."
+  },
+  "helpLead": {
+    "message": "Une extension qui trouve la vidéo et l’audio de la page ouverte et les enregistre sur votre ordinateur. Elle fonctionne en local : aucun serveur externe, aucune télémétrie, aucun programme tiers à installer."
+  },
+  "helpLabelCode": {
+    "message": "Code source"
+  },
+  "helpS1": {
+    "message": "Utilisation"
+  },
+  "helpS1a": {
+    "message": "Ouvrez une page avec une vidéo et lancez la lecture (sur certains sites, le flux n’apparaît qu’après le démarrage)."
+  },
+  "helpS1b": {
+    "message": "Cliquez sur l’icône VDL dans la barre d’outils. Les vidéos trouvées s’affichent."
+  },
+  "helpS1c": {
+    "message": "Choisissez le type et la qualité, puis cliquez sur « Télécharger ». L’audio a sa propre ligne : MP3, M4A ou WEBM."
+  },
+  "helpS1d": {
+    "message": "Les fichiers terminés apparaissent dans l’« Historique » (icône d’horloge) et dans le dossier de téléchargements (icône de dossier)."
+  },
+  "helpS1q": {
+    "message": "Raccourcis : la touche Alt+↓ et l’entrée du menu contextuel."
+  },
+  "helpS2": {
+    "message": "Fonctionnalités"
+  },
+  "helpF1": {
+    "message": "**Fichiers directs** (mp4, webm, mp3, etc.)."
+  },
+  "helpF2": {
+    "message": "**HLS (m3u8) et DASH (mpd) :** choix de la qualité, piste audio séparée, chiffrement AES-128, vidéo et audio réunis en un seul fichier sans réencodage."
+  },
+  "helpF3": {
+    "message": "**YouTube :** choix du type (MP4, WEBM, AV1) et de la résolution, téléchargement audio (MP3, M4A, WEBM), vidéo et audio réunis en un fichier. Sans lien direct, une solution de repli existe : l’enregistrement depuis le lecteur."
+  },
+  "helpF4": {
+    "message": "**Directs YouTube (bêta) :** enregistrement depuis le lecteur en temps réel, sans recharger la page. « Arrêter » termine l’enregistrement et réunit vidéo et audio dans un .mkv. L’audio ne se télécharge pas seul."
+  },
+  "helpF5": {
+    "message": "**Autres sites :** Vimeo, Dailymotion, Instagram, Facebook, X (Twitter), Twitch, TikTok, Bilibili, Canva, OK.ru, VK ; les autres via la détection générale des flux. Sur certains sites, le résultat dépend de ce que la page fournit."
+  },
+  "helpF6": {
+    "message": "**Directs d’autres sites (HLS) :** enregistrement via le bouton « Enregistrer », arrêt manuel ou à la limite de durée."
+  },
+  "helpS3": {
+    "message": "Réglages"
+  },
+  "helpP1": {
+    "message": "**Préférences par défaut :** qualité et type de vidéo, format et qualité audio."
+  },
+  "helpP2": {
+    "message": "**Général :** notifications, historique, « Enregistrer sous », modèle de nom ({title} {site} {quality} {date} {time}), taille minimale, téléchargements de segments en parallèle, limite d’enregistrement des directs."
+  },
+  "helpP3": {
+    "message": "**Réglages YouTube :** une pièce à la fois, ajout de cpn, en-têtes Origin/Referer/DNT, liens comme l'application mobile, méthode de liens, ordre et remplacements des clients, « Creative Commons uniquement » (activé par défaut) et la fonction Beta « Enregistrement depuis le lecteur ». Cliquez sur « ? » à côté d'une option pour une explication."
+  },
+  "helpS4": {
+    "message": "En cas de problème"
+  },
+  "helpT1": {
+    "message": "Autorisez l’extension à accéder à tous les sites : `about:addons` → VDL → « Autorisations »."
+  },
+  "helpT2": {
+    "message": "S’il n’y a pas de liens, utilisez l’enregistrement depuis le lecteur."
+  },
+  "helpT3": {
+    "message": "Cliquez sur 🐞 : l’extension crée un fichier de diagnostic et un texte de rapport prêt à l’emploi. Le fichier ne contient ni liens vidéo, ni cookies, ni identifiants de visiteur. Joignez-le à un e-mail ou à un ticket GitHub."
+  },
+  "helpS5": {
+    "message": "Limites"
+  },
+  "helpL1": {
+    "message": "Les flux protégés par DRM (Widevine, FairPlay, etc.) ne sont pas téléchargés et la protection n’est pas contournée."
+  },
+  "helpL2": {
+    "message": "YouTube : les formats chiffrés et les flux SABR ne sont pas pris en charge. Les jetons et signatures ne sont pas falsifiés."
+  },
+  "helpL3": {
+    "message": "Ne téléchargez que ce que vous avez le droit d’enregistrer. Le respect des règles des sites relève de votre responsabilité."
+  },
+  "helpL4": {
+    "message": "Non pris en charge : conversion de formats, téléchargement par lots, listes de lecture, sous-titres."
+  },
+  "helpS6": {
+    "message": "Confidentialité"
+  },
+  "helpV1": {
+    "message": "L’extension n’envoie rien au développeur. Les données (historique, réglages) restent dans votre navigateur. Le diagnostic n’est créé qu’à votre demande et n’est envoyé que par vous."
+  },
+  "helpS7": {
+    "message": "Liens et contact"
+  },
+  "helpLabelIssues": {
+    "message": "Code source et signalement de bogues"
+  },
+  "helpLabelMail": {
+    "message": "E-mail"
+  },
+  "helpLabelAuthor": {
+    "message": "Auteur"
+  },
+  "helpLabelLicense": {
+    "message": "Licence"
+  },
+  "helpLabelLink": {
+    "message": "Lien"
+  },
+  "helpS8": {
+    "message": "Composants utilisés"
+  },
+  "helpC1": {
+    "message": "**Bibliothèque tierce.** La conversion de l’audio en MP3 utilise **lamejs** 1.2.1, un portage JavaScript de l’encodeur LAME."
+  },
+  "helpC2": {
+    "message": "Le fichier `vendor/lame.min.js` est inclus sans modification et peut être remplacé par une autre version fournissant `lamejs.Mp3Encoder`. SHA-256 : `15d285e2587b3bdbfd18a68de6ce07cc074f7480a82c3815da2dc1c348ec6df4`."
+  },
+  "helpC3": {
+    "message": "La bibliothèque s’exécute localement dans le navigateur et n’effectue aucune requête réseau. Sans elle, le MP3 est indisponible ; les autres formats fonctionnent."
+  },
+  "helpC4": {
+    "message": "Le traitement vidéo (analyse des flux et fusion vidéo/audio sans réencodage) repose sur le multiplexeur propre à VDL, `lib/mux.js`."
+  },
+  "helpC5": {
+    "message": "Ce projet contient du code, ou des parties de code, généré par IA. Les textes, commentaires et traductions sont générés par IA."
+  },
+  "optTsToMp4": {
+    "message": "Convertir le TS en MP4 après le téléchargement ou l'enregistrement"
+  },
+  "hintTsToMp4": {
+    "message": "Les flux au format TS sont enregistrés en MP4 classique (H.264 + AAC) sans réencodage, ils se lisent donc dans n'importe quel lecteur. Si le flux utilise d'autres codecs ou dépasse environ 700 Mo, le fichier TS est enregistré tel quel."
+  },
+  "consentTitle": {
+    "message": "Conditions d’utilisation"
+  },
+  "consentIntro": {
+    "message": "VDL est uniquement un outil. Il est fourni « en l’état » (AS IS), sans aucune garantie."
+  },
+  "consentRights": {
+    "message": "Vous vous engagez à ne télécharger que du contenu sur lequel vous avez des droits, conformément à la législation."
+  },
+  "consentLiability": {
+    "message": "Toute la responsabilité et tous les frais juridiques liés à l’utilisation de VDL vous incombent. L’auteur de l’extension n’assume aucune responsabilité."
+  },
+  "consentAccept": {
+    "message": "J’accepte"
+  },
+  "consentDecline": {
+    "message": "Je refuse"
+  },
+  "consentNeeded": {
+    "message": "Acceptez d’abord les conditions d’utilisation dans la fenêtre VDL, puis réessayez."
+  },
+  "consentSettingsTitle": {
+    "message": "Conditions d’utilisation"
+  },
+  "consentAcceptedOn": {
+    "message": "Accepté le {date}."
+  },
+  "consentMissing": {
+    "message": "Non accepté : les téléchargements sont désactivés."
+  },
+  "consentRevoke": {
+    "message": "Retirer mon consentement"
+  },
+  "consentLocalOnly": {
+    "message": "Ce consentement n’est pas transmis et est conservé localement."
+  },
+  "optGeneralTitle": {
+    "message": "Général"
+  },
+  "optDownloadTitle": {
+    "message": "Téléchargements et enregistrement"
+  },
+  "optDiagTitle": {
+    "message": "Diagnostic"
+  },
+  "optYtRecordTitle": {
+    "message": "Enregistrement depuis le lecteur (Beta)"
+  },
+  "optYtRecordUi": {
+    "message": "Afficher l’option d’enregistrement depuis le lecteur"
+  },
+  "ytRecordDisabledHint": {
+    "message": "Impossible d’obtenir les liens de téléchargement. Vous pouvez activer l’enregistrement depuis le lecteur dans les paramètres."
+  },
+  "optLanguage": {
+    "message": "Langue de l’interface"
+  },
+  "langAuto": {
+    "message": "Automatique (langue du navigateur)"
+  },
+  "optResetTitle": {
+    "message": "Rétablir les paramètres par défaut"
+  },
+  "optResetText": {
+    "message": "Rétablit toutes les options à leurs valeurs par défaut. L’historique des téléchargements et les conditions acceptées ne sont pas modifiés."
+  },
+  "optResetButton": {
+    "message": "Rétablir"
+  },
+  "optResetConfirm": {
+    "message": "Rétablir les valeurs par défaut ?"
+  },
+  "optResetYes": {
+    "message": "Rétablir"
+  },
+  "optResetDone": {
+    "message": "Valeurs par défaut rétablies."
+  },
+  "hintTemplate": {
+    "message": "Comment les fichiers enregistrés sont nommés. Variables : {title} {site} {quality} {date} {time}. Exemple : {title} ({quality}) donne Ma vidéo (720p).mp4. L'extension est ajoutée automatiquement. Le modèle doit contenir {title} ; un champ vide revient à {title} {site} {date}."
+  },
+  "hintMinSize": {
+    "message": "Les fichiers directs plus petits que cette taille ne sont pas listés (minuscules images, pixels, fichiers de suivi). Aucun effet sur HLS, DASH ni YouTube. Saisissez 0 pour tout afficher."
+  },
+  "hintConcurrency": {
+    "message": "Nombre de parties (segments) d'un flux HLS ou DASH téléchargées en même temps. Plus élevé = plus rapide, mais le site et votre connexion sont plus sollicités ; baissez-le si le site renvoie des erreurs. Aussi utilisé pour l'enregistrement des directs."
+  },
+  "hintLiveMax": {
+    "message": "Un enregistrement en direct s'arrête de lui-même après cette durée et le fichier est enregistré. S'applique à Twitch, aux autres directs HLS et à l'enregistrement depuis le lecteur YouTube."
+  },
+  "hintMaxStream": {
+    "message": "Limite maximale d'un téléchargement ou enregistrement HLS/DASH. Les données restent en mémoire jusqu'à l'enregistrement, la limite protège donc le navigateur : à cette taille, le téléchargement ou l'enregistrement s'arrête. Ne l'augmentez que si vous avez assez de mémoire."
+  },
+  "hintYtRecordUi": {
+    "message": "Affiche le bouton d'enregistrement depuis le lecteur pour les vidéos YouTube ordinaires, en dernier recours quand les liens directs sont indisponibles. Les directs et les enregistrements déjà en cours ne sont pas touchés. Désactivé par défaut."
+  },
+  "hintYtRecordSpeed": {
+    "message": "Vitesse de lecture pendant l'enregistrement d'une vidéo ordinaire depuis le lecteur. L'enregistrement dure la durée de la vidéo divisée par cette vitesse ; sur un ordinateur lent, une vitesse élevée peut faire perdre des images. Les directs sont toujours enregistrés à 1x."
+  },
+  "hintDefaultAudioFormat": {
+    "message": "Le format présélectionné pour enregistrer uniquement l'audio : MP3 se lit partout (converti dans le navigateur) ; M4A (AAC) et WEBM (Opus) gardent le son d'origine sans conversion."
+  },
+  "hintNotifications": {
+    "message": "Affiche une notification système quand un téléchargement ou un enregistrement se termine ou échoue."
+  },
+  "hintHistory": {
+    "message": "Conserve sur cet ordinateur une liste des téléchargements terminés (titre, site, date), affichée sur la page Historique. Désactivé, aucune nouvelle entrée n'est ajoutée."
+  },
+  "hintSaveAs": {
+    "message": "Ouvre la boîte « Enregistrer sous » du navigateur pour chaque téléchargement afin de choisir dossier et nom. Désactivé, les fichiers vont directement dans le dossier de téléchargements."
+  },
+  "hintYtMethod": {
+    "message": "D'où est faite la demande de liens YouTube. Auto essaie d'abord la page, puis l'arrière-plan en secours. À modifier seulement pour trouver la cause d'un problème."
+  },
+  "hintYtCcOnly": {
+    "message": "Activé par défaut. Le téléchargement n'est autorisé que pour les vidéos que YouTube marque avec la licence Creative Commons ; pour les autres, un message s'affiche. Ne désactivez que si vous êtes propriétaire de la vidéo ou avez le droit de la télécharger."
+  },
+  "hintDiagFullUrls": {
+    "message": "Dans le fichier de diagnostic, les liens sont réduits à l'hôte et au chemin. À activer seulement si le développeur le demande : les liens complets peuvent contenir des identifiants de l'adresse. Le fichier n'est jamais envoyé automatiquement."
+  },
+  "ccNoticeTitle": {
+    "message": "Téléchargement non autorisé"
+  },
+  "ccNoticeText": {
+    "message": "Vous essayez de télécharger une vidéo sans licence Creative Commons. Par défaut, VDL n'autorise que les vidéos Creative Commons. Si vous êtes propriétaire de cette vidéo ou avez le droit de la télécharger, désactivez cette restriction. En la désactivant, vous confirmez avoir le droit de télécharger les vidéos que vous enregistrez. Ce message n'apparaît qu'une seule fois."
+  },
+  "ccNoticeOff": {
+    "message": "Désactiver la restriction"
+  },
+  "ccNoticeKeep": {
+    "message": "Garder la restriction"
+  },
+  "consentCc": {
+    "message": "Si vous désactivez la restriction « Creative Commons uniquement » pour YouTube, vous confirmez avoir le droit de télécharger les vidéos que vous enregistrez."
+  },
+  "ccNoticeLink": {
+    "message": "À propos de la licence Creative Commons"
+  },
+  "ccOffByUser": {
+    "message": "Restriction désactivée par l'utilisateur :"
+  },
+  "legalNotice1": {
+    "message": "Utilisez l'extension uniquement pour du contenu que vous avez le droit d'enregistrer."
+  },
+  "legalNotice2": {
+    "message": "Le respect de la loi relève de votre responsabilité."
+  },
+  "ytRecordEnable": {
+    "message": "Activer l'enregistrement depuis le lecteur"
+  },
+  "ytRecErrStart": {
+    "message": "La vidéo n'a pas pu être enregistrée depuis le début. Réessayez."
+  },
+  "unsavedChanges": {
+    "message": "Modifications non enregistrées"
+  },
+  "helpLame": {
+    "message": "**Remerciement à LAME.** La conversion en MP3 utilise l'encodeur LAME (via lamejs, LGPL-3.0). Merci au projet LAME :"
+  },
+  "optDebugLog": {
+    "message": "Journal de débogage : enregistrer tout ce que fait l’extension (pour le dépannage)"
+  },
+  "hintDebugLog": {
+    "message": "Tient un journal texte du travail de VDL : flux trouvés, téléchargements, erreurs, requêtes YouTube, état de l’enregistrement. Il reste dans ce navigateur (1500 dernières lignes, environ 250 Ko) et n’est jamais envoyé automatiquement. Les liens sont réduits à l’hôte et au chemin (complets seulement si l’option ci-dessus est active) ; ni titres ni cookies. Il démarre après un clic sur « Enregistrer ». Quand vous n’en avez plus besoin, désactivez-le et cliquez sur « Effacer le journal »."
+  },
+  "logView": {
+    "message": "Afficher le journal"
+  },
+  "logHide": {
+    "message": "Masquer le journal"
+  },
+  "logSave": {
+    "message": "Enregistrer dans un fichier"
+  },
+  "logClear": {
+    "message": "Effacer le journal"
+  },
+  "logCount": {
+    "message": "Entrées : {count} (environ {kb} Ko)"
+  },
+  "logEmpty": {
+    "message": "Le journal est vide."
+  },
+  "logEntries": {
+    "message": "Entrées"
+  },
+  "logTitle": {
+    "message": "Journal de débogage"
+  },
+  "logAttachHint": {
+    "message": "Enregistrez le journal dans un fichier et joignez-le au ticket GitHub ou au courriel (le lien ne contient que les dernières lignes)."
+  },
+  "helpT4": {
+    "message": "Difficile à reproduire ? Activez le « Journal de débogage » dans les options (Diagnostic), reproduisez le problème, puis affichez, copiez, enregistrez ou envoyez le journal depuis la même page. Le résultat de l’auto-diagnostic y est ajouté. Le journal reste dans votre navigateur et n’est jamais envoyé automatiquement."
+  }
+}

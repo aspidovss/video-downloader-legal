@@ -1,0 +1,205 @@
+{
+  "manifest_version": 3,
+  "name": "Video Downloader Legal",
+  "version": "1.5.6",
+  "version_name": "1.5.6",
+  "description": "__MSG_appDesc__",
+  "default_locale": "en",
+  "author": "AspidovSS",
+  "icons": {
+    "48": "icons/icon-48.png",
+    "128": "icons/icon-128.png"
+  },
+  "permissions": [
+    "tabs",
+    "downloads",
+    "webRequest",
+    "webRequestBlocking",
+    "webNavigation",
+    "storage",
+    "notifications",
+    "contextMenus",
+    "unlimitedStorage",
+    "clipboardWrite"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'"
+  },
+  "background": {
+    "scripts": [
+      "service/main.js"
+    ],
+    "type": "module"
+  },
+  "action": {
+    "default_title": "Video Downloader Legal",
+    "default_popup": "content/popup.html",
+    "default_icon": {
+      "48": "icons/icon-48.png",
+      "128": "icons/icon-128.png"
+    }
+  },
+  "sidebar_action": {
+    "default_panel": "content/popup.html",
+    "default_icon": "icons/icon-48.png",
+    "default_title": "Video Downloader Legal",
+    "open_at_install": false
+  },
+  "options_ui": {
+    "page": "content/settings.html",
+    "open_in_tab": true
+  },
+  "commands": {
+    "default-action": {
+      "description": "__MSG_cmdDefault__",
+      "suggested_key": {
+        "default": "Alt+Down",
+        "mac": "Ctrl+Shift+Down"
+      }
+    },
+    "_execute_action": {
+      "suggested_key": {
+        "default": "Alt+Up",
+        "mac": "Ctrl+Shift+Up"
+      }
+    }
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "http://*/*",
+        "https://*/*"
+      ],
+      "js": [
+        "injected/page.js"
+      ],
+      "run_at": "document_idle",
+      "all_frames": true
+    },
+    {
+      "matches": [
+        "*://*.ok.ru/*"
+      ],
+      "js": [
+        "injected/ok.js"
+      ],
+      "run_at": "document_idle",
+      "all_frames": true
+    },
+    {
+      "matches": [
+        "*://*.youtube.com/*",
+        "*://*.youtube-nocookie.com/*"
+      ],
+      "js": [
+        "injected/youtube_main.js"
+      ],
+      "world": "MAIN",
+      "run_at": "document_start",
+      "all_frames": true
+    },
+    {
+      "matches": [
+        "*://*.canva.com/*"
+      ],
+      "js": [
+        "injected/canva.js"
+      ],
+      "run_at": "document_end",
+      "all_frames": false
+    },
+    {
+      "matches": [
+        "*://x.com/*",
+        "*://twitter.com/*",
+        "*://*.x.com/*",
+        "*://*.twitter.com/*"
+      ],
+      "js": [
+        "injected/x.js"
+      ],
+      "run_at": "document_end",
+      "all_frames": false
+    },
+    {
+      "matches": [
+        "*://*.instagram.com/*",
+        "*://*.facebook.com/*"
+      ],
+      "js": [
+        "injected/instagram.js"
+      ],
+      "run_at": "document_end",
+      "all_frames": false
+    },
+    {
+      "matches": [
+        "*://*.youtube.com/*"
+      ],
+      "js": [
+        "injected/youtube_api.js"
+      ],
+      "world": "MAIN",
+      "run_at": "document_start",
+      "all_frames": false
+    },
+    {
+      "matches": [
+        "*://*.youtube.com/*",
+        "*://*.youtube-nocookie.com/*"
+      ],
+      "js": [
+        "injected/youtube.js"
+      ],
+      "run_at": "document_start",
+      "all_frames": true
+    },
+    {
+      "matches": [
+        "*://*.youtube.com/*"
+      ],
+      "js": [
+        "lib/mux.js",
+        "injected/youtube_rec.js"
+      ],
+      "world": "MAIN",
+      "run_at": "document_start",
+      "all_frames": false
+    },
+    {
+      "matches": [
+        "*://*.tiktok.com/*"
+      ],
+      "js": [
+        "injected/tiktok.js"
+      ],
+      "run_at": "document_end",
+      "all_frames": false
+    },
+    {
+      "matches": [
+        "*://*.tiktok.com/*"
+      ],
+      "js": [
+        "injected/tiktok_main.js"
+      ],
+      "world": "MAIN",
+      "run_at": "document_end",
+      "all_frames": false
+    }
+  ],
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "video-downloader-legal@aspidovss",
+      "strict_min_version": "140.0",
+      "data_collection_permissions": {
+        "required": [
+          "none"
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,6 @@
+# Line endings: LF in the repository and in working copies; binary and vendored files are never touched.
+* text=auto eol=lf
+*.png binary
+*.xpi binary
+*.zip binary
+vendor/lame.min.js -text
