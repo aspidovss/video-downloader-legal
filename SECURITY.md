@@ -1,6 +1,6 @@
 # Security policy
 
-If you find a vulnerability, please report it privately to **vdl@aspidov.ru** (subject: *VDL security*) rather than in a public issue. Include the extension version, Firefox version and steps to reproduce. You will get a reply as soon as possible; a fix is released as a new version on Mozilla Add-ons.
+If you find a vulnerability, please report it privately to **vdl@aspidov.ru** (subject: *VDL security*) rather than in a public issue. Include the extension version, browser (Firefox or Chrome) and its version, and steps to reproduce. You will get a reply as soon as possible; a fix is released as a new version on Mozilla Add-ons.
 
 Supported: the latest released version.
 

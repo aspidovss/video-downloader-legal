@@ -22,7 +22,7 @@ Save videos and audio from the page you watch — YouTube, Shorts, Instagram, Tw
 ```
 Save videos and audio from the page you watch — YouTube, Shorts, Instagram, Twitch, TikTok, VK, OKru, Bilibili, Dailymotion, RuTube, Dzen and more. Free, local, no paywall, no tracking.
 
-VDL - Video Downloader Legal lists what the open page plays and saves the one you choose. Everything happens inside Firefox: no external servers, no analytics, no helper programs to install. Video and audio are joined and TS is converted to MP4 by the extension's own code, without re-encoding.
+VDL - Video Downloader Legal lists what the open page plays and saves the one you choose. Everything happens inside your browser: no external servers, no analytics, no helper programs to install. The same extension also runs in Chrome and other Chromium browsers (development build on GitHub). Video and audio are joined and TS is converted to MP4 by the extension's own code, without re-encoding.
 
 FEATURES
 - Video download — direct files, HLS (m3u8) and DASH (mpd) streams on any site: choose the quality, separate audio tracks are joined into one file.

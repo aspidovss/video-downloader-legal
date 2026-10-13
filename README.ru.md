@@ -8,13 +8,13 @@
 
 [English](README.md) · [Русский](README.ru.md)
 
-![Firefox 140+](https://img.shields.io/badge/Firefox-140%2B-orange) ![Manifest V3](https://img.shields.io/badge/Manifest-V3-blue) ![License MIT](https://img.shields.io/badge/license-MIT-green) ![Telemetry none](https://img.shields.io/badge/telemetry-none-brightgreen)
+![Firefox 140+](https://img.shields.io/badge/Firefox-140%2B-orange?logo=firefoxbrowser&logoColor=white) ![Chrome 116+](https://img.shields.io/badge/Chrome-116%2B-4285F4?logo=googlechrome&logoColor=white) ![Manifest V3](https://img.shields.io/badge/Manifest-V3-blue) ![License MIT](https://img.shields.io/badge/license-MIT-green) ![Telemetry none](https://img.shields.io/badge/telemetry-none-brightgreen)
 
 <img src="docs/screenshots/ru-0-anywhere.png" alt="Скачивайте откуда угодно: YouTube, Twitch, Vimeo, TikTok" width="760">
 
 </div>
 
-Video Downloader Legal — расширение для Firefox (Manifest V3): показывает список видео и аудио, которые воспроизводит страница, и сохраняет выбранное. Всё работает внутри браузера: без внешних серверов, без аналитики, без программ-помощников (нет Native Messaging). Склейку видео со звуком и конвертацию MPEG-TS в MP4 делает **собственный код** расширения, без перекодирования.
+Video Downloader Legal — расширение для **Firefox и Chrome** (Manifest V3; в браузерах на основе Chromium — Edge, Brave, Opera — тоже работает): показывает список видео и аудио, которые воспроизводит страница, и сохраняет выбранное. Всё работает внутри браузера: без внешних серверов, без аналитики, без программ-помощников (нет Native Messaging). Склейку видео со звуком и конвертацию MPEG-TS в MP4 делает **собственный код** расширения, без перекодирования.
 
 Принцип: **DRM-защищённые потоки распознаются и не скачиваются, обхода шифрования нет**, токены, подписи и учётные данные не подделываются.
 
@@ -79,7 +79,31 @@ Video Downloader Legal — расширение для Firefox (Manifest V3): п
 
 ## Разработка
 
-Обычный JavaScript (ES-модули), без сборки. Пакет Firefox собирается командой `npm install && npm run build-for-amo` (готовый файл появится в `build/`); сборка для Chrome — `npm run build:chrome`. Структура проекта — в [английском README](README.md#project-structure). Журнал разработки на русском: [docs/DEVLOG-ru.md](docs/DEVLOG-ru.md). Текст справки: [docs/HELP-ru.md](docs/HELP-ru.md). Поддержать проект: [DONATE.md](DONATE.md).
+Обычный JavaScript (ES-модули), без бандлера. Из исходников собираются два пакета: `.xpi` для Firefox и `.zip` для Chrome. Для команд npm нужен **Node.js 18+**. Структура проекта — в [английском README](README.md#project-structure). Журнал разработки на русском: [docs/DEVLOG-ru.md](docs/DEVLOG-ru.md). Текст справки: [docs/HELP-ru.md](docs/HELP-ru.md). Поддержать проект: [DONATE.md](DONATE.md).
+
+### Сборка для Firefox (`.xpi`)
+
+```bash
+npm install
+npm run build-for-amo   # то же, что `npm run build`; пакет появится в build/
+```
+
+`build-for-amo` — скрипт, который запускает автоматический сборщик исходников AMO; он использует `web-ext` и упаковывает ровно файлы расширения (без `platform/`, `scripts/`, `tests/`, `docs/`, `AMO/` и документов). Без npm: `zip -r video-downloader-legal-1.5.6.xpi manifest.json LICENSE LICENSES THIRD-PARTY.md _locales content icons injected lib service styles utils vendor`. Неподписанный `.xpi` ставится только временно (`about:debugging`); релизный `.xpi` подписан Mozilla.
+
+### Сборка для Chrome (`.zip`)
+
+```bash
+npm run build:chrome            # build/chrome/ и build/vdl-chrome-<версия>.zip
+node scripts/build-chrome.mjs   # только папка build/chrome/ (без zip)
+```
+
+`scripts/build-chrome.mjs` берёт `manifest.json` для Firefox и переделывает его под Chrome: убирает `browser_specific_settings` и `sidebar_action`, ставит `minimum_chrome_version` 116, подключает фон как service worker `platform/sw.js`, заменяет `webRequestBlocking` на `declarativeNetRequest` и `offscreen`, добавляет `platform/shim.js` перед скриптами страниц. `npm install` не нужен. Для упаковки скрипт вызывает утилиту `zip`; если её нет (чистая Windows), он напишет об этом и оставит папку `build/chrome/` — упакуйте её встроенным `tar`:
+
+```powershell
+tar -a -c -f build\vdl-chrome-1.5.6.zip -C build\chrome .
+```
+
+Установка: `chrome://extensions` → «Режим разработчика» → «Загрузить распакованное» → папка `build/chrome`. В Chrome Web Store расширение не публикуется.
 
 ## Сторонний код и ИИ
 

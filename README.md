@@ -8,7 +8,7 @@
 
 [English](README.md) · [Русский](README.ru.md)
 
-![Firefox 140+](https://img.shields.io/badge/Firefox-140%2B-orange) ![Manifest V3](https://img.shields.io/badge/Manifest-V3-blue) ![License MIT](https://img.shields.io/badge/license-MIT-green) ![Telemetry none](https://img.shields.io/badge/telemetry-none-brightgreen)
+![Firefox 140+](https://img.shields.io/badge/Firefox-140%2B-orange?logo=firefoxbrowser&logoColor=white) ![Chrome 116+](https://img.shields.io/badge/Chrome-116%2B-4285F4?logo=googlechrome&logoColor=white) ![Manifest V3](https://img.shields.io/badge/Manifest-V3-blue) ![License MIT](https://img.shields.io/badge/license-MIT-green) ![Telemetry none](https://img.shields.io/badge/telemetry-none-brightgreen)
 
 <img src="docs/screenshots/en-0-anywhere.png" alt="Download anywhere: YouTube, Twitch, Vimeo, TikTok" width="760">
 
@@ -192,20 +192,45 @@ video-downloader-legal/
 └── README.md, README.ru.md, CHANGELOG.md, CONTRIBUTING.md, DONATE.md, PRIVACY.md, SECURITY.md, THIRD-PARTY.md
 ```
 
-The extension package (`.xpi`) contains `manifest.json`, `LICENSE`, `LICENSES`, `THIRD-PARTY.md`, `_locales`, `content`, `icons`, `injected`, `lib`, `service`, `styles`, `utils` and `vendor`; `platform/`, `scripts/`, `tests/`, `docs/`, `AMO/`, `.github/` and the documents are repository-only (`platform/` and `scripts/` are for the Chrome build). To build it:
+The sources are plain JavaScript (ES modules) with no bundling. Two packages are built from them: a Firefox `.xpi` and a Chrome `.zip`. You need **Node.js 18+** for the npm commands; the manual Firefox command needs only a `zip` tool.
 
-```bash
-zip -r video-downloader-legal-1.5.6.xpi manifest.json LICENSE LICENSES THIRD-PARTY.md _locales content icons injected lib service styles utils vendor
-```
+### Firefox package (`.xpi`)
 
-Or with npm (Firefox build only; needs Node.js 18+):
+The `.xpi` contains `manifest.json`, `LICENSE`, `LICENSES`, `THIRD-PARTY.md`, `_locales`, `content`, `icons`, `injected`, `lib`, `service`, `styles`, `utils` and `vendor`. `platform/`, `scripts/`, `tests/`, `docs/`, `AMO/`, `.github/` and the documents are repository-only (`platform/` and `scripts/` belong to the Chrome build).
+
+With npm (works on Windows, macOS and Linux):
 
 ```bash
 npm install
 npm run build-for-amo   # same as `npm run build`; the package appears in build/
 ```
 
-`build-for-amo` is the script that AMO's automatic source builder runs. It uses `web-ext` (the only dev dependency) and packs exactly the files listed above. The Chrome build is separate: `npm run build:chrome`.
+`build-for-amo` is the script that AMO's automatic source builder runs. It uses `web-ext` (the only dev dependency) and packs exactly the files listed above.
+
+Or by hand, without npm:
+
+```bash
+zip -r video-downloader-legal-1.5.6.xpi manifest.json LICENSE LICENSES THIRD-PARTY.md _locales content icons injected lib service styles utils vendor
+```
+
+An unsigned `.xpi` loads only as a temporary add-on (`about:debugging`) or in Firefox Developer Edition / Nightly with `xpinstall.signatures.required` set to `false`. The release `.xpi` is signed by Mozilla.
+
+### Chrome package (`.zip`)
+
+The Chrome package is made from the same sources by `scripts/build-chrome.mjs`. It takes the Firefox `manifest.json` and changes it: removes `browser_specific_settings` and `sidebar_action`, sets `minimum_chrome_version` to 116, switches the background to the service worker `platform/sw.js`, replaces `webRequestBlocking` with `declarativeNetRequest` and `offscreen`, and puts `platform/shim.js` in front of the content scripts and the extension pages. No npm install is needed (the script uses only Node's standard library).
+
+```bash
+npm run build:chrome            # build/chrome/ and build/vdl-chrome-<version>.zip
+node scripts/build-chrome.mjs   # only the folder build/chrome/ (no zip)
+```
+
+The zip step calls the `zip` tool. If it is not installed (plain Windows), the script says so and leaves the folder `build/chrome/`; pack it with the built-in `tar`:
+
+```powershell
+tar -a -c -f build\vdl-chrome-1.5.6.zip -C build\chrome .
+```
+
+Load the result in `chrome://extensions` → *Developer mode* → *Load unpacked* → the folder `build/chrome` (or the unpacked zip). It is not published in the Chrome Web Store.
 
 ## Third-party code
 

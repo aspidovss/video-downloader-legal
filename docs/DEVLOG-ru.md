@@ -2,7 +2,7 @@
 
 # Video Downloader Legal (VDL)
 
-Расширение для Firefox (Manifest V3): находит видео на странице и сохраняет его.
+Расширение для Firefox и Chrome (Manifest V3): находит видео на странице и сохраняет его.
 Автор: AspidovSS · Лицензия: MIT
 
 ## Что умеет
