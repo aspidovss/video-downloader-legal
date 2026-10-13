@@ -10,7 +10,7 @@
 
 ![Firefox 140+](https://img.shields.io/badge/Firefox-140%2B-orange) ![Manifest V3](https://img.shields.io/badge/Manifest-V3-blue) ![License MIT](https://img.shields.io/badge/license-MIT-green) ![Telemetry none](https://img.shields.io/badge/telemetry-none-brightgreen)
 
-<img src="docs/screenshots/en-6-themes.png" alt="Light and dark theme" width="760">
+<img src="docs/screenshots/en-0-anywhere.png" alt="Download anywhere: YouTube, Twitch, Vimeo, TikTok" width="760">
 
 </div>
 
