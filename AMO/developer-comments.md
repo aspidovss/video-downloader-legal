@@ -12,7 +12,7 @@ cd video-downloader-legal
 Linux / macOS / Git Bash:
 
 ```
-zip -r video-downloader-legal-1.6.0.xpi manifest.json LICENSE LICENSES THIRD-PARTY.md _locales content icons injected lib service styles utils vendor
+zip -r video-downloader-legal-ff-1.6.0.xpi manifest.json LICENSE LICENSES THIRD-PARTY.md _locales content icons injected lib service styles utils vendor
 ```
 
 Or with npm (Firefox build; the `build-for-amo` script in `package.json`, which AMO's builder uses; `web-ext` is the only dev dependency):
@@ -27,8 +27,8 @@ The package is written to `build/`.
 Windows (PowerShell):
 
 ```
-tar -a -c -f video-downloader-legal-1.6.0.zip manifest.json LICENSE LICENSES THIRD-PARTY.md _locales content icons injected lib service styles utils vendor
-Rename-Item video-downloader-legal-1.6.0.zip video-downloader-legal-1.6.0.xpi
+tar -a -c -f video-downloader-legal-ff-1.6.0.zip manifest.json LICENSE LICENSES THIRD-PARTY.md _locales content icons injected lib service styles utils vendor
+Rename-Item video-downloader-legal-ff-1.6.0.zip video-downloader-legal-ff-1.6.0.xpi
 ```
 
 ## Structure

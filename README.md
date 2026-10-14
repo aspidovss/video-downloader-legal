@@ -71,10 +71,10 @@ Requires **Firefox 140 or newer**.
 
 The same sources build a Manifest V3 package for Chromium. It is installed from GitHub in developer mode (it is not published in a store):
 
-1. Get the `vdl-chrome-<version>.zip` from the [Releases](https://github.com/aspidovss/video-downloader-legal/releases) page and unpack it, or build the folder yourself: `node scripts/build-chrome.mjs` (add `--zip` to also pack it). No npm install is needed.
+1. Get the `video-downloader-legal-chrome-<version>.zip` from the [Releases](https://github.com/aspidovss/video-downloader-legal/releases) page and unpack it, or build the folder yourself: `node scripts/build-chrome.mjs` (add `--zip` to also pack it). No npm install is needed.
 2. Open `chrome://extensions` (in **Microsoft Edge:** `edge://extensions`), turn on *Developer mode*, press *Load unpacked* and pick the unpacked folder (`build/chrome`).
 
-Needs **Chrome or Edge 116 or newer**. Edge runs the Chrome package unchanged (Edge-specific notes, the `vdl-edge-<version>.zip` name and the store checklist are in [EDGE/](EDGE/README.md)). Differences from Firefox: the toolbar popup only (no sidebar), and the background runs as a service worker. Request headers are set with `declarativeNetRequest`, and the MP3 conversion and the download links are made in an offscreen document. Tested on Chromium with local servers (header rules, HLS download, MP3 conversion) and checked by hand on live sites in Chrome.
+Needs **Chrome or Edge 116 or newer**. Edge runs the Chrome package unchanged (Edge-specific notes, the `video-downloader-legal-edge-<version>.zip` name and the store checklist are in [EDGE/](EDGE/README.md)). Differences from Firefox: the toolbar popup only (no sidebar), and the background runs as a service worker. Request headers are set with `declarativeNetRequest`, and the MP3 conversion and the download links are made in an offscreen document. Tested on Chromium with local servers (header rules, HLS download, MP3 conversion) and checked by hand on live sites in Chrome.
 
 ## How to use
 
@@ -212,7 +212,7 @@ npm run build-for-amo   # same as `npm run build`; the package appears in build/
 Or by hand, without npm:
 
 ```bash
-zip -r video-downloader-legal-1.6.0.xpi manifest.json LICENSE LICENSES THIRD-PARTY.md _locales content icons injected lib service styles utils vendor
+zip -r video-downloader-legal-ff-1.6.0.xpi manifest.json LICENSE LICENSES THIRD-PARTY.md _locales content icons injected lib service styles utils vendor
 ```
 
 An unsigned `.xpi` loads only as a temporary add-on (`about:debugging`) or in Firefox Developer Edition / Nightly with `xpinstall.signatures.required` set to `false`. The release `.xpi` is signed by Mozilla.
@@ -222,15 +222,15 @@ An unsigned `.xpi` loads only as a temporary add-on (`about:debugging`) or in Fi
 The Chrome package is made from the same sources by `scripts/build-chrome.mjs`. It takes the Firefox `manifest.json` and changes it: removes `browser_specific_settings` and `sidebar_action`, sets `minimum_chrome_version` to 116, switches the background to the service worker `platform/sw.js`, replaces `webRequestBlocking` with `declarativeNetRequest` and `offscreen`, and puts `platform/shim.js` in front of the content scripts and the extension pages. No npm install is needed (the script uses only Node's standard library).
 
 ```bash
-npm run build:chrome            # build/chrome/ and build/vdl-chrome-<version>.zip
-npm run build:edge              # the same package named build/vdl-edge-<version>.zip (Edge runs the Chrome build unchanged)
+npm run build:chrome            # build/chrome/ and build/video-downloader-legal-chrome-<version>.zip
+npm run build:edge              # the same package named build/video-downloader-legal-edge-<version>.zip (Edge runs the Chrome build unchanged)
 node scripts/build-chrome.mjs   # only the folder build/chrome/ (no zip)
 ```
 
 The zip step calls the `zip` tool. If it is not installed (plain Windows), the script says so and leaves the folder `build/chrome/`; pack it with the built-in `tar`:
 
 ```powershell
-tar -a -c -f build\vdl-chrome-1.6.0.zip -C build\chrome .
+tar -a -c -f build\video-downloader-legal-chrome-1.6.0.zip -C build\chrome .
 ```
 
 Load the result in `chrome://extensions` → *Developer mode* → *Load unpacked* → the folder `build/chrome` (or the unpacked zip). It is not published in the Chrome Web Store.

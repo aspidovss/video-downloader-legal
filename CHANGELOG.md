@@ -5,6 +5,7 @@ Added features per version (fixes and internal changes are not listed). Version 
 ## 1.6.0dev3
 
 ### Changed
+* Package names: `video-downloader-legal-ff-<version>.xpi` (Firefox, `npm run build`), `video-downloader-legal-chrome-<version>.zip` and `video-downloader-legal-edge-<version>.zip`.
 * The settings page: the *Keyboard shortcuts* block moved inside *General*, at its very end.
 
 ## 1.6.0dev2
@@ -25,7 +26,7 @@ Added features per version (fixes and internal changes are not listed). Version 
 
 ### Added
 * **Firefox for Android:** the toolbar popup fills the screen and has finger-sized buttons; what the phone does not have is skipped: context menu, hotkeys, notifications and the sidebar (the background no longer fails on the missing `contextMenus` / `commands` APIs), the folder buttons and the "Save as" / notification options are hidden. Needs Firefox for Android 142+. The footer shows `Firefox Android`.
-* **Microsoft Edge:** the Chrome build runs in Edge 116+ unchanged; `npm run build:edge` names the package `vdl-edge-<version>.zip`; the folder `EDGE/` has the install steps and the Edge Add-ons checklist; Edge is recognised in the page footer and in the bug-report template.
+* **Microsoft Edge:** the Chrome build runs in Edge 116+ unchanged; `npm run build:edge` names the package `video-downloader-legal-edge-<version>.zip`; the folder `EDGE/` has the install steps and the Edge Add-ons checklist; Edge is recognised in the page footer and in the bug-report template.
 * **Rebuild the MP3 encoder yourself:** `node scripts/build-lamejs.mjs` fetches lamejs 1.2.1 from GitHub, bundles it into `vendor/lame.js` and checks it against the file in the repository (`--compare`: same MP3 bytes as upstream's `lame.min.js`).
 * The "Download anywhere" banner is part of the store screenshots (`AMO/screenshots`).
 

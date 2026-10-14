@@ -59,10 +59,10 @@ Video Downloader Legal — расширение для **Firefox, Chrome и Micr
 
 Те же исходники собираются в пакет Manifest V3 для Chromium; устанавливается из GitHub в режиме разработчика (в магазине не публикуется):
 
-1. Скачайте `vdl-chrome-<версия>.zip` со страницы Releases и распакуйте, либо соберите папку сами: `node scripts/build-chrome.mjs` (с `--zip` ещё и упакует). Установка npm не нужна.
+1. Скачайте `video-downloader-legal-chrome-<версия>.zip` со страницы Releases и распакуйте, либо соберите папку сами: `node scripts/build-chrome.mjs` (с `--zip` ещё и упакует). Установка npm не нужна.
 2. `chrome://extensions` (в **Microsoft Edge:** `edge://extensions`) → включите «Режим разработчика» → «Загрузить распакованное» → выберите папку (`build/chrome`).
 
-Нужен **Chrome или Edge 116 или новее**. Edge запускает пакет для Chrome без изменений (заметки про Edge, имя `vdl-edge-<версия>.zip` и чек-лист магазина — в [EDGE/](EDGE/README.md)). Отличия от Firefox: только окно-попап (боковой панели нет), фон работает как service worker. Проверено в Chromium на локальных серверах (правила заголовков, скачивание HLS, MP3) и вручную на живых сайтах в Chrome.
+Нужен **Chrome или Edge 116 или новее**. Edge запускает пакет для Chrome без изменений (заметки про Edge, имя `video-downloader-legal-edge-<версия>.zip` и чек-лист магазина — в [EDGE/](EDGE/README.md)). Отличия от Firefox: только окно-попап (боковой панели нет), фон работает как service worker. Проверено в Chromium на локальных серверах (правила заголовков, скачивание HLS, MP3) и вручную на живых сайтах в Chrome.
 
 ## Как пользоваться
 
@@ -79,7 +79,7 @@ Video Downloader Legal — расширение для **Firefox, Chrome и Micr
 
 ## Разработка
 
-Обычный JavaScript (ES-модули), без бандлера. Из исходников собираются два пакета: `.xpi` для Firefox и `.zip` для Chrome. Для команд npm нужен **Node.js 18+**. Структура проекта — в [английском README](README.md#project-structure). Журнал разработки на русском: [docs/DEVLOG-ru.md](docs/DEVLOG-ru.md). Текст справки: [docs/HELP-ru.md](docs/HELP-ru.md). Поддержать проект: [DONATE.md](DONATE.md).
+Обычный JavaScript (ES-модули), без бандлера. Из исходников собираются два пакета: `.xpi` для Firefox и `.zip` для Chrome. Для команд npm нужен **Node.js 18+**. Структура проекта — в [английском README](README.md#project-structure). Журнал разработки: [на русском](docs/DEVLOG-ru.md), [in English](docs/DEVLOG-en.md). Текст справки: [docs/HELP-ru.md](docs/HELP-ru.md). Поддержать проект: [DONATE.md](DONATE.md).
 
 ### Сборка для Firefox (`.xpi`)
 
@@ -88,20 +88,20 @@ npm install
 npm run build-for-amo   # то же, что `npm run build`; пакет появится в build/
 ```
 
-`build-for-amo` — скрипт, который запускает автоматический сборщик исходников AMO; он использует `web-ext` и упаковывает ровно файлы расширения (без `platform/`, `scripts/`, `tests/`, `docs/`, `AMO/` и документов). Без npm: `zip -r video-downloader-legal-1.6.0.xpi manifest.json LICENSE LICENSES THIRD-PARTY.md _locales content icons injected lib service styles utils vendor`. Неподписанный `.xpi` ставится только временно (`about:debugging`); релизный `.xpi` подписан Mozilla.
+`build-for-amo` — скрипт, который запускает автоматический сборщик исходников AMO; он использует `web-ext` и упаковывает ровно файлы расширения (без `platform/`, `scripts/`, `tests/`, `docs/`, `AMO/` и документов). Без npm: `zip -r video-downloader-legal-ff-1.6.0.xpi manifest.json LICENSE LICENSES THIRD-PARTY.md _locales content icons injected lib service styles utils vendor`. Неподписанный `.xpi` ставится только временно (`about:debugging`); релизный `.xpi` подписан Mozilla.
 
 ### Сборка для Chrome и Microsoft Edge (`.zip`)
 
 ```bash
-npm run build:chrome            # build/chrome/ и build/vdl-chrome-<версия>.zip
-npm run build:edge              # тот же пакет под именем build/vdl-edge-<версия>.zip (Edge запускает сборку для Chrome без изменений)
+npm run build:chrome            # build/chrome/ и build/video-downloader-legal-chrome-<версия>.zip
+npm run build:edge              # тот же пакет под именем build/video-downloader-legal-edge-<версия>.zip (Edge запускает сборку для Chrome без изменений)
 node scripts/build-chrome.mjs   # только папка build/chrome/ (без zip)
 ```
 
 `scripts/build-chrome.mjs` берёт `manifest.json` для Firefox и переделывает его под Chrome: убирает `browser_specific_settings` и `sidebar_action`, ставит `minimum_chrome_version` 116, подключает фон как service worker `platform/sw.js`, заменяет `webRequestBlocking` на `declarativeNetRequest` и `offscreen`, добавляет `platform/shim.js` перед скриптами страниц. `npm install` не нужен. Для упаковки скрипт вызывает утилиту `zip`; если её нет (чистая Windows), он напишет об этом и оставит папку `build/chrome/` — упакуйте её встроенным `tar`:
 
 ```powershell
-tar -a -c -f build\vdl-chrome-1.6.0.zip -C build\chrome .
+tar -a -c -f build\video-downloader-legal-chrome-1.6.0.zip -C build\chrome .
 ```
 
 Установка: `chrome://extensions` → «Режим разработчика» → «Загрузить распакованное» → папка `build/chrome`. В Chrome Web Store расширение не публикуется.

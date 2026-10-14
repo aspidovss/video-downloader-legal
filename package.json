@@ -14,8 +14,8 @@
     "build-lamejs": "node scripts/build-lamejs.mjs",
     "verify-lamejs": "node scripts/build-lamejs.mjs --compare",
     "run": "web-ext run --source-dir . --ignore-files tests package.json",
-    "build": "web-ext build --source-dir . --overwrite-dest --artifacts-dir build --ignore-files tests AMO EDGE docs scripts platform .github .gitignore build dist node_modules package.json package-lock.json README.md README.ru.md CHANGELOG.md CONTRIBUTING.md DONATE.md PRIVACY.md SECURITY.md",
-    "build-for-amo": "npm run build"
+    "build": "node scripts/build-ff.mjs",
+    "build-for-amo": "node scripts/build-ff.mjs"
   },
   "devDependencies": {
     "web-ext": "^8.3.0"

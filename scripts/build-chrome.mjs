@@ -1,7 +1,7 @@
 // Builds the Chrome (Manifest V3, service worker) package from the same sources as Firefox.
 //   node scripts/build-chrome.mjs        -> build/chrome/            (load unpacked in chrome://extensions)
-//   node scripts/build-chrome.mjs --zip  -> build/vdl-chrome-<version>.zip   (`zip` tool; on Windows the built-in `tar` is the fallback)
-//   node scripts/build-chrome.mjs --zip --edge -> build/vdl-edge-<version>.zip  (the same package: Microsoft Edge runs the Chrome build unchanged;
+//   node scripts/build-chrome.mjs --zip  -> build/video-downloader-legal-chrome-<version>.zip   (`zip` tool; on Windows the built-in `tar` is the fallback)
+//   node scripts/build-chrome.mjs --zip --edge -> build/video-downloader-legal-edge-<version>.zip  (the same package: Microsoft Edge runs the Chrome build unchanged;
 //                                                the name only tells the two store uploads apart)
 import fs from 'node:fs';
 import path from 'node:path';
@@ -53,7 +53,7 @@ export function build() {
   return { dir: out, version: src.version_name || src.version };
 }
 
-export const packageName = (version, edge = false) => `vdl-${edge ? 'edge' : 'chrome'}-${version}.zip`;
+export const packageName = (version, edge = false) => `video-downloader-legal-${edge ? 'edge' : 'chrome'}-${version}.zip`;
 
 // zip tool first; on Windows (no `zip` by default) the built-in bsdtar writes a normal zip with `tar -a`.
 export function packFolder(dir, zip, platform = process.platform) {

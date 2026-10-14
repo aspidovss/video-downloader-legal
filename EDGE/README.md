@@ -4,7 +4,7 @@ Edge is built on Chromium, so it runs the **Chrome build** of VDL unchanged (Man
 
 ## Install (developer mode)
 
-1. Get `vdl-edge-<version>.zip` from the [Releases](https://github.com/aspidovss/video-downloader-legal/releases) page and unpack it into a folder, or build it yourself (below).
+1. Get `video-downloader-legal-edge-<version>.zip` from the [Releases](https://github.com/aspidovss/video-downloader-legal/releases) page and unpack it into a folder, or build it yourself (below).
 2. Open `edge://extensions`, turn on *Developer mode* (left side), press *Load unpacked* and pick the folder.
 3. Allow the extension on all sites if Edge asks (*Details → Site access → On all sites*); otherwise the page scanner cannot see the media.
 
@@ -13,7 +13,7 @@ The extension is not published in the Microsoft Edge Add-ons store yet; the step
 ## Build
 
 ```
-npm run build:edge      # build/chrome/ and build/vdl-edge-<version>.zip (no npm install needed)
+npm run build:edge      # build/chrome/ and build/video-downloader-legal-edge-<version>.zip (no npm install needed)
 ```
 
 `npm run build:edge` makes the same package as `npm run build:chrome`; only the file name differs, so the two uploads are easy to tell apart. The zip tool is used for packing; on Windows (no `zip`) the built-in `tar` is used. Files must be at the archive root.
@@ -26,7 +26,7 @@ Toolbar popup only (no sidebar); the background is a service worker; request hea
 
 Partner Center → *Edge program* → *Extensions* → *Create new extension* (the account is free for individual developers). Check the current requirements there; they change.
 
-* **Package:** `vdl-edge-<version>.zip` from `npm run build:edge`.
+* **Package:** `video-downloader-legal-edge-<version>.zip` from `npm run build:edge`.
 * **Name / short description / description:** use `../AMO/listing-en.md` (Name, Summary, Description); drop the paragraph about Firefox settings in *Good to know* and say instead: "After installing, allow the extension on all sites (Details → Site access)".
 * **Category:** Productivity (or the closest one offered). **Language:** English (the interface has 10 languages).
 * **Screenshots:** `../AMO/screenshots/en/` (1280×800); the banner `en-0-anywhere.png` can serve as the promotional image after scaling to the size the store asks for.

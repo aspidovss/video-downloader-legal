@@ -122,8 +122,8 @@ test('Microsoft Edge: detected by its user agent; same package as Chrome with it
   assert.equal(browserName('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36'), 'Chrome');
   assert.equal(browserName('Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:158.0) Gecko/20100101 Firefox/158.0'), 'Firefox');
   assert.equal(browserName('Mozilla/5.0 (Windows NT 10.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36 OPR/120.0.0.0'), 'Opera');
-  assert.equal(packageName('1.2.3'), 'vdl-chrome-1.2.3.zip');
-  assert.equal(packageName('1.2.3', true), 'vdl-edge-1.2.3.zip');
+  assert.equal(packageName('1.2.3'), 'video-downloader-legal-chrome-1.2.3.zip');
+  assert.equal(packageName('1.2.3', true), 'video-downloader-legal-edge-1.2.3.zip');
   const m = chromeManifest(JSON.parse(fs.readFileSync(new URL('../manifest.json', import.meta.url), 'utf8')));
   assert.equal(m.minimum_chrome_version, '116', 'Edge 116 is Chromium 116: the Chrome minimum applies');
   assert.ok(m.permissions.includes('offscreen') && m.permissions.includes('declarativeNetRequest'), 'APIs that Edge implements since Edge 109');
@@ -158,4 +158,9 @@ test('settings page: the language change is compared with the language shown BEF
   const submit = src.slice(src.indexOf("form.addEventListener('submit'"), src.indexOf('// "?" next to an option'));
   assert.ok(submit.indexOf('const langBefore = shownLang') >= 0 && submit.indexOf('const langBefore = shownLang') < submit.indexOf('await load()'));
   assert.ok(submit.includes('patch.uiLang !== langBefore') && !submit.includes('patch.uiLang !== shownLang'));
+});
+
+test('Firefox package name', async () => {
+  const { ffName } = await import('../scripts/build-ff.mjs');
+  assert.equal(ffName('1.2.3'), 'video-downloader-legal-ff-1.2.3.xpi');
 });
