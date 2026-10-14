@@ -6,6 +6,7 @@ Added features per version (fixes and internal changes are not listed). Version 
 
 ### Changed
 * Package names: `video-downloader-legal-ff-<version>.xpi` (Firefox, `npm run build`), `video-downloader-legal-chrome-<version>.zip` and `video-downloader-legal-edge-<version>.zip`.
+* `npm run build:dev` builds a separate Firefox add-on "VDL DEV" (own id, name and version) for unlisted signing on AMO; see `AMO/DEV-channel.md`.
 * The settings page: the *Keyboard shortcuts* block moved inside *General*, at its very end.
 
 ## 1.6.0dev2

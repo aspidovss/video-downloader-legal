@@ -15,6 +15,7 @@
     "verify-lamejs": "node scripts/build-lamejs.mjs --compare",
     "run": "web-ext run --source-dir . --ignore-files tests package.json",
     "build": "node scripts/build-ff.mjs",
+    "build:dev": "node scripts/build-ff.mjs --dev",
     "build-for-amo": "node scripts/build-ff.mjs"
   },
   "devDependencies": {
