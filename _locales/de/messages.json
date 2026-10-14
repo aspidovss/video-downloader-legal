@@ -754,5 +754,56 @@
   },
   "helpT4": {
     "message": "Schwer zu reproduzieren? Schalten Sie in den Einstellungen (Diagnose) das „Debug-Protokoll“ ein, wiederholen Sie das Problem und zeigen, kopieren, speichern oder senden Sie das Protokoll dort. Das Ergebnis der Auto-Diagnose wird hinzugefügt. Das Protokoll bleibt im Browser und wird nie von selbst gesendet."
+  },
+  "cmdAudio": {
+    "message": "Audio des ersten erkannten Mediums herunterladen"
+  },
+  "hkTitle": {
+    "message": "Tastenkürzel"
+  },
+  "optHotkeys": {
+    "message": "Tastenkürzel aktivieren"
+  },
+  "hintHotkeys": {
+    "message": "Schaltet die folgenden Kürzel ein oder aus. Klicken Sie in ein Feld und drücken Sie die gewünschten Tasten; Rücktaste leert es. Nötig sind Strg, Alt oder Command (Umschalt optional) und ein Buchstabe, eine Ziffer, ein Pfeil oder eine F-Taste."
+  },
+  "hkOpenPopup": {
+    "message": "Popup öffnen"
+  },
+  "hkDownloadVideo": {
+    "message": "Erstes Video herunterladen"
+  },
+  "hkDownloadAudio": {
+    "message": "Audio des ersten Mediums herunterladen"
+  },
+  "hkNone": {
+    "message": "Nicht zugewiesen"
+  },
+  "hkReset": {
+    "message": "Standard"
+  },
+  "hkInvalid": {
+    "message": "Diese Kombination kann nicht als Kürzel verwendet werden."
+  },
+  "hkChromeHint": {
+    "message": "In diesem Browser lassen sich Erweiterungskürzel nur auf seiner eigenen Seite ändern. Öffnen Sie die Adresse:"
+  },
+  "hkCopy": {
+    "message": "Adresse kopieren"
+  },
+  "hkCopied": {
+    "message": "Kopiert"
+  },
+  "optSidebar": {
+    "message": "Seitenleiste"
+  },
+  "sidebarOpen": {
+    "message": "In der Seitenleiste öffnen"
+  },
+  "sidebarClose": {
+    "message": "Seitenleiste schließen"
+  },
+  "noAudioHere": {
+    "message": "Auf dieser Seite gibt es kein Audio zum Herunterladen"
   }
 }

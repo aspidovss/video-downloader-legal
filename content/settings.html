@@ -67,6 +67,10 @@
           <span data-i18n="optLanguage"></span>
           <select name="uiLang" id="ui-lang"></select>
         </label>
+        <div class="check-row" id="sidebar-row" hidden>
+          <span class="field-label" data-i18n="optSidebar"></span>
+          <button type="button" id="sidebar-toggle" data-i18n="sidebarOpen"></button>
+        </div>
         <div class="check-row" data-desktop-only>
           <label class="check"><input type="checkbox" name="notifications"> <span data-i18n="optNotifications"></span></label>
           <button type="button" class="info" aria-expanded="false" data-i18n-title="hintToggle" data-i18n-aria="hintToggle">?</button>
@@ -92,6 +96,22 @@
         <button type="button" class="info" aria-expanded="false" data-i18n-title="hintToggle" data-i18n-aria="hintToggle">?</button>
         <div class="hint" hidden data-i18n="hintMinSize"></div>
       </div>
+      <fieldset class="prefs sub" data-desktop-only>
+        <legend data-i18n="hkTitle"></legend>
+        <div class="check-row">
+          <label class="check"><input type="checkbox" name="hotkeys"> <span data-i18n="optHotkeys"></span></label>
+          <button type="button" class="info" aria-expanded="false" data-i18n-title="hintToggle" data-i18n-aria="hintToggle">?</button>
+          <div class="hint" hidden data-i18n="hintHotkeys"></div>
+        </div>
+        <div class="hk-row" data-hk="hkExecute"><span data-i18n="hkOpenPopup"></span><input type="text" name="hkExecute" class="hk" readonly spellcheck="false"><button type="button" class="hk-reset" data-i18n="hkReset"></button></div>
+        <div class="hk-row" data-hk="hkVideo"><span data-i18n="hkDownloadVideo"></span><input type="text" name="hkVideo" class="hk" readonly spellcheck="false"><button type="button" class="hk-reset" data-i18n="hkReset"></button></div>
+        <div class="hk-row" data-hk="hkAudio"><span data-i18n="hkDownloadAudio"></span><input type="text" name="hkAudio" class="hk" readonly spellcheck="false"><button type="button" class="hk-reset" data-i18n="hkReset"></button></div>
+        <div id="hk-error" class="faint" hidden data-i18n="hkInvalid"></div>
+        <div id="hk-chrome" hidden>
+          <p class="faint"><span id="hk-chrome-text"></span> <code id="hk-chrome-url"></code></p>
+          <button type="button" id="hk-copy" data-i18n="hkCopy"></button>
+        </div>
+      </fieldset>
       </fieldset>
 
       <fieldset class="prefs">

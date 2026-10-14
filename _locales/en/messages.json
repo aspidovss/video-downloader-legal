@@ -754,5 +754,56 @@
   },
   "helpT4": {
     "message": "Hard to reproduce? Turn on the “Debug log” in the options (Diagnostics), repeat the problem, then view, copy, save or send the log there. The auto-diagnostics result is added to it. The log stays in your browser and is never sent by itself."
+  },
+  "cmdAudio": {
+    "message": "Download the audio of the first detected media"
+  },
+  "hkTitle": {
+    "message": "Keyboard shortcuts"
+  },
+  "optHotkeys": {
+    "message": "Enable keyboard shortcuts"
+  },
+  "hintHotkeys": {
+    "message": "Turns the shortcuts below on or off. Click a field and press the keys you want; Backspace clears it. A shortcut needs Ctrl, Alt or Command (Shift is optional) and a letter, digit, arrow or F key."
+  },
+  "hkOpenPopup": {
+    "message": "Open the popup"
+  },
+  "hkDownloadVideo": {
+    "message": "Download the first video"
+  },
+  "hkDownloadAudio": {
+    "message": "Download the audio of the first media"
+  },
+  "hkNone": {
+    "message": "Not assigned"
+  },
+  "hkReset": {
+    "message": "Default"
+  },
+  "hkInvalid": {
+    "message": "This combination cannot be used as a shortcut."
+  },
+  "hkChromeHint": {
+    "message": "This browser lets you change extension shortcuts only on its own page. Open the address:"
+  },
+  "hkCopy": {
+    "message": "Copy address"
+  },
+  "hkCopied": {
+    "message": "Copied"
+  },
+  "optSidebar": {
+    "message": "Sidebar"
+  },
+  "sidebarOpen": {
+    "message": "Open in sidebar"
+  },
+  "sidebarClose": {
+    "message": "Close sidebar"
+  },
+  "noAudioHere": {
+    "message": "No audio to download on this page"
   }
 }

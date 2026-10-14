@@ -1,6 +1,25 @@
 # Changelog
 
-Added features per version (fixes and internal changes are not listed). Version history before 1.5 is condensed from the development log; the full log (in Russian) is in [docs/DEVLOG-ru.md](docs/DEVLOG-ru.md).
+Added features per version (fixes and internal changes are not listed). Version history before 1.5 is condensed from the development log; the short development log is in [docs/DEVLOG-en.md](docs/DEVLOG-en.md) (English) and [docs/DEVLOG-ru.md](docs/DEVLOG-ru.md) (Russian).
+
+## 1.6.0dev3
+
+### Changed
+* The settings page: the *Keyboard shortcuts* block moved inside *General*, at its very end.
+
+## 1.6.0dev2
+
+### Added
+* **Sidebar button (Firefox):** a button in the popup opens the sidebar and closes the popup; in the sidebar the same button closes the panel. The settings page has the same control. Chrome, Edge and Firefox for Android do not show it.
+* **Keyboard shortcuts you can set:** a new settings block with a master switch and three shortcuts: open the popup (default `Alt+Up`), download the first video (`Alt+Down`) and the new *download the audio of the first media* (`Alt+Shift+Down`; the audio format and quality of the settings are used). Firefox: type the shortcut into the field (Backspace clears it, *Default* resets it). Chrome and Edge cannot change shortcuts from an extension, so the page shows the address `chrome://extensions/shortcuts` / `edge://extensions/shortcuts` with a copy button. Hidden on Android.
+
+## 1.6.0dev1
+
+### Added
+* **YouTube recording: AV1 video + Opus audio in one file.** The recorder used to leave them as two files (an MP4 and a `.weba`) because neither container can hold both. They are now joined into one Matroska file (`.mkv`) without re-encoding: the AV1 (or H.264) samples are cut out of the MP4 fragments and the Opus clusters are kept (`mergeMp4Opus` in `lib/mux.js`). Both tracks are cut to the span they have in common. If the join is not possible, the two files are saved as before.
+
+### Fixed
+* Settings: after *Save* the page did not apply a changed interface language until it was refreshed by hand (the language was compared after it had already been overwritten).
 
 ## 1.6.0dev
 

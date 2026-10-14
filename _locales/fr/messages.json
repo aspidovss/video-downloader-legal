@@ -754,5 +754,56 @@
   },
   "helpT4": {
     "message": "Difficile à reproduire ? Activez le « Journal de débogage » dans les options (Diagnostic), reproduisez le problème, puis affichez, copiez, enregistrez ou envoyez le journal depuis la même page. Le résultat de l’auto-diagnostic y est ajouté. Le journal reste dans votre navigateur et n’est jamais envoyé automatiquement."
+  },
+  "cmdAudio": {
+    "message": "Télécharger l'audio du premier média détecté"
+  },
+  "hkTitle": {
+    "message": "Raccourcis clavier"
+  },
+  "optHotkeys": {
+    "message": "Activer les raccourcis clavier"
+  },
+  "hintHotkeys": {
+    "message": "Active ou désactive les raccourcis ci-dessous. Cliquez dans un champ et appuyez sur les touches voulues ; Retour arrière le vide. Il faut Ctrl, Alt ou Command (Maj facultatif) et une lettre, un chiffre, une flèche ou une touche F."
+  },
+  "hkOpenPopup": {
+    "message": "Ouvrir la fenêtre"
+  },
+  "hkDownloadVideo": {
+    "message": "Télécharger la première vidéo"
+  },
+  "hkDownloadAudio": {
+    "message": "Télécharger l'audio du premier média"
+  },
+  "hkNone": {
+    "message": "Non attribué"
+  },
+  "hkReset": {
+    "message": "Par défaut"
+  },
+  "hkInvalid": {
+    "message": "Cette combinaison ne peut pas servir de raccourci."
+  },
+  "hkChromeHint": {
+    "message": "Dans ce navigateur, les raccourcis des extensions ne se modifient que sur sa propre page. Ouvrez l'adresse :"
+  },
+  "hkCopy": {
+    "message": "Copier l'adresse"
+  },
+  "hkCopied": {
+    "message": "Copié"
+  },
+  "optSidebar": {
+    "message": "Barre latérale"
+  },
+  "sidebarOpen": {
+    "message": "Ouvrir dans la barre latérale"
+  },
+  "sidebarClose": {
+    "message": "Fermer la barre latérale"
+  },
+  "noAudioHere": {
+    "message": "Aucun audio à télécharger sur cette page"
   }
 }

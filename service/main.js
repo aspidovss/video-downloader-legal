@@ -21,12 +21,13 @@ import { tsToMp4 } from '../lib/ts2mp4.js';
 import { describeInit } from '../lib/mp4info.js';
 import { maskUrl, repType, estimateSize, probeInfo } from '../lib/sitediag.js';
 import {
-  MP3_KBPS, parseGooglevideoUrl, validateSummary, buildVariants, rangedParts, trackExt, newDiag, recordRequest, buildDiagnostics,
+  MP3_KBPS, groupAudio, pickAudioQuality, parseGooglevideoUrl, validateSummary, buildVariants, rangedParts, trackExt, newDiag, recordRequest, buildDiagnostics,
 } from '../lib/youtube.js';
 import { mp3Bitrate, mp3EstimateBytes, encodeMp3, decodeToPcm, MP3_MAX_SECONDS } from '../lib/mp3.js';
 import { resolveClients, buildPlayerRequest, parsePlayerResponse, urlParamNames, parseSwData, buildSessionPlayerRequest, makeCpn, withCpn, MIB } from '../lib/ytapi.js';
 import '../lib/mux.js'; // publishes globalThis.__vdlMux (shared with the page-world recorder)
 import { getSettings, saveSettings, addHistory, DEFAULTS } from '../utils/settings.js';
+import { COMMAND_OF, isValidShortcut } from '../lib/shortcuts.js';
 import { dlog, configureLog, flushLog, logEnabled } from '../utils/debuglog.js';
 import { diagLines } from '../lib/debuglog.js';
 
@@ -116,6 +117,7 @@ browser.storage.onChanged.addListener((changes, area) => {
     const wasOn = (changes.settings.oldValue || {}).ytCcOnly !== false;
     if (settings.ytCcOnly === false && wasOn) browser.storage.local.set({ ccOffAt: Date.now() }).catch(() => {});
     else if (settings.ytCcOnly !== false) browser.storage.local.remove('ccOffAt').catch(() => {});
+    if (['hotkeys', 'hkExecute', 'hkVideo', 'hkAudio'].some((k) => settings[k] !== before[k])) applyHotkeys();
     loadUiLang(settings.uiLang).then(() => { try { browser.contextMenus.update('vdl-download', { title: tr('menuDownload') }); } catch { /* menu not created yet */ } }).catch(() => {});
     for (const [tabId, t] of tabs) if (t.yt?.summary) refreshYoutube(tabId); // e.g. CC-only toggled
   }
@@ -1651,10 +1653,10 @@ async function handleRecStatus(msg, sender) {
   if (t.yt.summary) refreshYoutube(tabId); else notifyUI(tabId);
 }
 
-// Video + audio of the same container are joined into one file by the recorder.
+// Video + audio of the same container are joined into one file by the recorder (VP9 + AAC and AV1 + Opus: into Matroska).
 function canMergeTracks(list) {
   return list.length === 2 && list[0].kind === 'video' && list[1].kind === 'audio'
-    && ((list[0].ext === 'webm' && list[1].ext === 'weba') || (list[0].ext === 'mp4' && list[1].ext === 'm4a') || (list[0].ext === 'webm' && list[1].ext === 'm4a'));
+    && ((list[0].ext === 'webm' && list[1].ext === 'weba') || (list[0].ext === 'mp4' && list[1].ext === 'm4a') || (list[0].ext === 'webm' && list[1].ext === 'm4a') || (list[0].ext === 'mp4' && list[1].ext === 'weba'));
 }
 
 function recFilenames(tabId) {
@@ -1665,7 +1667,7 @@ function recFilenames(tabId) {
     title: y?.summary?.isLive ? `youtube_${y.summary.videoId}_${stamp}` : (y?.summary?.title || 'youtube'),
     site: 'youtube.com',
     quality: tr.height ? `${tr.height}p` : '',
-    ext: list.length === 2 && list[0].ext === 'webm' && list[1].ext === 'm4a' && canMergeTracks(list) ? (tr.kind === 'video' ? 'mkv' : tr.ext) : tr.ext, // VP9 + AAC are joined into Matroska
+    ext: list.length === 2 && ((list[0].ext === 'webm' && list[1].ext === 'm4a') || (list[0].ext === 'mp4' && list[1].ext === 'weba')) && canMergeTracks(list) ? (tr.kind === 'video' ? 'mkv' : tr.ext) : tr.ext, // VP9 + AAC and AV1 + Opus are joined into Matroska
     suffix: list.length > 1 && tr.kind === 'audio' ? '.audio' : '',
   }));
 }
@@ -1816,13 +1818,50 @@ browser.contextMenus?.onClicked.addListener(async (info, tab) => {
   if (it) startDownload({ tabId: tab.id, itemId: it.id });
 });
 
-browser.commands?.onCommand.addListener(async (command) => {
-  if (command !== 'default-action') return;
+// Hotkeys: "download the first video" and "download the audio of the first media" act on the newest detected item of
+// the active tab; "open the popup" is handled by the browser itself. The master switch is settings.hotkeys.
+async function hotkeyItem() {
   await ready;
   const [tab] = await browser.tabs.query({ active: true, currentWindow: true });
   const items = tab && tabs.get(tab.id) ? shownItems(tabs.get(tab.id)).filter(downloadable).reverse() : [];
-  if (items[0]) startDownload({ tabId: tab.id, itemId: items[0].id, variant: 0 });
+  return { tab, it: items[0] || null };
+}
+
+// The audio the popup would pick: the preferred format and quality of the settings.
+function hotkeyAudioChoice(tabId, it) {
+  const y = tabs.get(tabId)?.yt;
+  const list = it.kind === 'yt' ? variantsFor(y).map((v, index) => ({ ...v, index })).filter((v) => v.audio) : (it.kind === 'dash' ? dashAudioVariants(it) : []);
+  const groups = groupAudio(list.filter((v) => !v.unavailable && !v.tooLong));
+  const group = groups.find((g) => g.type === settings.defaultAudioFormat) || groups[0];
+  const chosen = group && pickAudioQuality(group.items, settings.defaultAudioQuality, group.type === 'mp3');
+  if (!chosen) return null;
+  return it.kind === 'yt'
+    ? { tabId, itemId: it.id, variant: chosen.index, variantLabel: chosen.label }
+    : { tabId, itemId: it.id, variant: 0, audio: { rep: chosen.rep ?? 0, mp3: !!chosen.mp3, kbps: chosen.kbps || 0 } };
+}
+
+browser.commands?.onCommand.addListener(async (command) => {
+  if (command !== 'default-action' && command !== 'download-audio') return;
+  await ready;
+  if (!settings.hotkeys) return;
+  const { tab, it } = await hotkeyItem();
+  if (!it) return;
+  if (command === 'default-action') { startDownload({ tabId: tab.id, itemId: it.id, variant: 0 }); return; }
+  const msg = hotkeyAudioChoice(tab.id, it);
+  if (msg) startDownload(msg);
+  else notify(tr('noAudioHere'));
 });
+
+// Firefox only (commands.update): puts the shortcuts of the settings on the commands, or removes them when the
+// switch is off. Called when these settings change, not at every start, so a shortcut set in
+// about:addons stays until the user changes it here.
+async function applyHotkeys() {
+  if (typeof browser.commands?.update !== 'function') return;
+  for (const [key, name] of Object.entries(COMMAND_OF)) {
+    const want = settings.hotkeys && isValidShortcut(settings[key]) ? settings[key] : '';
+    try { await browser.commands.update({ name, shortcut: want }); } catch (e) { dlog('settings', 'shortcut refused', { name, shortcut: want, error: String(e?.message || e) }); }
+  }
+}
 
 // ---------------------------------------------------------- debug log ----
 // Uncaught errors of the background go to the debug log (only when it is switched on).

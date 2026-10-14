@@ -238,6 +238,53 @@ test('WebM + AAC: no video without sound is left at the start or the end', { ski
   assert.ok(Math.abs(v[v.length - 1] - a[a.length - 1]) < 2.2, `end v=${v[v.length - 1]} a=${a[a.length - 1]}`);
 });
 
+const hasEnc = (name) => hasFfmpeg && String(spawnSync('ffmpeg', ['-hide_banner', '-encoders']).stdout).includes(name);
+
+for (const [label, enc, mime, codec] of [['AV1', 'libsvtav1', 'video/mp4; codecs="av01.0.05M.08"', 'av1'], ['H.264', 'libx264', 'video/mp4; codecs="avc1.4D401F"', 'h264']]) {
+  test(`MP4 ${label} video + WebM Opus audio are joined into one Matroska file (no re-encoding)`, { skip: !hasEnc(enc) || !hasEnc('libopus') }, async () => {
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'vdl-opus-'));
+    const vf = path.join(dir, 'v.mp4');
+    const af = path.join(dir, 'a.webm');
+    ff('-f', 'lavfi', '-i', 'testsrc=size=160x96:rate=25', '-t', '8', '-c:v', enc, '-g', '50', '-movflags', 'frag_keyframe+empty_moov+default_base_moof', '-f', 'mp4', vf);
+    ff('-f', 'lavfi', '-i', 'sine=frequency=440:sample_rate=48000', '-t', '8', '-c:a', 'libopus', '-f', 'webm', af);
+    const blob = await mergeReps(await capture(vf, mime), await capture(af, 'audio/webm; codecs="opus"'));
+    assert.ok(blob, 'merge succeeded');
+    assert.equal(blob.type, 'video/x-matroska');
+    const out = path.join(dir, 'm.mkv');
+    fs.writeFileSync(out, Buffer.from(await blob.arrayBuffer()));
+    const codecs = String(spawnSync('ffprobe', ['-v', 'error', '-show_entries', 'stream=codec_name', '-of', 'csv=p=0', out]).stdout).trim().split(/\s+/).sort().join(',');
+    assert.equal(codecs, `${codec},opus`);
+    ff('-i', out, '-f', 'null', '-'); // decodes cleanly
+    const frames = Number(String(spawnSync('ffprobe', ['-v', 'error', '-count_packets', '-select_streams', 'v:0', '-show_entries', 'stream=nb_read_packets', '-of', 'csv=p=0', out]).stdout).trim());
+    assert.equal(frames, 200); // 8 s at 25 fps: every video sample is there
+    const dur = Number(String(spawnSync('ffprobe', ['-v', 'error', '-show_entries', 'format=duration', '-of', 'csv=p=0', out]).stdout).trim());
+    assert.ok(dur > 7.5 && dur < 8.6, `duration ${dur}`);
+    const vol = spawnSync('ffmpeg', ['-i', out, '-vn', '-af', 'volumedetect', '-f', 'null', '-']);
+    assert.match(String(vol.stderr), /mean_volume: -\d+/);
+  });
+}
+
+test('MP4 video + WebM Opus audio with different media offsets are cut to the common span and start at 0', { skip: !hasEnc('libx264') || !hasEnc('libopus') }, async () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'vdl-opus2-'));
+  const vf = path.join(dir, 'v.mp4');
+  const af = path.join(dir, 'a.webm');
+  // video covers 5..15 s of the stream clock, audio 0..10 s -> common 5..10
+  ff('-f', 'lavfi', '-i', 'testsrc=size=160x96:rate=25', '-t', '10', '-c:v', 'libx264', '-g', '50', '-output_ts_offset', '5', '-movflags', 'frag_keyframe+empty_moov+default_base_moof', '-f', 'mp4', vf);
+  ff('-f', 'lavfi', '-i', 'sine=frequency=440:sample_rate=48000', '-t', '10', '-c:a', 'libopus', '-f', 'webm', af);
+  const blob = await mergeReps(await capture(vf, 'video/mp4; codecs="avc1.4D401F"'), await capture(af, 'audio/webm; codecs="opus"'));
+  assert.ok(blob);
+  const out = path.join(dir, 'm.mkv');
+  fs.writeFileSync(out, Buffer.from(await blob.arrayBuffer()));
+  const starts = String(spawnSync('ffprobe', ['-v', 'error', '-show_entries', 'stream=start_time', '-of', 'csv=p=0', out]).stdout).trim().split(/\s+/).map(Number);
+  for (const st of starts) assert.ok(st < 2.5, `start_time ${st}`);
+  ff('-i', out, '-f', 'null', '-');
+});
+
+test('MP4 + WebM merge refuses what it cannot copy: VP9 in MP4 is not handled, garbage gives null', async () => {
+  const mk = (mime, container, kind) => { const c = new TrackCapture(mime, () => {}); c.container = container; c.kind = kind; c.reps.set('x', { init: new Uint8Array(8), frags: new Map([[0, new Blob([1])]]), height: 0, bytes: 1 }); return c; };
+  assert.equal(await mergeReps(mk('video/mp4', 'mp4', 'video'), mk('audio/webm', 'webm', 'audio')), null);
+});
+
 test('merge refuses mixed containers', async () => {
   const mk = (mime) => { const c = new TrackCapture(mime, () => {}); c.reps.set('x', { init: new Uint8Array(1), frags: new Map([[0, new Blob([1])]]), height: 0, bytes: 1 }); return c; };
   assert.equal(await mergeReps(mk('video/webm'), mk('audio/mp4')), null);

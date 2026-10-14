@@ -244,3 +244,10 @@ html.android main { padding: 12px 14px 18px; }
   button.icon, footer.toolbar button.icon { min-width: 44px; }
   footer.toolbar { justify-content: space-around; }
 }
+
+/* keyboard shortcut rows of the settings page */
+.hk-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.hk-row > span { flex: 1 1 200px; }
+.hk-row input.hk { width: 170px; text-align: center; cursor: pointer; }
+.hk-row input.hk:focus { border-color: var(--accent); outline: 2px solid var(--accent); outline-offset: 1px; }
+.field-label { flex: 1 1 200px; }

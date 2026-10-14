@@ -754,5 +754,56 @@
   },
   "helpT4": {
     "message": "Difícil de reproduzir? Ative o “Registro de depuração” nas opções (Diagnóstico), repita o problema e veja, copie, salve ou envie o registro ali mesmo. O resultado do autodiagnóstico é adicionado a ele. O registro fica no seu navegador e nunca é enviado sozinho."
+  },
+  "cmdAudio": {
+    "message": "Baixar o áudio da primeira mídia detectada"
+  },
+  "hkTitle": {
+    "message": "Atalhos de teclado"
+  },
+  "optHotkeys": {
+    "message": "Ativar atalhos de teclado"
+  },
+  "hintHotkeys": {
+    "message": "Liga ou desliga os atalhos abaixo. Clique em um campo e pressione as teclas desejadas; Backspace limpa o campo. É preciso Ctrl, Alt ou Command (Shift é opcional) e uma letra, um dígito, uma seta ou uma tecla F."
+  },
+  "hkOpenPopup": {
+    "message": "Abrir o pop-up"
+  },
+  "hkDownloadVideo": {
+    "message": "Baixar o primeiro vídeo"
+  },
+  "hkDownloadAudio": {
+    "message": "Baixar o áudio da primeira mídia"
+  },
+  "hkNone": {
+    "message": "Não atribuído"
+  },
+  "hkReset": {
+    "message": "Padrão"
+  },
+  "hkInvalid": {
+    "message": "Esta combinação não pode ser usada como atalho."
+  },
+  "hkChromeHint": {
+    "message": "Neste navegador, os atalhos das extensões só podem ser alterados na própria página dele. Abra o endereço:"
+  },
+  "hkCopy": {
+    "message": "Copiar endereço"
+  },
+  "hkCopied": {
+    "message": "Copiado"
+  },
+  "optSidebar": {
+    "message": "Barra lateral"
+  },
+  "sidebarOpen": {
+    "message": "Abrir na barra lateral"
+  },
+  "sidebarClose": {
+    "message": "Fechar a barra lateral"
+  },
+  "noAudioHere": {
+    "message": "Não há áudio para baixar nesta página"
   }
 }

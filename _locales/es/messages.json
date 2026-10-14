@@ -754,5 +754,56 @@
   },
   "helpT4": {
     "message": "¿Difícil de reproducir? Active el «Registro de depuración» en las opciones (Diagnóstico), repita el problema y vea, copie, guarde o envíe el registro allí. El resultado del autodiagnóstico se añade a él. El registro queda en su navegador y nunca se envía solo."
+  },
+  "cmdAudio": {
+    "message": "Descargar el audio del primer medio detectado"
+  },
+  "hkTitle": {
+    "message": "Atajos de teclado"
+  },
+  "optHotkeys": {
+    "message": "Activar los atajos de teclado"
+  },
+  "hintHotkeys": {
+    "message": "Activa o desactiva los atajos de abajo. Haga clic en un campo y pulse las teclas que quiera; Retroceso lo vacía. Se necesita Ctrl, Alt o Command (Mayús es opcional) y una letra, un dígito, una flecha o una tecla F."
+  },
+  "hkOpenPopup": {
+    "message": "Abrir la ventana emergente"
+  },
+  "hkDownloadVideo": {
+    "message": "Descargar el primer vídeo"
+  },
+  "hkDownloadAudio": {
+    "message": "Descargar el audio del primer medio"
+  },
+  "hkNone": {
+    "message": "Sin asignar"
+  },
+  "hkReset": {
+    "message": "Predeterminado"
+  },
+  "hkInvalid": {
+    "message": "Esta combinación no se puede usar como atajo."
+  },
+  "hkChromeHint": {
+    "message": "En este navegador los atajos de las extensiones solo se cambian en su propia página. Abra la dirección:"
+  },
+  "hkCopy": {
+    "message": "Copiar dirección"
+  },
+  "hkCopied": {
+    "message": "Copiado"
+  },
+  "optSidebar": {
+    "message": "Barra lateral"
+  },
+  "sidebarOpen": {
+    "message": "Abrir en la barra lateral"
+  },
+  "sidebarClose": {
+    "message": "Cerrar la barra lateral"
+  },
+  "noAudioHere": {
+    "message": "No hay audio para descargar en esta página"
   }
 }

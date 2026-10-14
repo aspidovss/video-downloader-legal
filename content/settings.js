@@ -1,6 +1,7 @@
-import { translatePage, renderFooter, initFoldable, t } from '../utils/dom.js';
+import { translatePage, renderFooter, initFoldable, browserName, t } from '../utils/dom.js';
 import { loadUiLang, UI_LANGS, LANG_NAMES, uiLangCode } from '../utils/i18n.js';
 import { getSettings, saveSettings, DEFAULTS } from '../utils/settings.js';
+import { DEFAULT_SHORTCUTS, COMMAND_OF, isValidShortcut, shortcutFromEvent } from '../lib/shortcuts.js';
 import { getConsent, revokeConsent } from '../utils/consent.js';
 import { isAccepted } from '../lib/consent.js';
 import { readLog, clearLog } from '../utils/debuglog.js';
@@ -50,8 +51,62 @@ async function load() {
     if (el.type === 'checkbox') el.checked = !!s[el.name];
     else el.value = el.name === 'template' && !String(s.template || '').includes('{title}') ? DEFAULTS.template : s[el.name];
   }
+  await showActualShortcuts(s);
   snapshot = formValues();
   updateDirty();
+}
+
+// Keyboard shortcuts. Firefox: the fields show the shortcuts the browser really has (they can be changed in
+// about:addons too) and are written with commands.update by the background. Chrome / Edge: an extension cannot
+// change them, so the page only explains where to do it.
+const canSetShortcuts = typeof browser.commands?.update === 'function';
+async function showActualShortcuts(s) {
+  if (!canSetShortcuts || !s.hotkeys) return;
+  try {
+    const all = await browser.commands.getAll();
+    for (const [key, name] of Object.entries(COMMAND_OF)) {
+      const c = all.find((x) => x.name === name);
+      if (c && isValidShortcut(c.shortcut || '') && form.elements[key]) form.elements[key].value = c.shortcut || '';
+    }
+  } catch { /* keep the stored values */ }
+}
+const $hkError = document.getElementById('hk-error');
+const isMac = /Mac/.test(navigator.platform || '');
+for (const row of document.querySelectorAll('.hk-row')) {
+  const input = row.querySelector('input');
+  input.placeholder = t('hkNone');
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'Tab') return;
+    e.preventDefault();
+    if (e.key === 'Backspace' || e.key === 'Delete') { input.value = ''; $hkError.hidden = true; form.dispatchEvent(new Event('input')); return; }
+    if (['Control', 'Alt', 'Shift', 'Meta'].includes(e.key)) return;
+    const sc = shortcutFromEvent(e, isMac);
+    $hkError.hidden = !!sc;
+    if (sc) { input.value = sc; form.dispatchEvent(new Event('input')); }
+  });
+  row.querySelector('.hk-reset').addEventListener('click', () => { input.value = DEFAULT_SHORTCUTS[row.dataset.hk]; $hkError.hidden = true; form.dispatchEvent(new Event('input')); });
+}
+if (!canSetShortcuts) {
+  for (const row of document.querySelectorAll('.hk-row')) row.hidden = true;
+  const url = `${browserName() === 'Edge' ? 'edge' : 'chrome'}://extensions/shortcuts`;
+  document.getElementById('hk-chrome').hidden = false;
+  document.getElementById('hk-chrome-text').textContent = t('hkChromeHint');
+  document.getElementById('hk-chrome-url').textContent = url;
+  const copy = document.getElementById('hk-copy');
+  copy.addEventListener('click', async () => {
+    try { await navigator.clipboard.writeText(url); copy.textContent = t('hkCopied'); } catch { /* ignore */ }
+    setTimeout(() => { copy.textContent = t('hkCopy'); }, 1500);
+  });
+}
+
+// Sidebar (Firefox desktop): open / close from the settings too
+const $sideRow = document.getElementById('sidebar-row');
+const $sideBtn = document.getElementById('sidebar-toggle');
+if (typeof browser.sidebarAction?.toggle === 'function') {
+  $sideRow.hidden = false;
+  const label = async () => { try { $sideBtn.textContent = t(await browser.sidebarAction.isOpen({}) ? 'sidebarClose' : 'sidebarOpen'); } catch { /* ignore */ } };
+  $sideBtn.addEventListener('click', async () => { await browser.sidebarAction.toggle(); setTimeout(label, 300); });
+  label();
 }
 
 form.addEventListener('submit', async (e) => {
@@ -62,6 +117,7 @@ form.addEventListener('submit', async (e) => {
     patch[el.name] = el.type === 'checkbox' ? el.checked : el.type === 'number' ? Number(el.value) : el.value;
   }
   if (!UI_LANGS.includes(patch.uiLang)) patch.uiLang = 'auto';
+  for (const k of Object.keys(DEFAULT_SHORTCUTS)) if (!isValidShortcut(String(patch[k] ?? ''))) patch[k] = DEFAULT_SHORTCUTS[k];
   patch.template = String(patch.template || '').trim();
   if (!patch.template.includes('{title}')) patch.template = DEFAULTS.template;
   patch.minSizeKB = Math.max(0, Math.floor(Number(patch.minSizeKB)) || 0);
@@ -75,10 +131,11 @@ form.addEventListener('submit', async (e) => {
   patch.ytRecordSpeed = Math.min(4, Math.max(1, patch.ytRecordSpeed || 2));
   patch.ytClients = String(patch.ytClients || '').toUpperCase().replace(/[^A-Z0-9_,\s]/g, '').trim() || 'VISIONOS,ANDROID_VR,IOS,IOS_VDL';
   try { if (patch.ytClientOverrides.trim()) JSON.parse(patch.ytClientOverrides); } catch { patch.ytClientOverrides = ''; }
+  const langBefore = shownLang; // load() below overwrites shownLang, so the language change must be noted first
   await saveSettings(patch);
   await load(); // shows the values as saved (corrected ones included); the bar goes away
   $bar.hidden = false; $barText.hidden = true; $barSave.hidden = true; $barCancel.hidden = true; savedMsg.hidden = false;
-  if (patch.uiLang !== shownLang) { setTimeout(() => location.reload(), 500); return; } // the page re-reads its language
+  if (patch.uiLang !== langBefore) { setTimeout(() => location.reload(), 500); return; } // the page re-reads its language
   setTimeout(() => { savedMsg.hidden = true; if (!dirty) $bar.hidden = true; }, 1500);
 });
 

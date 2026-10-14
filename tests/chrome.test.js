@@ -152,3 +152,10 @@ test('Firefox for Android: detection, guarded desktop-only APIs, touch layout, d
   const settings = fs.readFileSync(new URL('../content/settings.html', import.meta.url), 'utf8');
   for (const n of ['notifications', 'saveAs']) assert.match(settings, new RegExp(`data-desktop-only>\\s*<label class="check"><input type="checkbox" name="${n}"`));
 });
+
+test('settings page: the language change is compared with the language shown BEFORE load() overwrites it (page reloads after Save)', () => {
+  const src = fs.readFileSync(new URL('../content/settings.js', import.meta.url), 'utf8');
+  const submit = src.slice(src.indexOf("form.addEventListener('submit'"), src.indexOf('// "?" next to an option'));
+  assert.ok(submit.indexOf('const langBefore = shownLang') >= 0 && submit.indexOf('const langBefore = shownLang') < submit.indexOf('await load()'));
+  assert.ok(submit.includes('patch.uiLang !== langBefore') && !submit.includes('patch.uiLang !== shownLang'));
+});

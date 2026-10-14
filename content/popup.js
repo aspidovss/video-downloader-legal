@@ -394,6 +394,20 @@ function consentGate() {
   });
 }
 
+// Firefox only: one button moves the interface between the popup and the sidebar (closes the sidebar when pressed in it).
+async function setupSidebarButton() {
+  const btn = document.getElementById('btn-sidebar');
+  if (typeof browser.sidebarAction?.open !== 'function') return; // Chrome / Edge / Android
+  let inSidebar = false;
+  try { inSidebar = (await browser.extension.getViews({ type: 'sidebar' })).includes(window); } catch { /* unknown: treat as popup */ }
+  btn.hidden = false;
+  btn.title = t(inSidebar ? 'sidebarClose' : 'sidebarOpen');
+  btn.onclick = () => {
+    if (inSidebar) browser.sidebarAction.close();
+    else { browser.sidebarAction.open(); window.close(); } // open() has to run inside the click
+  };
+}
+
 async function init() {
   translatePage();
   if (!(await hasConsent())) await consentGate();
@@ -401,6 +415,7 @@ async function init() {
   const [tab] = await browser.tabs.query({ active: true, currentWindow: true });
   tabId = tab?.id ?? null;
 
+  await setupSidebarButton();
   document.getElementById('btn-settings').onclick = () => browser.runtime.openOptionsPage();
   document.getElementById('btn-history').onclick = () => browser.tabs.create({ url: browser.runtime.getURL('content/history.html') });
   document.getElementById('btn-reload').onclick = async () => {

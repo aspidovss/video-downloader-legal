@@ -754,5 +754,56 @@
   },
   "helpT4": {
     "message": "再現しにくい場合は、設定（診断）で「デバッグログ」をオンにして問題を再現し、同じ画面でログを表示・コピー・保存・送信してください。自動診断の結果もログに追加されます。ログはブラウザー内にのみ保存され、自動送信されません。"
+  },
+  "cmdAudio": {
+    "message": "最初に検出されたメディアの音声をダウンロード"
+  },
+  "hkTitle": {
+    "message": "キーボードショートカット"
+  },
+  "optHotkeys": {
+    "message": "キーボードショートカットを有効にする"
+  },
+  "hintHotkeys": {
+    "message": "下のショートカットのオン/オフを切り替えます。欄をクリックして使いたいキーを押してください。Backspace で消去できます。Ctrl、Alt、Command のいずれか(Shift は任意)と、英字・数字・矢印・F キーが必要です。"
+  },
+  "hkOpenPopup": {
+    "message": "ポップアップを開く"
+  },
+  "hkDownloadVideo": {
+    "message": "最初の動画をダウンロード"
+  },
+  "hkDownloadAudio": {
+    "message": "最初のメディアの音声をダウンロード"
+  },
+  "hkNone": {
+    "message": "未割り当て"
+  },
+  "hkReset": {
+    "message": "既定値"
+  },
+  "hkInvalid": {
+    "message": "この組み合わせはショートカットに使えません。"
+  },
+  "hkChromeHint": {
+    "message": "このブラウザでは、拡張機能のショートカットは専用ページでのみ変更できます。次のアドレスを開いてください:"
+  },
+  "hkCopy": {
+    "message": "アドレスをコピー"
+  },
+  "hkCopied": {
+    "message": "コピーしました"
+  },
+  "optSidebar": {
+    "message": "サイドバー"
+  },
+  "sidebarOpen": {
+    "message": "サイドバーで開く"
+  },
+  "sidebarClose": {
+    "message": "サイドバーを閉じる"
+  },
+  "noAudioHere": {
+    "message": "このページにはダウンロードできる音声がありません"
   }
 }
