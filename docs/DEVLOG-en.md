@@ -140,6 +140,8 @@ Details of every build are in `CHANGELOG.md` and the git history.
 - **1.6.0dev.** Microsoft Edge (the Chrome build unchanged); Firefox for Android; reproducible lamejs build (`vendor/lame.js`, `scripts/build-lamejs.mjs`); Mozilla validator warnings fixed; copyright check and LGPL-3.0 text verified (against ftp.gnu.org).
 - **1.6.0dev1.** AV1/H.264 + Opus joined into one `.mkv` without re-encoding (`mergeMp4Opus`). FFmpeg deliberately not used: 25–30 MB core, harder AMO review, patents and GPL builds, phone memory. If re-encoding is ever needed, look at WebCodecs.
 - **1.6.0dev2.** Sidebar button (Firefox only); configurable shortcuts (open popup, download video, download audio); Chrome rejects a manifest with Ctrl+Alt shortcuts, a test guards this. AMO validator: no errors or warnings. 205 tests.
+- **1.6.0dev3.** Log trimmed; "Hotkeys" block inside "General"; new package names (`-ff-`, `-chrome-`, `-edge-`); separate "VDL DEV" add-on for AMO signing (`npm run build:dev`, branch `1.6.0dev_amo` kept local).
+- **1.6.0dev4.** Joined .mkv files (AV1/H.264 + Opus, VP9 + AAC) are written by one shared `writeMkv` in `lib/mux.js`: known Segment size, SeekHead, Cues on the clusters with keyframes, video and sound in the same clusters (a new cluster at a keyframe, at least every 5 s). Before, the sound came in separate 10-second clusters and could start late after a seek. Checked on the user's recording (AV1 1280×720 + Opus, 60 s): a seek to 45 s reads 230 KB instead of 3.5 MB, all 1440 frames and 3000 audio packets are there. 210 tests.
 
 ## Tools used by tests
 - `ffmpeg`/`ffprobe` are needed only by tests (`tests/*.test.js` generate reference files with them). They are not part of the extension package, are not linked to the code and are not distributed, so they are not listed in `LICENSE`/`THIRD-PARTY.md`. It is a developer's external tool (its license, LGPL/GPL, depends on the build).
@@ -149,5 +151,5 @@ Details of every build are in `CHANGELOG.md` and the git history.
 - **Android:** test on a real phone (install via `web-ext`, download, HLS, MP3, hidden UI elements).
 - **Context menu** on `blob:` videos does nothing — not critical, deferred.
 - **Chrome / Edge:** a side panel via `sidePanel` — not planned for now.
-- **Players:** mkv with AV1+Opus plays differently in different players; the file has no cues for fast seeking.
+- **Players:** the seek index was added in 1.6.0dev4. The Windows player may need the "AV1 Video Extension" from the Microsoft Store for AV1; check the file in VLC, MPC-HC/PotPlayer, mpv and the Windows player.
 - **Release:** after the Android check remove `dev` from `version_name`, prepare AMO Release Notes and the Edge Add-ons checklist (`EDGE/`).

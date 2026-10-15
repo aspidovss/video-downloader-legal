@@ -2,6 +2,11 @@
 
 Added features per version (fixes and internal changes are not listed). Version history before 1.5 is condensed from the development log; the short development log is in [docs/DEVLOG-en.md](docs/DEVLOG-en.md) (English) and [docs/DEVLOG-ru.md](docs/DEVLOG-ru.md) (Russian).
 
+## 1.6.0dev4
+
+### Changed
+* **Joined .mkv files seek properly:** recordings joined into Matroska (AV1/H.264 + Opus, VP9 + AAC) now have a known file size, an index (SeekHead + Cues) and both tracks in the same clusters. Players jump to any point at once and the sound starts together with the picture after a seek.
+
 ## 1.6.0dev3
 
 ### Changed

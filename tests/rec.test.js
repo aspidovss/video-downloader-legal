@@ -345,3 +345,61 @@ test('MP4 video + audio with different fragment lengths become an ordinary MP4 w
   assert.equal(md5(out, '0:a'), md5(af, '0:a'));
   ff('-i', out, '-f', 'null', '-');
 });
+
+// ---- Matroska layout of the joined files: seekable in ordinary players ----
+function mkvLayout(buf) {
+  const vi = (o, id) => { const f = buf[o]; let l = 1; let m = 0x80; while (l <= 8 && !(f & m)) { l++; m >>= 1; } let v = id ? f : f & (m - 1); let ones = (f & (m - 1)) === m - 1; for (let i = 1; i < l; i++) { v = v * 256 + buf[o + i]; if (buf[o + i] !== 255) ones = false; } return { v, l, unknown: !id && ones }; };
+  const kids = (start, end) => { const out = []; let o = start; while (o < end) { const id = vi(o, true); const sz = vi(o + id.l, false); out.push({ id: id.v, start: o, data: o + id.l + sz.l, end: o + id.l + sz.l + sz.v }); o += id.l + sz.l + sz.v; } return out; };
+  const uint = (e) => { let v = 0; for (let i = e.data; i < e.end; i++) v = v * 256 + buf[i]; return v; };
+  const [ebml] = kids(0, buf.length);
+  const sid = vi(ebml.end, true);
+  const ssz = vi(ebml.end + sid.l, false);
+  const segData = ebml.end + sid.l + ssz.l;
+  const top = kids(segData, buf.length);
+  const cues = top.find((e) => e.id === 0x1c53bb6b);
+  const points = cues ? kids(cues.data, cues.end).map((cp) => { const k = kids(cp.data, cp.end); const tp = kids(k.find((x) => x.id === 0xb7).data, k.find((x) => x.id === 0xb7).end); return { time: uint(k.find((x) => x.id === 0xb3)), track: uint(tp.find((x) => x.id === 0xf7)), pos: uint(tp.find((x) => x.id === 0xf1)) }; }) : [];
+  const clusters = top.filter((e) => e.id === 0x1f43b675).map((c) => ({ pos: c.start - segData, tracks: new Set(kids(c.data, c.end).filter((b) => b.id === 0xa3 || b.id === 0xa0).map((b) => buf[b.id === 0xa3 ? b.data : kids(b.data, b.end)[0].data] & 0x7f)) }));
+  const seek = top[0].id === 0x114d9b74 ? kids(top[0].data, top[0].end).map((s) => { const k = kids(s.data, s.end); return { id: k[0], pos: uint(k[1]) }; }) : [];
+  return { unknownSize: ssz.unknown, sizeOk: segData + ssz.v === buf.length, firstId: top[0].id, seekTargets: seek.map((s) => top.find((e) => e.start - segData === s.pos)?.id), points, clusters };
+}
+
+for (const [label, make, enc] of [
+  ['H.264 + Opus', (dir) => {
+    const vf = path.join(dir, 'v.mp4'); const af = path.join(dir, 'a.webm');
+    ff('-f', 'lavfi', '-i', 'testsrc=size=160x96:rate=25', '-t', '20', '-c:v', 'libx264', '-g', '50', '-movflags', 'frag_keyframe+empty_moov+default_base_moof', '-f', 'mp4', vf);
+    ff('-f', 'lavfi', '-i', 'sine=frequency=440:sample_rate=48000', '-t', '20', '-c:a', 'libopus', '-f', 'webm', af);
+    return [vf, 'video/mp4; codecs="avc1.4D401F"', af, 'audio/webm; codecs="opus"'];
+  }, 'libx264'],
+  ['VP9 + AAC', (dir) => {
+    const vf = path.join(dir, 'v.webm'); const af = path.join(dir, 'a.mp4');
+    ff('-f', 'lavfi', '-i', 'testsrc=size=160x90:rate=25', '-t', '20', '-c:v', 'libvpx-vp9', '-g', '50', '-f', 'webm', vf);
+    ff('-f', 'lavfi', '-i', 'sine=frequency=440:sample_rate=48000', '-t', '20', '-c:a', 'aac', '-movflags', 'frag_keyframe+empty_moov+default_base_moof', af);
+    return [vf, 'video/webm; codecs="vp9"', af, 'audio/mp4; codecs="mp4a"'];
+  }, 'libvpx-vp9'],
+]) {
+  test(`${label} -> .mkv: known size, SeekHead, interleaved clusters, Cues; a seek reads only a part of the file`, { skip: !hasEnc(enc) || !hasEnc(label.includes('Opus') ? 'libopus' : 'aac') }, async () => {
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'vdl-seek-'));
+    const [vf, vm, af, am] = make(dir);
+    const blob = await mergeReps(await capture(vf, vm), await capture(af, am));
+    assert.ok(blob);
+    const buf = Buffer.from(await blob.arrayBuffer());
+    const out = path.join(dir, 'm.mkv');
+    fs.writeFileSync(out, buf);
+    const L = mkvLayout(buf);
+    assert.equal(L.unknownSize, false);
+    assert.ok(L.sizeOk, 'Segment size = rest of the file');
+    assert.equal(L.firstId, 0x114d9b74, 'SeekHead first');
+    assert.deepEqual(L.seekTargets, [0x1549a966, 0x1654ae6b, 0x1c53bb6b], 'SeekHead -> Info, Tracks, Cues');
+    assert.ok(L.points.length >= 8, `cue points: ${L.points.length}`); // 20 s, keyframe every 2 s
+    const at = new Set(L.clusters.map((c) => c.pos));
+    for (const p of L.points) { assert.ok(at.has(p.pos), `cue ${p.time} -> cluster`); assert.equal(p.track, 1); }
+    assert.ok(L.clusters.filter((c) => c.tracks.size === 2).length >= L.clusters.length - 1, 'both tracks share the clusters');
+    ff('-i', out, '-f', 'null', '-');
+    // seeking to 15 s with the index: far less than the whole file is read, and sound comes with the picture
+    const r = spawnSync('ffmpeg', ['-v', 'debug', '-ss', '15', '-i', out, '-t', '1', '-f', 'null', '-']);
+    const read = Number((/Statistics: (\d+) bytes read/.exec(String(r.stderr)) || [])[1]);
+    assert.ok(read < buf.length * 0.6, `read ${read} of ${buf.length}`);
+    const pk = String(spawnSync('ffprobe', ['-v', 'error', '-read_intervals', '15%+1', '-show_entries', 'packet=stream_index', '-of', 'csv=p=0', out]).stdout).trim().split(/\s+/);
+    assert.ok(pk.includes('0') && pk.includes('1'), 'both tracks right after the seek');
+  });
+}

@@ -1,4 +1,4 @@
-**Plain, unminified JavaScript (ES modules); no build step.** The `.xpi` is a plain zip of the source code — nothing is transpiled, bundled, minified or generated. Repository: [github.com/aspidovss/video-downloader-legal](https://github.com/aspidovss/video-downloader-legal)
+**Plain, readable JavaScript (ES modules); the extension files are the source files.** The `.xpi` is a plain zip of the source folders — nothing is transpiled, minified or generated at build time. One file, `vendor/lame.js`, was produced earlier from the unmodified lamejs 1.2.1 sources by `scripts/build-lamejs.mjs` (concatenation, no minifier; reproducible, see Structure); it is committed as is. Repository: [github.com/aspidovss/video-downloader-legal](https://github.com/aspidovss/video-downloader-legal)
 
 ## Build
 
@@ -22,7 +22,7 @@ npm install
 npm run build-for-amo
 ```
 
-The package is written to `build/`.
+The package is written to `build/video-downloader-legal-ff-<version_name>.xpi`. For the separate unlisted add-on "VDL DEV" (own id, name and version in the manifest, everything else identical): `npm run build:dev` -> `build/video-downloader-legal-dev-<version_name>.xpi`.
 
 Windows (PowerShell):
 
