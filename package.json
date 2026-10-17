@@ -17,6 +17,7 @@
     "build": "node scripts/build-ff.mjs",
     "build:dev": "node scripts/build-ff.mjs --dev",
     "build:amo-dev": "node scripts/build-amo-dev.mjs",
+    "build:amo": "node scripts/build-amo-dev.mjs --release",
     "build-for-amo": "node scripts/build-ff.mjs"
   },
   "devDependencies": {

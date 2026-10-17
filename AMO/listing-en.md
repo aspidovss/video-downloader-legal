@@ -1,6 +1,6 @@
 # Mozilla Add-ons listing — English (default locale)
 
-State as published (1.5.4; this file describes 1.6.0): https://addons.mozilla.org/en-US/firefox/addon/video-downloader-legal/
+State as published (1.5.6; this file describes 1.6.0): https://addons.mozilla.org/en-US/firefox/addon/video-downloader-legal/
 Use this file as the base for the next versions. The AMO description field is **plain text** (HTML tags are shown literally): bullets are `-`, headings are UPPERCASE, links are auto-linked.
 
 ## Name
@@ -22,12 +22,14 @@ Save videos and audio from the page you watch — YouTube, Shorts, Instagram, Tw
 ```
 Save videos and audio from the page you watch — YouTube, Shorts, Instagram, Twitch, TikTok, VK, OKru, Bilibili, Dailymotion, RuTube, Dzen and more. Free, local, no paywall, no tracking.
 
-VDL - Video Downloader Legal lists what the open page plays and saves the one you choose. Everything happens inside your browser: no external servers, no analytics, no helper programs to install. The same extension also runs in Chrome, Microsoft Edge and other Chromium browsers (development build on GitHub). Video and audio are joined and TS is converted to MP4 by the extension's own code, without re-encoding.
+VDL - Video Downloader Legal lists what the open page plays and saves the one you choose. Everything happens inside your browser: no external servers, no analytics, no helper programs to install. It also works in Firefox for Android; the same extension runs in Chrome, Microsoft Edge and other Chromium browsers (builds on GitHub). Video and audio are joined and TS is converted to MP4 by the extension's own code, without re-encoding.
 
 FEATURES
 - Video download — direct files, HLS (m3u8) and DASH (mpd) streams on any site: choose the quality, separate audio tracks are joined into one file.
 - YouTube and YouTube Shorts — choose type (MP4, WEBM, AV1) and resolution; audio as MP3, M4A or WEBM; video and audio in one file.
 - YouTube subtitles — as an .srt file or with the video.
+- Ready for Telegram — video and sound of different formats are joined into an ordinary MP4 (no re-encoding), so Telegram sends it as a video.
+- Clear reasons — when YouTube does not give a video, the window says why (age restriction, private, removed, region, members only, paid…) and whether recording can help. Creative Commons videos get a CC BY badge.
 - Live streams — record Twitch and other HLS live streams until you press Stop; YouTube live recording from the player (beta).
 - TS to MP4 — streams in MPEG-TS are saved as ordinary MP4 by default (no re-encoding); TS stays available as the second choice.
 - TikTok — the video on screen is first, with its title and cover; the rest of the feed is under "More".
@@ -85,7 +87,16 @@ Plain-text version in [privacy-policy.md](privacy-policy.md).
 
 ## Version 1.6.0 — release notes (shown to users)
 ```
-New: the MP3 encoder (lamejs) is now one readable file that anyone can rebuild from its sources with a script included in the source code; works in Microsoft Edge (Chromium build); cleaner package for Firefox (Chrome-only code removed). Everything from 1.5.x is included: terms of use on first run, interface language switch, foldable settings with a save bar, "Creative Commons only" for YouTube on by default, recording from the player (beta), optional debug log, redesigned help.
+New in 1.6.0:
+- Firefox for Android: the window fills the screen, buttons are finger-sized.
+- YouTube subtitles: any track (also automatic or translated by YouTube) as .srt, or with the video.
+- Clear reasons when YouTube does not give a video (age restriction, private, removed, region, members only, paid…) and a CC BY badge for Creative Commons videos.
+- Video and sound of different formats are joined into an ordinary MP4 — Telegram sends it as a video. MKV is still available in the settings.
+- Joined files seek at once; long WebM joins need much less memory.
+- Configurable keyboard shortcuts (open the window, download video, download audio) and a sidebar button.
+- Kick: one card per stream with all qualities.
+- Small files are hidden below 150 KB again; the context-menu item was removed (the window and shortcuts do the same).
+- The MP3 encoder (lamejs) is one readable file that anyone can rebuild from its sources.
 ```
 
 ## Version 1.5.6 — release notes (shown to users)
