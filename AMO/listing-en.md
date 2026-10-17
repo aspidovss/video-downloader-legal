@@ -27,13 +27,14 @@ VDL - Video Downloader Legal lists what the open page plays and saves the one yo
 FEATURES
 - Video download — direct files, HLS (m3u8) and DASH (mpd) streams on any site: choose the quality, separate audio tracks are joined into one file.
 - YouTube and YouTube Shorts — choose type (MP4, WEBM, AV1) and resolution; audio as MP3, M4A or WEBM; video and audio in one file.
+- YouTube subtitles — as an .srt file or with the video.
 - Live streams — record Twitch and other HLS live streams until you press Stop; YouTube live recording from the player (beta).
 - TS to MP4 — streams in MPEG-TS are saved as ordinary MP4 by default (no re-encoding); TS stays available as the second choice.
 - TikTok — the video on screen is first, with its title and cover; the rest of the feed is under "More".
 - Other sites — Vimeo, Dailymotion, RuTube, Dzen, Instagram, Facebook, X (Twitter), Bilibili, Canva, OKru, VK and any other site through general stream detection (results depend on what the page provides).
 - Audio download — MP3 (converted in the browser), M4A or WEBM.
 - Light and dark theme — follows your system. 10 languages: English, Russian, Chinese, Spanish, Hindi, French, Arabic, Portuguese, German, Japanese.
-- Convenient — download history, file name template, notifications, hotkey Alt+Down, context-menu item, built-in help.
+- Convenient — download history, file name template, notifications, configurable hotkeys, built-in help.
 - Diagnostics — one button saves a local file (links masked) you can attach to a bug report; an optional debug log (off by default) records what the extension does. Nothing is ever sent automatically.
 
 PRIVACY FIRST

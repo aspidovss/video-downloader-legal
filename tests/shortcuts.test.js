@@ -63,3 +63,10 @@ test('hotkeys block is the last part of the General block', () => {
   assert.ok(html.indexOf('optDownloadTitle') > end);
   assert.ok(html.slice(end + 11, html.indexOf('optDownloadTitle')).includes('</fieldset>'));
 });
+
+test('YouTube Creative Commons video: the card shows a "CC BY" badge with an explanation', () => {
+  const popup = read('content/popup.js');
+  assert.match(popup, /it\.license === 'cc'.*'CC BY'/);
+  assert.match(read('service/main.js'), /license: it\.kind === 'yt' \? \(t\?\.yt\?\.summary\?\.license/);
+  for (const l of ['ar', 'de', 'en', 'es', 'fr', 'hi', 'ja', 'pt_BR', 'ru', 'zh_CN']) assert.ok(JSON.parse(read(`_locales/${l}/messages.json`)).ccBadgeTitle.message.includes('CC BY'), l);
+});

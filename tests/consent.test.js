@@ -17,7 +17,8 @@ test('default file name template is pre-filled: title, site, date', async () => 
   const { DEFAULTS } = await import('../utils/settings.js');
   const { buildFilename } = await import('../lib/util.js');
   assert.equal(DEFAULTS.template, '{title} {site} {date}');
-  assert.equal(DEFAULTS.minSizeKB, 10);
+  assert.equal(DEFAULTS.minSizeKB, 150); // 1.6.0dev6: back to 150 KB
+  assert.equal(DEFAULTS.joinFormat, 'mp4'); // different containers are joined into MP4 (Telegram: video, not document)
   assert.equal(buildFilename(DEFAULTS.template, { title: 'Clip', site: 'a.com', ext: 'mp4', date: new Date(2026, 9, 13) }), 'Clip a.com 2026-10-13.mp4');
 });
 

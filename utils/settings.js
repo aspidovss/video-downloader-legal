@@ -4,11 +4,12 @@ export const DEFAULTS = {
   notifications: true,
   history: true,
   template: '{title} {site} {date}',
-  minSizeKB: 10,
+  minSizeKB: 150,      // 1.6.0dev6: back to 150 KB (10 KB since 1.5.5dev7 showed too many small files)
   concurrency: 4,
   maxStreamMB: 4096,
   liveMaxMinutes: 180, // 1.5.1: limit of one live recording
   saveAs: false,
+  joinFormat: 'mp4',   // 1.6.0dev6: video + audio of different containers are joined into 'mp4' (Telegram sends it as a video) or 'mkv'
   tsToMp4: true,       // 1.5.2: TS streams are saved as MP4 (no re-encoding)
   ytCcOnly: true,
   ytRecordSpeed: 2,
@@ -26,6 +27,7 @@ export const DEFAULTS = {
   ytCpn: true,         // 1.4.3: add cpn to googlevideo URLs
   ytHeaders: true,     // 1.4.3: Origin/Referer/DNT on googlevideo requests
   ytRecordUi: false,   // 1.5.5dev2: show "record from the player" for YouTube videos (live streams always offer it)
+  subsWithVideo: false, // 1.6.0dev5: YouTube subtitles saved with the video (embedded into .webm, else a .srt next to it)
   hotkeys: true,       // 1.6.0dev2: keyboard shortcuts on/off (the shortcuts themselves are set below)
   hkExecute: 'Alt+Up',    // open the popup
   hkVideo: 'Alt+Down',    // download the first video

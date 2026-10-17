@@ -2,10 +2,42 @@
 
 Added features per version (fixes and internal changes are not listed). Version history before 1.5 is condensed from the development log; the short development log is in [docs/DEVLOG-en.md](docs/DEVLOG-en.md) (English) and [docs/DEVLOG-ru.md](docs/DEVLOG-ru.md) (Russian).
 
+## 1.6.0dev7
+
+### Changed
+* **Kick (Amazon IVS):** when the stream's main playlist with all qualities is found, the single-quality playlists the player fetches (no quality list) go under *More*.
+
+## 1.6.0dev6
+
+### Changed
+* **Joins into MP4 instead of MKV:** video and sound of different formats (AV1 or H.264 + Opus, VP9 + AAC — mostly YouTube recordings) are saved as an ordinary MP4 with the index at the start, still without re-encoding. Telegram Desktop sends such a file as a video (an `.mkv` went as a document — test of 17.10.2026); browsers and players open and seek it at once. *Settings → Download and recording → Joining video and audio of different formats* can switch back to MKV.
+* *Ignore files smaller than* is 150 KB by default again (installs that kept the old 10 KB move to 150 KB once).
+* The README, the development log and the help page link to the add-on on addons.mozilla.org.
+
+## 1.6.0dev5
+
+### Added
+* **YouTube subtitles:** the card has a *Subtitles* row with the video's tracks (also automatic ones, and a YouTube translation into the interface language). *SRT* saves `<title>.<lang>.srt`; with *with video* checked, the chosen subtitles go into a joined `.webm` as a switchable track (off by default) or are saved as an `.srt` next to the video.
+* **Why YouTube gave nothing:** instead of one general message the card says what happened — age restriction (18+), robot check, private, removed, not available in your country, members only, paid / DRM, not started yet, content confirmation, cut-off downloads, too many requests, no connection — and whether recording while playing can help. The diagnostics file has a `verdict` field. The "too many downloads" hint is shown only when it fits.
+* **Creative Commons badge:** a YouTube video under Creative Commons shows a green *CC BY* badge with an explanation.
+* **Joined .webm files seek properly:** VP9 + Opus downloads get a known size, an index (SeekHead + Cues) and both tracks in the same clusters; the join goes cluster by cluster, so long videos do not need their whole size in memory.
+
+### Changed
+* *Record while playing* (no "Fallback:" prefix); the *BETA* badge stays next to the button.
+* The diagnostics panel: a ✕ closes it; it belongs to the video it was made on and is not shown on another one; *Copy text* takes the whole width (nothing moves when its label changes), *GitHub issue* and *Send an e-mail* share one line.
+* **Removed:** the context-menu item *Download this media* (the popup and the keyboard shortcuts do the same); the extension no longer asks for the `contextMenus` permission.
+* `npm run build:amo-dev` makes everything one AMO upload of "VDL DEV" needs: the `.xpi`, the source archive and the text for the form; the build number only grows.
+
+## 1.6.0dev4
+
+### Changed
+* **Joined .mkv files seek properly:** recordings joined into Matroska (AV1/H.264 + Opus, VP9 + AAC) now have a known file size, an index (SeekHead + Cues) and both tracks in the same clusters. Players jump to any point at once and the sound starts together with the picture after a seek.
+
 ## 1.6.0dev3
 
 ### Changed
 * Package names: `video-downloader-legal-ff-<version>.xpi` (Firefox, `npm run build`), `video-downloader-legal-chrome-<version>.zip` and `video-downloader-legal-edge-<version>.zip`.
+* `npm run build:dev` builds a separate Firefox add-on "VDL DEV" (own id, name and version) for unlisted signing on AMO; see `AMO/DEV-channel.md`.
 * The settings page: the *Keyboard shortcuts* block moved inside *General*, at its very end.
 
 ## 1.6.0dev2

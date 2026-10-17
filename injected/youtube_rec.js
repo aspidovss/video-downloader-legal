@@ -427,7 +427,8 @@
       .sort((a, b) => (a.kind === 'video' ? -1 : 1) - (b.kind === 'video' ? -1 : 1));
     rec.merged = false;
     if (list.length === 2 && list[0].kind === 'video' && list[1].kind === 'audio') {
-      const blob = await mergeReps(list[0], list[1], { trimSilent: !!rec.live });
+      // VP9 + AAC / AV1 + Opus: MP4 unless the name the background chose ends in .mkv (setting "joinFormat")
+      const blob = await mergeReps(list[0], list[1], { trimSilent: !!rec.live, mkv: /\.mkv$/i.test((names && names[0]) || '') });
       if (blob) {
         download(blob, (names && names[0]) || `youtube.${list[0].container}`);
         rec.merged = true;
@@ -439,7 +440,7 @@
           const r = t.best();
           const times = [...r.frags.keys()].sort((a, b) => a - b);
           const blob = new Blob([r.init, ...times.map((k) => r.frags.get(k))], { type: t.mime.split(';')[0] });
-          download(blob, ((names && names[i]) || `youtube-${i + 1}.${t.ext}`).replace(/\.mkv$/, `.${t.ext}`));
+          download(blob, ((names && names[i]) || `youtube-${i + 1}.${t.ext}`).replace(/\.(?:mkv|mp4)$/, `.${t.ext}`));
         }, i * 900);
       });
     }

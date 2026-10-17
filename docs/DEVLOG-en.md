@@ -18,7 +18,7 @@ Author: AspidovSS · License: MIT · In development: 1.6.0dev2 (`version` 1.6.0 
 | Bilibili (.com and .tv) through the public API of the site, Canva (`/watch`), TikTok (the video on screen) | best-effort |
 | OK.ru (parsing the player data on the page), VK and other sites through the general stream interception | best-effort |
 | Live HLS streams (Twitch and others): recording with a stop button, limits by time and size | works |
-| History, file name template, notifications, context menu item | works (no menu and no notifications on Android) |
+| History, file name template, notifications, hotkeys | works (no hotkeys and no notifications on Android) |
 | Keyboard shortcuts: open the popup, download the first video, download the audio of the first media; configurable on the settings page in Firefox | works (not on Android) |
 | Sidebar with a toggle button in the popup and in the settings | Firefox for desktop only |
 | YouTube: main method through the mobile clients (ANDROID_VR/IOS), joined into one file; fallback: recording during playback (video and audio are joined into webm, mp4, or mkv for VP9+AAC and AV1+Opus), recording of live streams | **works (checked on live YouTube); best-effort: YouTube changes often, the method may stop working** |
@@ -39,6 +39,7 @@ Details of every build are in the log below.
 ## Installation
 
 **Firefox (desktop)**
+0. **From the Mozilla catalogue (for regular users):** https://addons.mozilla.org/en-US/firefox/addon/video-downloader-legal/
 1. **Quick check:** `about:debugging#/runtime/this-firefox` -> "Load Temporary Add-on" -> pick `manifest.json`. It disappears when Firefox restarts.
 2. **Permanent installation (recommended):** sign it as *unlisted* on addons.mozilla.org (free), get the `.xpi` and open it in Firefox.
 3. **Developer Edition / Nightly / ESR:** set `xpinstall.signatures.required = false` in `about:config`, then open the `.xpi`. This does not work in regular release Firefox.
@@ -140,6 +141,11 @@ Details of every build are in `CHANGELOG.md` and the git history.
 - **1.6.0dev.** Microsoft Edge (the Chrome build unchanged); Firefox for Android; reproducible lamejs build (`vendor/lame.js`, `scripts/build-lamejs.mjs`); Mozilla validator warnings fixed; copyright check and LGPL-3.0 text verified (against ftp.gnu.org).
 - **1.6.0dev1.** AV1/H.264 + Opus joined into one `.mkv` without re-encoding (`mergeMp4Opus`). FFmpeg deliberately not used: 25–30 MB core, harder AMO review, patents and GPL builds, phone memory. If re-encoding is ever needed, look at WebCodecs.
 - **1.6.0dev2.** Sidebar button (Firefox only); configurable shortcuts (open popup, download video, download audio); Chrome rejects a manifest with Ctrl+Alt shortcuts, a test guards this. AMO validator: no errors or warnings. 205 tests.
+- **1.6.0dev3.** Log trimmed; "Hotkeys" block inside "General"; new package names (`-ff-`, `-chrome-`, `-edge-`); separate "VDL DEV" add-on for AMO signing (`npm run build:dev`, branch `1.6.0dev_amo` kept local).
+- **1.6.0dev7.** Kick / Amazon IVS (`*.live-video.net`): single-quality playlists without a quality list go under "More" when the main playlist is there (like Twitch, but not hidden completely). Open question: in a Kick live recording after TS→MP4 some frames are a few bytes short (decoder errors in the bottom rows); the raw .ts is needed to compare.
+- **1.6.0dev6.** Joins of different containers are written as an ordinary MP4 (`writeMp4` in `lib/mux.js`: moov first, ~0.5 s chunks; Opus in MP4 — `Opus` + `dOps` from OpusHead, packet durations from the TOC; VP9 from WebM — `vp09` + `vpcC` from the keyframe header; AV1 from WebM — `av01` + `av1C`). Reason: Telegram Desktop test of 17.10 — any MP4 and WEBM goes as a video, MKV as a document; the author checked "The Wait" recording as MP4: video, sound, seeking. MKV is the `joinFormat` setting. *Ignore files smaller than* is 150 KB again (one-time migration from 10). AMO link in the README, the log and the help page. 240 tests.
+- **1.6.0dev5.** YouTube subtitles (`lib/subs.js`: the track list from the API clients and the page, timedtext json3 → SRT, a YouTube translation into the interface language; a D_WEBVTT/SUBTITLES track inside .webm, else an .srt next to the video). Why YouTube gave nothing (`lib/ytverdict.js`: status codes first, then the reason text in en/ru) and a `verdict` field in the diagnostics. CC BY badge. Indexed .webm join, cluster by cluster. Context menu removed (and the `contextMenus` permission). Diagnostics panel: ✕, tied to the page, buttons do not move. AMO builder `scripts/build-amo-dev.mjs`. Subtitles on live YouTube cannot be checked in this environment (no access to the site): the author checks them.
+- **1.6.0dev4.** Joined .mkv files (AV1/H.264 + Opus, VP9 + AAC) are written by one shared `writeMkv` in `lib/mux.js`: known Segment size, SeekHead, Cues on the clusters with keyframes, video and sound in the same clusters (a new cluster at a keyframe, at least every 5 s). Before, the sound came in separate 10-second clusters and could start late after a seek. Checked on the user's recording (AV1 1280×720 + Opus, 60 s): a seek to 45 s reads 230 KB instead of 3.5 MB, all 1440 frames and 3000 audio packets are there. 210 tests.
 
 ## Tools used by tests
 - `ffmpeg`/`ffprobe` are needed only by tests (`tests/*.test.js` generate reference files with them). They are not part of the extension package, are not linked to the code and are not distributed, so they are not listed in `LICENSE`/`THIRD-PARTY.md`. It is a developer's external tool (its license, LGPL/GPL, depends on the build).
@@ -149,5 +155,5 @@ Details of every build are in `CHANGELOG.md` and the git history.
 - **Android:** test on a real phone (install via `web-ext`, download, HLS, MP3, hidden UI elements).
 - **Context menu** on `blob:` videos does nothing — not critical, deferred.
 - **Chrome / Edge:** a side panel via `sidePanel` — not planned for now.
-- **Players:** mkv with AV1+Opus plays differently in different players; the file has no cues for fast seeking.
+- **Players:** since 1.6.0dev6 joins are MP4 by default (Telegram sends them as videos); the Windows player may need the "AV1 Video Extension" for AV1.
 - **Release:** after the Android check remove `dev` from `version_name`, prepare AMO Release Notes and the Edge Add-ons checklist (`EDGE/`).

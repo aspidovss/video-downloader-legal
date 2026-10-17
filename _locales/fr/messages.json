@@ -92,9 +92,6 @@
   "saved": {
     "message": "Enregistré"
   },
-  "menuDownload": {
-    "message": "Télécharger avec Video Downloader Legal"
-  },
   "cmdDefault": {
     "message": "Télécharger la première vidéo détectée"
   },
@@ -123,7 +120,7 @@
     "message": "YouTube refuse ce lien pour l’extension (HTTP 403). Utilisez plutôt « Enregistrer pendant la lecture »."
   },
   "ytRecord": {
-    "message": "Solution de secours : enregistrer pendant la lecture"
+    "message": "Enregistrer pendant la lecture"
   },
   "ytRecordHint": {
     "message": "Recharge la page et lit la vidéo en sourdine, plus vite. Gardez cet onglet ouvert jusqu’à la fin."
@@ -300,7 +297,7 @@
     "message": "Échec de la copie"
   },
   "bugGithub": {
-    "message": "Ouvrir une issue GitHub"
+    "message": "Issue GitHub"
   },
   "bugEmail": {
     "message": "Envoyer un e-mail"
@@ -450,7 +447,7 @@
     "message": "Les fichiers terminés apparaissent dans l’« Historique » (icône d’horloge) et dans le dossier de téléchargements (icône de dossier)."
   },
   "helpS1q": {
-    "message": "Raccourcis : la touche Alt+↓ et l’entrée du menu contextuel."
+    "message": "Raccourcis : les raccourcis clavier (à régler dans Paramètres → Général)."
   },
   "helpS2": {
     "message": "Fonctionnalités"
@@ -465,7 +462,7 @@
     "message": "**YouTube :** choix du type (MP4, WEBM, AV1) et de la résolution, téléchargement audio (MP3, M4A, WEBM), vidéo et audio réunis en un fichier. Sans lien direct, une solution de repli existe : l’enregistrement depuis le lecteur."
   },
   "helpF4": {
-    "message": "**Directs YouTube (bêta) :** enregistrement depuis le lecteur en temps réel, sans recharger la page. « Arrêter » termine l’enregistrement et réunit vidéo et audio dans un .mkv. L’audio ne se télécharge pas seul."
+    "message": "**Directs YouTube (bêta) :** enregistrement depuis le lecteur en temps réel, sans recharger la page. « Arrêter » termine l’enregistrement et réunit vidéo et audio dans un .mp4. L’audio ne se télécharge pas seul."
   },
   "helpF5": {
     "message": "**Autres sites :** Vimeo, Dailymotion, Instagram, Facebook, X (Twitter), Twitch, TikTok, Bilibili, Canva, OK.ru, VK ; les autres via la détection générale des flux. Sur certains sites, le résultat dépend de ce que la page fournit."
@@ -805,5 +802,86 @@
   },
   "noAudioHere": {
     "message": "Aucun audio à télécharger sur cette page"
+  },
+  "ccBadgeTitle": {
+    "message": "Creative Commons Attribution (CC BY) : réutilisation permise en citant l’auteur. Vérifiez la licence dans la description de la vidéo."
+  },
+  "ytWhyAge": {
+    "message": "Vidéo soumise à une limite d’âge (18+) : YouTube ne la fournit qu’à un compte connecté dont l’âge est confirmé, et VDL n’utilise pas votre compte. Essayez l’enregistrement pendant la lecture."
+  },
+  "ytWhyBot": {
+    "message": "YouTube demande de confirmer que vous n’êtes pas un robot : votre réseau a envoyé beaucoup de requêtes. Patientez de quelques minutes à une heure ou rechargez la page."
+  },
+  "ytWhyPrivate": {
+    "message": "Vidéo privée : l’auteur ne l’a partagée qu’avec certaines personnes."
+  },
+  "ytWhyRemoved": {
+    "message": "La vidéo a été supprimée ou n’est pas disponible sur YouTube."
+  },
+  "ytWhyRegion": {
+    "message": "L’auteur n’a pas rendu cette vidéo disponible dans votre pays."
+  },
+  "ytWhyMembers": {
+    "message": "Vidéo réservée aux membres de la chaîne. Si vous y avez accès, essayez l’enregistrement pendant la lecture."
+  },
+  "ytWhyPaid": {
+    "message": "Vidéo payante ou film protégé contre la copie (DRM) : impossible de la télécharger ou de l’enregistrer."
+  },
+  "ytWhyUpcoming": {
+    "message": "Le direct ou la première n’a pas encore commencé."
+  },
+  "ytWhyUpcomingAt": {
+    "message": "Le direct ou la première n’a pas encore commencé. Début : {time}."
+  },
+  "ytWhyContentCheck": {
+    "message": "YouTube demande de confirmer que vous voulez regarder cette vidéo. Confirmez sur la page puis rechargez-la."
+  },
+  "ytWhySabr": {
+    "message": "YouTube n’a fourni aucun lien direct vers cette vidéo. Utilisez l’enregistrement pendant la lecture."
+  },
+  "ytWhyCut": {
+    "message": "YouTube interrompt le téléchargement de cette vidéo après la première partie. Utilisez l’enregistrement pendant la lecture."
+  },
+  "ytWhyRate": {
+    "message": "Trop de requêtes vers YouTube depuis votre réseau. Patientez de quelques minutes à une heure."
+  },
+  "ytWhyNetwork": {
+    "message": "Pas de connexion à YouTube. Vérifiez internet et rechargez la page."
+  },
+  "ytWhyUnknown": {
+    "message": "YouTube n’a pas fourni cette vidéo ; la raison n’a pas été reconnue."
+  },
+  "ytWhyUnknownReason": {
+    "message": "YouTube n’a pas fourni cette vidéo ; la raison n’a pas été reconnue. Réponse de YouTube : « {reason} »."
+  },
+  "subsTitle": {
+    "message": "Sous-titres"
+  },
+  "subsSaveTitle": {
+    "message": "Enregistrer les sous-titres en fichier .srt"
+  },
+  "subsWithVideo": {
+    "message": "avec la vidéo"
+  },
+  "subsWithVideoTitle": {
+    "message": "Enregistrer les sous-titres choisis avec la vidéo : dans le fichier .webm (activables dans le lecteur), sinon en fichier .srt à côté"
+  },
+  "subsFailed": {
+    "message": "Impossible d’obtenir les sous-titres. Activez-les quelques secondes dans le lecteur puis réessayez."
+  },
+  "optJoinFormat": {
+    "message": "Assembler vidéo et son de formats différents"
+  },
+  "joinMp4": {
+    "message": "MP4 (recommandé : Telegram l’envoie comme vidéo)"
+  },
+  "joinMkv": {
+    "message": "MKV (Matroska)"
+  },
+  "hintJoinFormat": {
+    "message": "Quand la vidéo et le son arrivent dans des formats différents (AV1 ou H.264 avec Opus, VP9 avec AAC), ils sont assemblés sans réencodage. Le MP4 se lit dans les navigateurs et lecteurs et Telegram l’envoie comme vidéo ; un .mkv part dans Telegram comme document."
+  },
+  "helpLabelAmo": {
+    "message": "Modules Firefox"
   }
 }

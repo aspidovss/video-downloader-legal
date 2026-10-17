@@ -146,7 +146,7 @@ test('Firefox for Android: detection, guarded desktop-only APIs, touch layout, d
   assert.equal(isAndroid('Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:140.0) Gecko/20100101 Firefox/140.0'), false);
   assert.equal(browserName(ua), 'Firefox Android');
   const main = fs.readFileSync(new URL('../service/main.js', import.meta.url), 'utf8');
-  assert.ok(!/browser\.contextMenus\.onClicked|browser\.commands\.onCommand|browser\.notifications\.create/.test(main), 'unguarded call of an API Android does not have');
+  assert.ok(!/browser\.commands\.onCommand|browser\.notifications\.create/.test(main), 'unguarded call of an API Android does not have');
   const css = fs.readFileSync(new URL('../styles/ui.css', import.meta.url), 'utf8');
   assert.ok(css.includes('html.android body.popup') && css.includes('pointer: coarse'));
   const settings = fs.readFileSync(new URL('../content/settings.html', import.meta.url), 'utf8');
@@ -163,4 +163,25 @@ test('settings page: the language change is compared with the language shown BEF
 test('Firefox package name', async () => {
   const { ffName } = await import('../scripts/build-ff.mjs');
   assert.equal(ffName('1.2.3'), 'video-downloader-legal-ff-1.2.3.xpi');
+});
+
+test('VDL DEV manifest: own id, name and numeric version; source untouched', async () => {
+  const { devManifest, DEV_ID, ffName } = await import('../scripts/build-ff.mjs');
+  const m = JSON.parse(JSON.stringify(JSON.parse(fs.readFileSync(new URL('../manifest.json', import.meta.url), 'utf8'))));
+  const d = devManifest(m, 7);
+  assert.equal(d.browser_specific_settings.gecko.id, DEV_ID);
+  assert.notEqual(DEV_ID, m.browser_specific_settings.gecko.id);
+  assert.match(d.version, /^\d+\.\d+\.\d+\.7$/);
+  assert.match(d.name, /DEV/);
+  assert.equal(m.browser_specific_settings.gecko.id, 'video-downloader-legal@aspidovss');
+  assert.equal(ffName('1.6.0dev3', true), 'video-downloader-legal-dev-1.6.0dev3.xpi');
+});
+
+test('VDL DEV for AMO: the build number only grows (AMO never takes a version twice)', async () => {
+  const { nextDevNumber, PACKAGE_FILES } = await import('../scripts/build-amo-dev.mjs');
+  assert.equal(nextDevNumber('1.6.0dev5', undefined), 5);
+  assert.equal(nextDevNumber('1.6.0dev5', 5), 6); // rebuilt the same dev
+  assert.equal(nextDevNumber('1.6.0dev5', 2), 5);
+  assert.equal(nextDevNumber('1.6.0', 9), 10);
+  assert.ok(PACKAGE_FILES.includes('manifest.json') && !PACKAGE_FILES.includes('tests'));
 });

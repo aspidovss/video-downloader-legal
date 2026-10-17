@@ -92,9 +92,6 @@
   "saved": {
     "message": "已保存"
   },
-  "menuDownload": {
-    "message": "使用 Video Downloader Legal 下载"
-  },
   "cmdDefault": {
     "message": "下载检测到的第一个视频"
   },
@@ -123,7 +120,7 @@
     "message": "YouTube 拒绝向扩展提供此链接 (HTTP 403)。请改用“播放时录制”。"
   },
   "ytRecord": {
-    "message": "备用方式：播放时录制"
+    "message": "播放时录制"
   },
   "ytRecordHint": {
     "message": "将重新加载页面，并以静音、较快的速度播放视频。结束前请保持此标签页打开。"
@@ -300,7 +297,7 @@
     "message": "复制失败"
   },
   "bugGithub": {
-    "message": "打开 GitHub issue"
+    "message": "GitHub issue"
   },
   "bugEmail": {
     "message": "发送电子邮件"
@@ -450,7 +447,7 @@
     "message": "完成的文件可在“历史记录”（时钟图标）和下载文件夹（文件夹图标）中查看。"
   },
   "helpS1q": {
-    "message": "快捷方式：快捷键 Alt+↓ 和右键菜单项。"
+    "message": "快捷方式：键盘快捷键（在“设置 → 常规”中设置）。"
   },
   "helpS2": {
     "message": "已实现的功能"
@@ -465,7 +462,7 @@
     "message": "**YouTube：** 可选类型（MP4、WEBM、AV1）和分辨率，可下载音频（MP3、M4A、WEBM），视频与音频合并为一个文件。无法获取直链时，可改用播放器录制。"
   },
   "helpF4": {
-    "message": "**YouTube 直播（测试版）：** 无需刷新页面，通过播放器实时录制。点击“停止”结束录制，并将视频与音频合并为 .mkv 文件。不支持单独下载音频。"
+    "message": "**YouTube 直播（测试版）：** 无需刷新页面，通过播放器实时录制。点击“停止”结束录制，并将视频与音频合并为 .mp4 文件。不支持单独下载音频。"
   },
   "helpF5": {
     "message": "**其他网站：** Vimeo、Dailymotion、Instagram、Facebook、X (Twitter)、Twitch、TikTok、Bilibili、Canva、OK.ru、VK；其余网站通过通用的流检测。部分网站的效果取决于页面提供的信息。"
@@ -805,5 +802,86 @@
   },
   "noAudioHere": {
     "message": "此页面没有可下载的音频"
+  },
+  "ccBadgeTitle": {
+    "message": "知识共享 署名（CC BY）：注明作者即可再利用。请在视频说明中核对许可。"
+  },
+  "ytWhyAge": {
+    "message": "年龄限制视频（18+）：YouTube 只向已确认年龄的登录账号提供，而 VDL 不使用你的账号。请尝试边播放边录制。"
+  },
+  "ytWhyBot": {
+    "message": "YouTube 要求确认你不是机器人：你的网络发出了大量请求。请等待几分钟到一小时，或重新加载页面。"
+  },
+  "ytWhyPrivate": {
+    "message": "私享视频：作者只与选定的人分享。"
+  },
+  "ytWhyRemoved": {
+    "message": "视频已被删除或在 YouTube 上不可用。"
+  },
+  "ytWhyRegion": {
+    "message": "作者未在你所在的国家/地区提供此视频。"
+  },
+  "ytWhyMembers": {
+    "message": "仅限频道会员的视频。如果你有权限，请尝试边播放边录制。"
+  },
+  "ytWhyPaid": {
+    "message": "付费视频或带复制保护（DRM）的电影：无法下载或录制。"
+  },
+  "ytWhyUpcoming": {
+    "message": "直播或首播尚未开始。"
+  },
+  "ytWhyUpcomingAt": {
+    "message": "直播或首播尚未开始。开始时间：{time}。"
+  },
+  "ytWhyContentCheck": {
+    "message": "YouTube 要求确认你想观看此视频。请在页面上确认后重新加载。"
+  },
+  "ytWhySabr": {
+    "message": "YouTube 没有提供此视频的直接链接。请使用边播放边录制。"
+  },
+  "ytWhyCut": {
+    "message": "YouTube 会在第一部分之后中断此视频的下载。请使用边播放边录制。"
+  },
+  "ytWhyRate": {
+    "message": "你的网络向 YouTube 发出的请求过多。请等待几分钟到一小时。"
+  },
+  "ytWhyNetwork": {
+    "message": "无法连接 YouTube。请检查网络并重新加载页面。"
+  },
+  "ytWhyUnknown": {
+    "message": "YouTube 没有提供此视频；无法识别原因。"
+  },
+  "ytWhyUnknownReason": {
+    "message": "YouTube 没有提供此视频；无法识别原因。YouTube 的回复：“{reason}”。"
+  },
+  "subsTitle": {
+    "message": "字幕"
+  },
+  "subsSaveTitle": {
+    "message": "将字幕保存为 .srt 文件"
+  },
+  "subsWithVideo": {
+    "message": "随视频"
+  },
+  "subsWithVideoTitle": {
+    "message": "随视频保存所选字幕：放在 .webm 文件内（可在播放器中开关），否则在旁边保存为 .srt 文件"
+  },
+  "subsFailed": {
+    "message": "无法获取字幕。请在播放器中开启字幕几秒钟后重试。"
+  },
+  "optJoinFormat": {
+    "message": "合并不同格式的视频和音频"
+  },
+  "joinMp4": {
+    "message": "MP4（推荐：Telegram 会作为视频发送）"
+  },
+  "joinMkv": {
+    "message": "MKV（Matroska）"
+  },
+  "hintJoinFormat": {
+    "message": "当视频和声音为不同格式（AV1 或 H.264 配 Opus、VP9 配 AAC）时，将不重新编码直接合并。MP4 可在浏览器和播放器中播放，Telegram 会作为视频发送；.mkv 在 Telegram 中会作为文件发送。"
+  },
+  "helpLabelAmo": {
+    "message": "Firefox 附加组件"
   }
 }

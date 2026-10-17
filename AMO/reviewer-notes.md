@@ -19,7 +19,6 @@ Chrome-only code (the offscreen document client, `platform/`) is not in this pac
 | `webNavigation`, `tabs` | reset per-tab lists on navigation, show the list for the active tab |
 | `storage`, `unlimitedStorage` | settings, download history; `unlimitedStorage` for large in-memory/Blob staging while joining segments |
 | `notifications` | "download finished / failed" |
-| `contextMenus` | "download this media" on links/videos |
 | `clipboardWrite` | the "Copy" buttons of the diagnostics panel and of the optional debug log (options) |
 | host `<all_urls>` | video sites are not known in advance; content script lists `<video>`/`<source>` elements and sees media requests |
 
@@ -38,14 +37,14 @@ Chrome-only code (the offscreen document client, `platform/`) is not in this pac
 * Segments of ordinary (non-DRM) streams are fetched and joined locally (own MP4/WebM muxer, no remote code, no WASM).
 
 ## Network
-* Requests go to the page's own media hosts and, for YouTube, to `www.youtube.com/youtubei/v1/player` and `www.youtube.com/sw.js_data` (the same bootstrap data any YouTube client uses) and `*.googlevideo.com`.
+* Requests go to the page's own media hosts and, for YouTube, to `www.youtube.com/youtubei/v1/player` and `www.youtube.com/sw.js_data` (the same bootstrap data any YouTube client uses), `www.youtube.com/api/timedtext` (subtitles, only when the user asks for them) and `*.googlevideo.com`.
 * No credentials are forged, no PO tokens or signatures are generated, no player code is executed.
 
 ## Data collection
 `data_collection_permissions.required = ["none"]`. Nothing leaves the user's browser except requests described above, which go to the sites the user is already watching.
 
 ## Test
-0. On first use the popup shows the terms of use (tool provided "as is", user downloads only content they have the right to, user bears all legal costs). Press **I accept** to continue; **I decline** closes the popup and shows the terms again next time. Until accepted, downloads, the hotkey and the context-menu item are refused. The accepted flag is stored locally only and can be withdrawn in the options page.
+0. On first use the popup shows the terms of use (tool provided "as is", user downloads only content they have the right to, user bears all legal costs). Press **I accept** to continue; **I decline** closes the popup and shows the terms again next time. Until accepted, downloads and the hotkeys are refused. The accepted flag is stored locally only and can be withdrawn in the options page.
 1. Open any page with an MP4/HLS video → toolbar button lists it → Download.
 2. YouTube watch page → "Download" lists formats; "Record" is the fallback.
 3. (Optional) Options > Diagnostics > *Debug log* (off by default) keeps a local text log in `storage.local` (links masked); it can be viewed, copied, saved or cleared, never sent by the extension. The 🐞 button runs a short self-test and saves a diagnostics file locally (URLs are masked unless the user enables full URLs in settings); the file is never sent by the extension, the user chooses whether to send it.

@@ -98,6 +98,7 @@
             formats: j.streamingData.formats || [], adaptiveFormats: j.streamingData.adaptiveFormats || [],
             hlsManifestUrl: j.streamingData.hlsManifestUrl || '',
           } : null,
+          captions: j?.captions ? { playerCaptionsTracklistRenderer: { captionTracks: j.captions.playerCaptionsTracklistRenderer?.captionTracks || [], translationLanguages: j.captions.playerCaptionsTracklistRenderer?.translationLanguages || [] } } : null,
         };
         // Stop rule: first non-IOS client that gives video formats.
         if (c.name !== 'IOS' && j?.playabilityStatus?.status === 'OK' && hasVideo(j)) break;
