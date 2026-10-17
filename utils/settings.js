@@ -26,6 +26,10 @@ export const DEFAULTS = {
   ytCpn: true,         // 1.4.3: add cpn to googlevideo URLs
   ytHeaders: true,     // 1.4.3: Origin/Referer/DNT on googlevideo requests
   ytRecordUi: false,   // 1.5.5dev2: show "record from the player" for YouTube videos (live streams always offer it)
+  hotkeys: true,       // 1.6.0dev2: keyboard shortcuts on/off (the shortcuts themselves are set below)
+  hkExecute: 'Alt+Up',    // open the popup
+  hkVideo: 'Alt+Down',    // download the first video
+  hkAudio: 'Alt+Shift+Down', // download the audio of the first media
   uiLang: 'auto',      // 1.5.5dev2: 'auto' = browser language, or a locale code
 };
 

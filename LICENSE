@@ -24,12 +24,19 @@ SOFTWARE.
 
 THIRD-PARTY COMPONENTS
 
-The file vendor/lame.min.js is NOT covered by the MIT License above.
-It is an unmodified copy of lamejs 1.2.1 and is licensed under the
+The file vendor/lame.js is NOT covered by the MIT License above.
+It is lamejs 1.2.1, assembled, not modified, from its sources by
+scripts/build-lamejs.mjs, and is licensed under the
 GNU Lesser General Public License v3.0 (LGPL-3.0).
 
-  Copyright (c) lamejs authors
+  Copyright (c) Alex Zhukov and the lamejs contributors
+  (lamejs is a rewrite of jump3r, which is a rewrite of libmp3lame)
+  Copyright (c) the LAME authors named in the headers of the code in the file:
+  Mark Taylor, Gabriel Bouvigne, Robert Hegemann, Takehiro Tominaga,
+  Naoki Shibata, Alexander Leidinger, David Robinson, Glen Sawyer
+  LAME project: https://lame.sourceforge.net/
   Source code: https://github.com/zhuker/lamejs
   License text: LICENSES/LGPL-3.0.txt
+  Licensing notes of lamejs: LICENSES/lamejs-LICENSE.txt
 
 See THIRD-PARTY.md for details.

@@ -3,7 +3,10 @@ import assert from 'node:assert/strict';
 import vm from 'node:vm';
 import fs from 'node:fs';
 import { buildRules } from '../service/headers.js';
-import { chromeManifest } from '../scripts/build-chrome.mjs';
+import { chromeManifest, build as buildChrome, packageName, packFolder } from '../scripts/build-chrome.mjs';
+import { browserName, isAndroid } from '../utils/dom.js';
+import os from 'node:os';
+import { fileURLToPath } from 'node:url';
 import { MiniDOMParser } from '../lib/xmlmini.js';
 import { parseMPD } from '../lib/dash.js';
 
@@ -80,4 +83,84 @@ test('MiniDOMParser (no DOMParser in the Chrome service worker): parseMPD works 
   const doc = new MiniDOMParser().parseFromString('<a x="1 &lt; 2"><![CDATA[<raw>]]><b/></a>');
   assert.equal(doc.documentElement.getAttribute('x'), '1 < 2');
   assert.equal(doc.documentElement.textContent, '<raw>');
+});
+
+const FF_DIRS = ['content', 'injected', 'lib', 'service', 'styles', 'utils', 'vendor'];
+function* walk(dir) {
+  for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
+    const p = `${dir}/${e.name}`;
+    if (e.isDirectory()) yield* walk(p); else yield p;
+  }
+}
+
+test('Firefox package has no chrome.offscreen code (AMO validator warning); the Chrome build gets the real client', () => {
+  const root = fileURLToPath(new URL('..', import.meta.url)).replace(/[\\/]$/, '');
+  for (const d of FF_DIRS) for (const f of walk(`${root}/${d}`)) {
+    if (!/\.(js|mjs|html)$/.test(f)) continue;
+    assert.ok(!/offscreen\s*\.\s*createDocument/.test(fs.readFileSync(f, 'utf8')), `${f} must not call offscreen.createDocument`);
+  }
+  assert.ok(fs.existsSync(`${root}/platform/offscreen-client.js`));
+  const { dir } = buildChrome();
+  assert.ok(/offscreen\.createDocument/.test(fs.readFileSync(`${dir}/service/offscreen-client.js`, 'utf8')), 'the Chrome build has the real client in service/');
+  assert.equal(fs.existsSync(`${dir}/platform/offscreen-client.js`), false, 'no duplicate left in platform/');
+  assert.ok(fs.existsSync(`${dir}/vendor/lame.js`) && !fs.existsSync(`${dir}/vendor/lame.min.js`));
+  assert.ok(fs.existsSync(`${dir}/LICENSES/LGPL-3.0.txt`) && fs.existsSync(`${dir}/LICENSES/lamejs-LICENSE.txt`), 'the Chrome package carries all licence texts');
+  const stub = fs.readFileSync(`${root}/service/offscreen-client.js`, 'utf8');
+  for (const name of ['chromeBlobUrl', 'chromeRevoke', 'chromeMp3']) assert.ok(stub.includes(`export const ${name}`), `stub exports ${name}`);
+});
+
+test('manifest: Firefox for Android minimum is declared (data_collection_permissions needs 142)', () => {
+  const m = JSON.parse(fs.readFileSync(new URL('../manifest.json', import.meta.url), 'utf8'));
+  assert.equal(m.browser_specific_settings.gecko.strict_min_version, '140.0');
+  assert.deepEqual(m.browser_specific_settings.gecko.data_collection_permissions, { required: ['none'] });
+  assert.equal(m.browser_specific_settings.gecko_android.strict_min_version, '142.0');
+  assert.equal(chromeManifest(m).browser_specific_settings, undefined);
+});
+
+test('Microsoft Edge: detected by its user agent; same package as Chrome with its own file name', () => {
+  assert.equal(browserName('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36 Edg/141.0.0.0'), 'Edge');
+  assert.equal(browserName('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36'), 'Chrome');
+  assert.equal(browserName('Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:158.0) Gecko/20100101 Firefox/158.0'), 'Firefox');
+  assert.equal(browserName('Mozilla/5.0 (Windows NT 10.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36 OPR/120.0.0.0'), 'Opera');
+  assert.equal(packageName('1.2.3'), 'video-downloader-legal-chrome-1.2.3.zip');
+  assert.equal(packageName('1.2.3', true), 'video-downloader-legal-edge-1.2.3.zip');
+  const m = chromeManifest(JSON.parse(fs.readFileSync(new URL('../manifest.json', import.meta.url), 'utf8')));
+  assert.equal(m.minimum_chrome_version, '116', 'Edge 116 is Chromium 116: the Chrome minimum applies');
+  assert.ok(m.permissions.includes('offscreen') && m.permissions.includes('declarativeNetRequest'), 'APIs that Edge implements since Edge 109');
+});
+
+test('packFolder: returns false (no crash) when the zip tool is missing', () => {
+  const dir = fs.mkdtempSync(`${os.tmpdir()}/vdl-pack-`);
+  try {
+    const old = process.env.PATH;
+    process.env.PATH = '';
+    let ok;
+    try { ok = packFolder(dir, `${dir}/x.zip`, 'linux'); } finally { process.env.PATH = old; }
+    assert.equal(ok, false);
+  } finally { fs.rmSync(dir, { recursive: true, force: true }); }
+});
+
+test('Firefox for Android: detection, guarded desktop-only APIs, touch layout, desktop-only settings', () => {
+  const ua = 'Mozilla/5.0 (Android 14; Mobile; rv:142.0) Gecko/142.0 Firefox/142.0';
+  assert.equal(isAndroid(ua), true);
+  assert.equal(isAndroid('Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:140.0) Gecko/20100101 Firefox/140.0'), false);
+  assert.equal(browserName(ua), 'Firefox Android');
+  const main = fs.readFileSync(new URL('../service/main.js', import.meta.url), 'utf8');
+  assert.ok(!/browser\.contextMenus\.onClicked|browser\.commands\.onCommand|browser\.notifications\.create/.test(main), 'unguarded call of an API Android does not have');
+  const css = fs.readFileSync(new URL('../styles/ui.css', import.meta.url), 'utf8');
+  assert.ok(css.includes('html.android body.popup') && css.includes('pointer: coarse'));
+  const settings = fs.readFileSync(new URL('../content/settings.html', import.meta.url), 'utf8');
+  for (const n of ['notifications', 'saveAs']) assert.match(settings, new RegExp(`data-desktop-only>\\s*<label class="check"><input type="checkbox" name="${n}"`));
+});
+
+test('settings page: the language change is compared with the language shown BEFORE load() overwrites it (page reloads after Save)', () => {
+  const src = fs.readFileSync(new URL('../content/settings.js', import.meta.url), 'utf8');
+  const submit = src.slice(src.indexOf("form.addEventListener('submit'"), src.indexOf('// "?" next to an option'));
+  assert.ok(submit.indexOf('const langBefore = shownLang') >= 0 && submit.indexOf('const langBefore = shownLang') < submit.indexOf('await load()'));
+  assert.ok(submit.includes('patch.uiLang !== langBefore') && !submit.includes('patch.uiLang !== shownLang'));
+});
+
+test('Firefox package name', async () => {
+  const { ffName } = await import('../scripts/build-ff.mjs');
+  assert.equal(ffName('1.2.3'), 'video-downloader-legal-ff-1.2.3.xpi');
 });

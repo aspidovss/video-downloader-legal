@@ -1,6 +1,40 @@
 # Changelog
 
-Added features per version (fixes and internal changes are not listed). Version history before 1.5 is condensed from the development log; the full log (in Russian) is in [docs/DEVLOG-ru.md](docs/DEVLOG-ru.md).
+Added features per version (fixes and internal changes are not listed). Version history before 1.5 is condensed from the development log; the short development log is in [docs/DEVLOG-en.md](docs/DEVLOG-en.md) (English) and [docs/DEVLOG-ru.md](docs/DEVLOG-ru.md) (Russian).
+
+## 1.6.0dev3
+
+### Changed
+* Package names: `video-downloader-legal-ff-<version>.xpi` (Firefox, `npm run build`), `video-downloader-legal-chrome-<version>.zip` and `video-downloader-legal-edge-<version>.zip`.
+* The settings page: the *Keyboard shortcuts* block moved inside *General*, at its very end.
+
+## 1.6.0dev2
+
+### Added
+* **Sidebar button (Firefox):** a button in the popup opens the sidebar and closes the popup; in the sidebar the same button closes the panel. The settings page has the same control. Chrome, Edge and Firefox for Android do not show it.
+* **Keyboard shortcuts you can set:** a new settings block with a master switch and three shortcuts: open the popup (default `Alt+Up`), download the first video (`Alt+Down`) and the new *download the audio of the first media* (`Alt+Shift+Down`; the audio format and quality of the settings are used). Firefox: type the shortcut into the field (Backspace clears it, *Default* resets it). Chrome and Edge cannot change shortcuts from an extension, so the page shows the address `chrome://extensions/shortcuts` / `edge://extensions/shortcuts` with a copy button. Hidden on Android.
+
+## 1.6.0dev1
+
+### Added
+* **YouTube recording: AV1 video + Opus audio in one file.** The recorder used to leave them as two files (an MP4 and a `.weba`) because neither container can hold both. They are now joined into one Matroska file (`.mkv`) without re-encoding: the AV1 (or H.264) samples are cut out of the MP4 fragments and the Opus clusters are kept (`mergeMp4Opus` in `lib/mux.js`). Both tracks are cut to the span they have in common. If the join is not possible, the two files are saved as before.
+
+### Fixed
+* Settings: after *Save* the page did not apply a changed interface language until it was refreshed by hand (the language was compared after it had already been overwritten).
+
+## 1.6.0dev
+
+### Added
+* **Firefox for Android:** the toolbar popup fills the screen and has finger-sized buttons; what the phone does not have is skipped: context menu, hotkeys, notifications and the sidebar (the background no longer fails on the missing `contextMenus` / `commands` APIs), the folder buttons and the "Save as" / notification options are hidden. Needs Firefox for Android 142+. The footer shows `Firefox Android`.
+* **Microsoft Edge:** the Chrome build runs in Edge 116+ unchanged; `npm run build:edge` names the package `video-downloader-legal-edge-<version>.zip`; the folder `EDGE/` has the install steps and the Edge Add-ons checklist; Edge is recognised in the page footer and in the bug-report template.
+* **Rebuild the MP3 encoder yourself:** `node scripts/build-lamejs.mjs` fetches lamejs 1.2.1 from GitHub, bundles it into `vendor/lame.js` and checks it against the file in the repository (`--compare`: same MP3 bytes as upstream's `lame.min.js`).
+* The "Download anywhere" banner is part of the store screenshots (`AMO/screenshots`).
+
+### Changed
+* Copyright notices for lamejs / LAME: the original authors are named in `THIRD-PARTY.md` and `LICENSE`, the licensing notes of lamejs are shipped (`LICENSES/lamejs-LICENSE.txt`), and the header of `vendor/lame.js` states that the code is not modified, only assembled.
+* `vendor/lame.min.js` is replaced by `vendor/lame.js`: the unmodified lamejs sources in one readable, non-minified file (clears the two `no-unsanitized` validator warnings).
+* Chrome-only code (offscreen document client) moved out of the Firefox package (clears the `offscreen.createDocument` warning); the Chrome build puts it back.
+* `gecko_android.strict_min_version` 142.0 (clears the Android warning about `data_collection_permissions`).
 
 ## 1.5.6
 

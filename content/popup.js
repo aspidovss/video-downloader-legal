@@ -1,4 +1,4 @@
-import { h, t, translatePage } from '../utils/dom.js';
+import { h, t, translatePage, browserName } from '../utils/dom.js';
 import { loadUiLang } from '../utils/i18n.js';
 
 await loadUiLang();
@@ -283,7 +283,7 @@ function renderJobs(jobs) {
           ? h('button', { onclick: () => browser.runtime.sendMessage({ type: 'cancel_job', jobId: j.id }) }, t('cancel'))
           : null),
       j.state === 'error' && (/HTTP (?:403|410|429)\b/.test(j.error || '') || ['ytDirectBlocked', 'ytLimited'].includes(j.errorKey)) ? h('div', { class: 'note' }, t('busyHint')) : null,
-      j.state === 'done' && j.downloadId !== null && j.downloadId !== undefined
+      j.state === 'done' && j.downloadId !== null && j.downloadId !== undefined && typeof browser.downloads.show === 'function'
         ? h('div', { class: 'jobbtns' },
           h('button', { class: 'small', onclick: () => { try { browser.downloads.show(j.downloadId); } catch { /* ignore */ } } }, t('openFolder')))
         : null);
@@ -299,7 +299,7 @@ function reportText(file, site) {
     `VDL ${v}, ${site || 'YouTube'}`,
     `${t('bugTplSite')}: ${site || 'YouTube'}`,
     `${t('bugTplVersion')}: ${v}`,
-    `Firefox / ${t('bugTplSystem')}: ${navigator.userAgent}`,
+    `${browserName()} / ${t('bugTplSystem')}: ${navigator.userAgent}`,
     `${t('bugTplDid')}: `,
     `${t('bugTplHappened')}: `,
     `${t('bugTplFile')}: ${file}`,
@@ -394,6 +394,20 @@ function consentGate() {
   });
 }
 
+// Firefox only: one button moves the interface between the popup and the sidebar (closes the sidebar when pressed in it).
+async function setupSidebarButton() {
+  const btn = document.getElementById('btn-sidebar');
+  if (typeof browser.sidebarAction?.open !== 'function') return; // Chrome / Edge / Android
+  let inSidebar = false;
+  try { inSidebar = (await browser.extension.getViews({ type: 'sidebar' })).includes(window); } catch { /* unknown: treat as popup */ }
+  btn.hidden = false;
+  btn.title = t(inSidebar ? 'sidebarClose' : 'sidebarOpen');
+  btn.onclick = () => {
+    if (inSidebar) browser.sidebarAction.close();
+    else { browser.sidebarAction.open(); window.close(); } // open() has to run inside the click
+  };
+}
+
 async function init() {
   translatePage();
   if (!(await hasConsent())) await consentGate();
@@ -401,6 +415,7 @@ async function init() {
   const [tab] = await browser.tabs.query({ active: true, currentWindow: true });
   tabId = tab?.id ?? null;
 
+  await setupSidebarButton();
   document.getElementById('btn-settings').onclick = () => browser.runtime.openOptionsPage();
   document.getElementById('btn-history').onclick = () => browser.tabs.create({ url: browser.runtime.getURL('content/history.html') });
   document.getElementById('btn-reload').onclick = async () => {
@@ -408,6 +423,7 @@ async function init() {
     window.close();
   };
 
+  if (typeof browser.downloads.showDefaultFolder !== 'function') document.getElementById('btn-folder').hidden = true; // Android
   document.getElementById('btn-folder').onclick = () => { try { browser.downloads.showDefaultFolder(); } catch { /* ignore */ } };
   document.getElementById('btn-help').onclick = () => browser.tabs.create({ url: browser.runtime.getURL('content/help.html') });
   document.getElementById('btn-bug').onclick = async () => {

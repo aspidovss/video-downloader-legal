@@ -12,7 +12,7 @@ cd video-downloader-legal
 Linux / macOS / Git Bash:
 
 ```
-zip -r video-downloader-legal-1.5.6.xpi manifest.json LICENSE LICENSES THIRD-PARTY.md _locales content icons injected lib service styles utils vendor
+zip -r video-downloader-legal-ff-1.6.0.xpi manifest.json LICENSE LICENSES THIRD-PARTY.md _locales content icons injected lib service styles utils vendor
 ```
 
 Or with npm (Firefox build; the `build-for-amo` script in `package.json`, which AMO's builder uses; `web-ext` is the only dev dependency):
@@ -27,8 +27,8 @@ The package is written to `build/`.
 Windows (PowerShell):
 
 ```
-tar -a -c -f video-downloader-legal-1.5.6.zip manifest.json LICENSE LICENSES THIRD-PARTY.md _locales content icons injected lib service styles utils vendor
-Rename-Item video-downloader-legal-1.5.6.zip video-downloader-legal-1.5.6.xpi
+tar -a -c -f video-downloader-legal-ff-1.6.0.zip manifest.json LICENSE LICENSES THIRD-PARTY.md _locales content icons injected lib service styles utils vendor
+Rename-Item video-downloader-legal-ff-1.6.0.zip video-downloader-legal-ff-1.6.0.xpi
 ```
 
 ## Structure
@@ -38,7 +38,7 @@ Rename-Item video-downloader-legal-1.5.6.zip video-downloader-legal-1.5.6.xpi
 - `lib/` — `hls.js`, `dash.js` parsers; `downloader.js` segments; `liverec.js` live recording; `mux.js` own MP4/WebM muxer; `ts2mp4.js` TS→MP4 without re-encoding; `rebase.js` timestamps to 0:00; `mp3.js` lamejs glue; `youtube.js`, `ytapi.js`, `sites.js` site support; `md5.js`, `util.js`, `mp4info.js`, `sitediag.js` helpers
 - `injected/` — content scripts: `page.js` (generic scanner), YouTube (`youtube*.js`, record only on user click), TikTok (read-only), Instagram/Facebook, X, Canva, OK.ru
 - `content/` — popup, settings, history, help; `utils/`, `styles/`, `_locales/` (10 languages), `icons/`
-- `vendor/lame.min.js` — **unmodified** lamejs 1.2.1 (LGPL-3.0, optional MP3). Verify: `npm pack lamejs@1.2.1`, SHA-256 `15d285e2587b3bdbfd18a68de6ce07cc074f7480a82c3815da2dc1c348ec6df4`. The two validator warnings (line 76) come from this file.
+- `vendor/lame.js` — lamejs 1.2.1 (LGPL-3.0, optional MP3): the **unmodified sources** of tag 1.2.1 bundled into one readable file (no minifier) by `scripts/build-lamejs.mjs`. Verify: `node scripts/build-lamejs.mjs` (needs Node.js 18+ and git; fetches the tag from GitHub, rebuilds, prints `MATCH`), SHA-256 `f7f74b09d1190d9935e776169dd76c7b66e30db7e2f51b816af88f85a44ed9a8`.
 - Not in the `.xpi` (repository only): `tests/`, `docs/`, `AMO/`, `package.json`, README
 
 ## Sources of technical values

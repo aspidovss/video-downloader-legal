@@ -216,7 +216,7 @@
     "message": "MP3 质量（仅音频转换）"
   },
   "mp3Missing": {
-    "message": "未安装 MP3 编码器 (vendor/lame.min.js)。请改为下载 M4A/WEBM。"
+    "message": "未安装 MP3 编码器 (vendor/lame.js)。请改为下载 M4A/WEBM。"
   },
   "mp3Decode": {
     "message": "浏览器无法解码此音频。请改为下载 M4A/WEBM。"
@@ -543,7 +543,7 @@
     "message": "**第三方库。** 音频转 MP3 使用 **lamejs** 1.2.1（LAME 编码器的 JavaScript 移植版）。"
   },
   "helpC2": {
-    "message": "`vendor/lame.min.js` 未经修改，可替换为提供 `lamejs.Mp3Encoder` 的其他构建。SHA-256：`15d285e2587b3bdbfd18a68de6ce07cc074f7480a82c3815da2dc1c348ec6df4`。"
+    "message": "`vendor/lame.js` 由未经修改的 lamejs 源码构建（可用 `scripts/build-lamejs.mjs` 重新构建），可替换为提供 `lamejs.Mp3Encoder` 的其他构建。SHA-256：`f7f74b09d1190d9935e776169dd76c7b66e30db7e2f51b816af88f85a44ed9a8`。"
   },
   "helpC3": {
     "message": "该库在浏览器中本地运行，不发起任何网络请求。没有它时 MP3 不可用，其他格式仍可使用。"
@@ -754,5 +754,56 @@
   },
   "helpT4": {
     "message": "问题难以重现？请在设置（诊断）中开启“调试日志”，重现问题后在那里查看、复制、保存或发送日志。自动诊断的结果也会加入其中。日志保存在浏览器中，不会自动发送。"
+  },
+  "cmdAudio": {
+    "message": "下载检测到的第一个媒体的音频"
+  },
+  "hkTitle": {
+    "message": "键盘快捷键"
+  },
+  "optHotkeys": {
+    "message": "启用键盘快捷键"
+  },
+  "hintHotkeys": {
+    "message": "开启或关闭下面的快捷键。点击输入框并按下所需按键;按退格键可清除。需要 Ctrl、Alt 或 Command(Shift 可选)加字母、数字、方向键或 F 键。"
+  },
+  "hkOpenPopup": {
+    "message": "打开弹出窗口"
+  },
+  "hkDownloadVideo": {
+    "message": "下载第一个视频"
+  },
+  "hkDownloadAudio": {
+    "message": "下载第一个媒体的音频"
+  },
+  "hkNone": {
+    "message": "未设置"
+  },
+  "hkReset": {
+    "message": "默认"
+  },
+  "hkInvalid": {
+    "message": "此组合不能用作快捷键。"
+  },
+  "hkChromeHint": {
+    "message": "在此浏览器中,扩展快捷键只能在其自带页面中修改。请打开地址:"
+  },
+  "hkCopy": {
+    "message": "复制地址"
+  },
+  "hkCopied": {
+    "message": "已复制"
+  },
+  "optSidebar": {
+    "message": "侧边栏"
+  },
+  "sidebarOpen": {
+    "message": "在侧边栏中打开"
+  },
+  "sidebarClose": {
+    "message": "关闭侧边栏"
+  },
+  "noAudioHere": {
+    "message": "此页面没有可下载的音频"
   }
 }

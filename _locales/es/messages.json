@@ -216,7 +216,7 @@
     "message": "Calidad MP3 (conversión de audio)"
   },
   "mp3Missing": {
-    "message": "El codificador MP3 (vendor/lame.min.js) no está instalado. Descarga M4A/WEBM en su lugar."
+    "message": "El codificador MP3 (vendor/lame.js) no está instalado. Descarga M4A/WEBM en su lugar."
   },
   "mp3Decode": {
     "message": "El navegador no pudo decodificar este audio. Descarga M4A/WEBM en su lugar."
@@ -543,7 +543,7 @@
     "message": "**Biblioteca de terceros.** Para convertir audio a MP3 se usa **lamejs** 1.2.1, un port de JavaScript del codificador LAME."
   },
   "helpC2": {
-    "message": "El archivo `vendor/lame.min.js` se incluye sin modificar y puede sustituirse por otra compilación que ofrezca `lamejs.Mp3Encoder`. SHA-256: `15d285e2587b3bdbfd18a68de6ce07cc074f7480a82c3815da2dc1c348ec6df4`."
+    "message": "El archivo `vendor/lame.js` se genera a partir del código fuente de lamejs sin modificar (`scripts/build-lamejs.mjs` lo reconstruye) y puede sustituirse por otra compilación que ofrezca `lamejs.Mp3Encoder`. SHA-256: `f7f74b09d1190d9935e776169dd76c7b66e30db7e2f51b816af88f85a44ed9a8`."
   },
   "helpC3": {
     "message": "La biblioteca funciona en local en el navegador y no hace peticiones de red. Sin ella MP3 no está disponible; los demás formatos siguen funcionando."
@@ -754,5 +754,56 @@
   },
   "helpT4": {
     "message": "¿Difícil de reproducir? Active el «Registro de depuración» en las opciones (Diagnóstico), repita el problema y vea, copie, guarde o envíe el registro allí. El resultado del autodiagnóstico se añade a él. El registro queda en su navegador y nunca se envía solo."
+  },
+  "cmdAudio": {
+    "message": "Descargar el audio del primer medio detectado"
+  },
+  "hkTitle": {
+    "message": "Atajos de teclado"
+  },
+  "optHotkeys": {
+    "message": "Activar los atajos de teclado"
+  },
+  "hintHotkeys": {
+    "message": "Activa o desactiva los atajos de abajo. Haga clic en un campo y pulse las teclas que quiera; Retroceso lo vacía. Se necesita Ctrl, Alt o Command (Mayús es opcional) y una letra, un dígito, una flecha o una tecla F."
+  },
+  "hkOpenPopup": {
+    "message": "Abrir la ventana emergente"
+  },
+  "hkDownloadVideo": {
+    "message": "Descargar el primer vídeo"
+  },
+  "hkDownloadAudio": {
+    "message": "Descargar el audio del primer medio"
+  },
+  "hkNone": {
+    "message": "Sin asignar"
+  },
+  "hkReset": {
+    "message": "Predeterminado"
+  },
+  "hkInvalid": {
+    "message": "Esta combinación no se puede usar como atajo."
+  },
+  "hkChromeHint": {
+    "message": "En este navegador los atajos de las extensiones solo se cambian en su propia página. Abra la dirección:"
+  },
+  "hkCopy": {
+    "message": "Copiar dirección"
+  },
+  "hkCopied": {
+    "message": "Copiado"
+  },
+  "optSidebar": {
+    "message": "Barra lateral"
+  },
+  "sidebarOpen": {
+    "message": "Abrir en la barra lateral"
+  },
+  "sidebarClose": {
+    "message": "Cerrar la barra lateral"
+  },
+  "noAudioHere": {
+    "message": "No hay audio para descargar en esta página"
   }
 }

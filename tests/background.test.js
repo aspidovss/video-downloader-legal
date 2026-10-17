@@ -1120,7 +1120,7 @@ test('YouTube: variants carry sizes; audio-only variants (M4A, MP3 with an estim
   assert.equal(by('Audio · MP3').mp3, true);
   assert.equal(by('Audio · MP3').sizeEstimated, true);
   assert.equal(by('Audio · MP3').size, 6456000, '269 s at the default 192 kbps');
-  assert.equal(by('Audio · MP3').unavailable, true, 'no vendor/lame.min.js in the test environment');
+  assert.equal(by('Audio · MP3').unavailable, true, 'no vendor/lame.js in the test environment');
   assert.equal(JSON.stringify(it).includes('googlevideo'), false);
 });
 

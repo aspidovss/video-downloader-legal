@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "Video Downloader Legal",
-  "version": "1.5.6",
-  "version_name": "1.5.6",
+  "version": "1.6.0",
+  "version_name": "1.6.0dev3",
   "description": "__MSG_appDesc__",
   "default_locale": "en",
   "author": "AspidovSS",
@@ -58,6 +58,13 @@
       "suggested_key": {
         "default": "Alt+Down",
         "mac": "Ctrl+Shift+Down"
+      }
+    },
+    "download-audio": {
+      "description": "__MSG_cmdAudio__",
+      "suggested_key": {
+        "default": "Alt+Shift+Down",
+        "mac": "Ctrl+Shift+Right"
       }
     },
     "_execute_action": {
@@ -200,6 +207,9 @@
           "none"
         ]
       }
+    },
+    "gecko_android": {
+      "strict_min_version": "142.0"
     }
   }
 }

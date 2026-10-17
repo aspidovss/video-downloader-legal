@@ -3,4 +3,4 @@
 *.png binary
 *.xpi binary
 *.zip binary
-vendor/lame.min.js -text
+vendor/lame.js -text

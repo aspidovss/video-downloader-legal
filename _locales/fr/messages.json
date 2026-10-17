@@ -216,7 +216,7 @@
     "message": "Qualité MP3 (conversion audio)"
   },
   "mp3Missing": {
-    "message": "L’encodeur MP3 (vendor/lame.min.js) n’est pas installé. Téléchargez plutôt en M4A/WEBM."
+    "message": "L’encodeur MP3 (vendor/lame.js) n’est pas installé. Téléchargez plutôt en M4A/WEBM."
   },
   "mp3Decode": {
     "message": "Le navigateur n’a pas pu décoder cet audio. Téléchargez plutôt en M4A/WEBM."
@@ -543,7 +543,7 @@
     "message": "**Bibliothèque tierce.** La conversion de l’audio en MP3 utilise **lamejs** 1.2.1, un portage JavaScript de l’encodeur LAME."
   },
   "helpC2": {
-    "message": "Le fichier `vendor/lame.min.js` est inclus sans modification et peut être remplacé par une autre version fournissant `lamejs.Mp3Encoder`. SHA-256 : `15d285e2587b3bdbfd18a68de6ce07cc074f7480a82c3815da2dc1c348ec6df4`."
+    "message": "Le fichier `vendor/lame.js` est construit à partir des sources de lamejs non modifiées (`scripts/build-lamejs.mjs` le reconstruit) et peut être remplacé par une autre version fournissant `lamejs.Mp3Encoder`. SHA-256 : `f7f74b09d1190d9935e776169dd76c7b66e30db7e2f51b816af88f85a44ed9a8`."
   },
   "helpC3": {
     "message": "La bibliothèque s’exécute localement dans le navigateur et n’effectue aucune requête réseau. Sans elle, le MP3 est indisponible ; les autres formats fonctionnent."
@@ -754,5 +754,56 @@
   },
   "helpT4": {
     "message": "Difficile à reproduire ? Activez le « Journal de débogage » dans les options (Diagnostic), reproduisez le problème, puis affichez, copiez, enregistrez ou envoyez le journal depuis la même page. Le résultat de l’auto-diagnostic y est ajouté. Le journal reste dans votre navigateur et n’est jamais envoyé automatiquement."
+  },
+  "cmdAudio": {
+    "message": "Télécharger l'audio du premier média détecté"
+  },
+  "hkTitle": {
+    "message": "Raccourcis clavier"
+  },
+  "optHotkeys": {
+    "message": "Activer les raccourcis clavier"
+  },
+  "hintHotkeys": {
+    "message": "Active ou désactive les raccourcis ci-dessous. Cliquez dans un champ et appuyez sur les touches voulues ; Retour arrière le vide. Il faut Ctrl, Alt ou Command (Maj facultatif) et une lettre, un chiffre, une flèche ou une touche F."
+  },
+  "hkOpenPopup": {
+    "message": "Ouvrir la fenêtre"
+  },
+  "hkDownloadVideo": {
+    "message": "Télécharger la première vidéo"
+  },
+  "hkDownloadAudio": {
+    "message": "Télécharger l'audio du premier média"
+  },
+  "hkNone": {
+    "message": "Non attribué"
+  },
+  "hkReset": {
+    "message": "Par défaut"
+  },
+  "hkInvalid": {
+    "message": "Cette combinaison ne peut pas servir de raccourci."
+  },
+  "hkChromeHint": {
+    "message": "Dans ce navigateur, les raccourcis des extensions ne se modifient que sur sa propre page. Ouvrez l'adresse :"
+  },
+  "hkCopy": {
+    "message": "Copier l'adresse"
+  },
+  "hkCopied": {
+    "message": "Copié"
+  },
+  "optSidebar": {
+    "message": "Barre latérale"
+  },
+  "sidebarOpen": {
+    "message": "Ouvrir dans la barre latérale"
+  },
+  "sidebarClose": {
+    "message": "Fermer la barre latérale"
+  },
+  "noAudioHere": {
+    "message": "Aucun audio à télécharger sur cette page"
   }
 }
