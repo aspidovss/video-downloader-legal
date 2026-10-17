@@ -4,6 +4,7 @@ import { loadUiLang } from '../utils/i18n.js';
 await loadUiLang();
 
 const REPO = 'https://github.com/aspidovss/video-downloader-legal';
+const AMO = 'https://addons.mozilla.org/firefox/addon/video-downloader-legal/';
 const MAIL = 'vdl@aspidov.ru';
 const LAME = 'https://github.com/zhuker/lamejs';
 const LGPL = 'https://www.gnu.org/licenses/lgpl-3.0.html';
@@ -30,7 +31,7 @@ const intro = (...body) => h('fieldset', { class: 'prefs', 'data-fold': 'helpInt
 function build() {
   const root = document.getElementById('help');
   root.replaceChildren(
-    intro(h('p', { class: 'src' }, h('strong', {}, `${t('helpLabelCode')}: `), link(REPO)), h('p', {}, t('helpLead'))),
+    intro(h('p', { class: 'src' }, h('strong', {}, `${t('helpLabelCode')}: `), link(REPO)), h('p', { class: 'src' }, h('strong', {}, `${t('helpLabelAmo')}: `), link(AMO)), h('p', {}, t('helpLead'))),
     section('helpS1', list(['helpS1a', 'helpS1b', 'helpS1c', 'helpS1d'], true), h('p', {}, t('helpS1q'))),
     section('helpS2', list(['helpF1', 'helpF2', 'helpF3', 'helpF4', 'helpF5', 'helpF6'])),
     section('helpS3', list(['helpP1', 'helpP2', 'helpP3'])),

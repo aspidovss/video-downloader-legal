@@ -29,9 +29,8 @@ globalThis.browser = {
     sendMessage: async () => {}, getURL: (p) => `moz-extension://x/${p}`, getPlatformInfo: async () => ({}),
   },
   action: { setBadgeText: async (o) => badges.push(o), setBadgeBackgroundColor: async () => {} },
-  contextMenus: { create: () => {}, onClicked: mk('menu') },
   commands: { onCommand: mk('command') },
-  i18n: { getMessage: (k) => k },
+  i18n: { getMessage: (k) => k, getUILanguage: () => 'en-US' },
   notifications: { create: async (o) => notifications.push(o) },
   downloads: {
     onChanged: mk('downloads.onChanged'),
@@ -496,6 +495,22 @@ test('YouTube recording: audio-only save sends a single audio file name', async 
   assert.equal((await send({ type: 'yt_rec', tabId: 12, cmd: 'save_audio' }, sender)).ok, false);
 });
 
+
+test('YouTube recording: AV1 + Opus is saved as .mp4 by default (Telegram: video), .mkv by the setting', async () => {
+  const sender = { tab: { id: 13 } };
+  await send({ type: 'yt_player', data: ytSummary() }, sender);
+  const tr = [{ kind: 'video', ext: 'mp4', height: 720, fragments: 3, bytes: 9 }, { kind: 'audio', ext: 'weba', height: 0, fragments: 3, bytes: 4 }];
+  await send({ type: 'yt_rec_status', state: { state: 'recording', tracks: tr } }, sender);
+  await send({ type: 'yt_rec', tabId: 13, cmd: 'save' }, sender);
+  assert.deepEqual(tabMessages.at(-1).msg.names, ['Clip_ Test.mp4', 'Clip_ Test.audio.weba']); // the recorder joins into the first name
+  const prev = store.local.settings;
+  store.local.settings = { ...prev, joinFormat: 'mkv' };
+  listeners['storage.onChanged'][0].fn({ settings: { newValue: store.local.settings } }, 'local');
+  await send({ type: 'yt_rec', tabId: 13, cmd: 'save' }, sender);
+  assert.deepEqual(tabMessages.at(-1).msg.names, ['Clip_ Test.mkv', 'Clip_ Test.audio.weba']);
+  store.local.settings = prev;
+  listeners['storage.onChanged'][0].fn({ settings: { newValue: prev } }, 'local');
+});
 
 // ---- mobile-client API (main way) ----
 const apiJson = (extra = {}) => ({
@@ -1346,4 +1361,64 @@ test('debug log: off by default; when on it records detections and downloads wit
   hit('https://cdn.example.com/after.mp4', { 'content-type': 'video/mp4', 'content-length': 7_000_000 });
   await tick(400);
   assert.equal(store.local.debugLog.length, n, 'nothing is written after switching off');
+});
+
+test('YouTube subtitles: the card lists the tracks; SRT saves <title>.<lang>.srt; "with video" adds the .srt next to an mp4', async () => {
+  const tabId = 97;
+  const TT = 'https://www.youtube.com/api/timedtext?v=subVid123456&lang=en';
+  const audio = new Uint8Array(40000).fill(7);
+  const prevFetch = globalThis.fetch;
+  const asked = [];
+  globalThis.fetch = async (url, opts) => {
+    const u = new URL(url);
+    if (u.pathname === '/api/timedtext') {
+      asked.push(u.searchParams.get('fmt'));
+      return { ok: true, status: 200, text: async () => JSON.stringify({ events: [{ tStartMs: 1000, dDurationMs: 1500, segs: [{ utf8: 'Hi there' }] }] }) };
+    }
+    if (u.pathname.includes('/youtubei/v1/player')) {
+      return { ok: true, status: 200, json: async () => ({ ...apiJson({ adaptiveFormats: [
+        { itag: 137, mimeType: 'video/mp4; codecs="avc1.640028"', qualityLabel: '1080p', height: 1080, bitrate: 4e6, contentLength: '1000', url: 'https://rr1---sn-abc.googlevideo.com/videoplayback?itag=137&c=VISIONOS' },
+        { itag: 140, mimeType: 'audio/mp4; codecs="mp4a.40.2"', bitrate: 130000, contentLength: String(audio.length), url: 'https://rr1---sn-abc.googlevideo.com/videoplayback?itag=140&c=VISIONOS' },
+      ] }), captions: { playerCaptionsTracklistRenderer: { captionTracks: [{ baseUrl: TT, name: { simpleText: 'English' }, languageCode: 'en', isTranslatable: true }], translationLanguages: [] } } }) };
+    }
+    if (u.hostname.endsWith('googlevideo.com')) {
+      const [a, b] = u.searchParams.get('range').split('-').map(Number);
+      const chunk = audio.subarray(a, b + 1);
+      return { ok: true, status: 206, headers: { get: () => '' }, arrayBuffer: async () => chunk.buffer.slice(chunk.byteOffset, chunk.byteOffset + chunk.byteLength) };
+    }
+    return prevFetch(url, opts);
+  };
+  try {
+    const sender = { tab: { id: tabId } };
+    await send({ type: 'yt_player', data: ytSummary({ videoId: 'subVid123456', sabr: true, formats: [] }) }, sender);
+    await tick(80);
+    const it = (await send({ type: 'get_state', tabId }, sender)).items.find((i) => i.kind === 'yt');
+    assert.deepEqual(it.subs.map((s) => [s.id, s.lang, s.label]), [['t0', 'en', 'English']]);
+    const before = downloadsStarted.length;
+    const r = await send({ type: 'yt_subs', tabId, itemId: it.id, choice: 't0' }, sender);
+    assert.equal(r.ok, true);
+    assert.deepEqual(downloadsStarted.slice(before).map((d) => d.filename), ['Clip_ Test.en.srt']);
+    assert.ok(asked.includes('json3'));
+    // with the video (here an audio-only m4a track stands in for a single-file download): .srt next to it
+    const idx = it.variants.findIndex((v) => v.atype === 'm4a');
+    const b2 = downloadsStarted.length;
+    await send({ type: 'download', tabId, itemId: it.id, variant: idx, variantLabel: it.variants[idx].label, subs: 't0' }, sender);
+    await tick(300);
+    assert.deepEqual(downloadsStarted.slice(b2).map((d) => d.filename), ['Clip_ Test.m4a', 'Clip_ Test.en.srt']);
+  } finally { globalThis.fetch = prevFetch; }
+});
+
+test('Kick / Amazon IVS: quality playlists without a quality list go under "More" when the master is there', async () => {
+  const M = 'https://fa1.us-west-2.playback.live-video.net/api/video/v1/us-west-2.x.channel.y.m3u8?token=t';
+  fixtures[M] = '#EXTM3U\n#EXT-X-STREAM-INF:BANDWIDTH=9000000,RESOLUTION=1920x1080,FRAME-RATE=60.000\nhttps://fa1.euw12.playlist.live-video.net/v1/playlist/A.m3u8\n#EXT-X-STREAM-INF:BANDWIDTH=3400000,RESOLUTION=1280x720,FRAME-RATE=60.000\nhttps://fa1.euw12.playlist.live-video.net/v1/playlist/B.m3u8\n';
+  for (const k of ['A', 'Q', 'R']) fixtures[`https://fa1.euw11.playlist.live-video.net/v1/playlist/${k}.m3u8`] = '#EXTM3U\n#EXT-X-TARGETDURATION:2\n#EXTINF:2,\nx.ts\n';
+  fixtures['https://fa1.euw12.playlist.live-video.net/v1/playlist/A.m3u8'] = '#EXTM3U\n#EXT-X-TARGETDURATION:2\n#EXTINF:2,\nx.ts\n';
+  hit(M, { 'content-type': 'application/vnd.apple.mpegurl' }, { tabId: 31 });
+  hit('https://fa1.euw11.playlist.live-video.net/v1/playlist/Q.m3u8', { 'content-type': 'application/vnd.apple.mpegurl' }, { tabId: 31 });
+  hit('https://fa1.euw11.playlist.live-video.net/v1/playlist/R.m3u8', { 'content-type': 'application/vnd.apple.mpegurl' }, { tabId: 31 });
+  await tick(150);
+  const hls = (await send({ type: 'get_state', tabId: 31 })).items.filter((i) => i.kind === 'hls');
+  assert.equal(hls.length, 3);
+  assert.deepEqual(hls.filter((i) => !i.secondary).map((i) => i.url), [M], 'only the master stays in the main list');
+  assert.equal(hls.filter((i) => i.secondary).length, 2);
 });

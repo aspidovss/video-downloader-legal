@@ -71,6 +71,7 @@ function card(it) {
     e.target.disabled = true;
     const res = await browser.runtime.sendMessage({
       type: 'download', tabId, itemId: it.id, variant, variantLabel: it.variants?.[variant]?.label,
+      subs: it.kind === 'yt' && prefs.subsWithVideo ? subsPick(it)?.id || '' : '',
     });
     if (!res.ok) e.target.disabled = false;
     setTimeout(refresh, 300);
@@ -105,7 +106,8 @@ function card(it) {
   }
 
   let note = null;
-  if (it.noteKey) note = h('div', { class: 'note warn' }, t(it.noteKey));
+  if (it.why && it.why !== 'cut') note = h('div', { class: 'note warn' }, whyText(it));
+  else if (it.noteKey) note = h('div', { class: 'note warn' }, t(it.noteKey));
   else if (it.protected) note = h('div', { class: 'note warn' }, t('drm'));
   else if (it.kind === 'yt' && it.live) note = h('div', { class: 'note warn' }, t('ytLiveNote'));
   else if (liveRec) note = h('div', { class: 'note' }, t('liveNote'));
@@ -125,14 +127,53 @@ function card(it) {
       h('div', { class: 'thumbwrap' }, thumb, dur),
       h('div', { class: 'info' },
         h('div', { class: 'title', title: it.caption ? `${it.caption}\n${it.title}` : it.title }, it.caption || it.title),it.caption ? h('div', { class: 'subtitle' }, it.title) : null,
-        h('div', { class: 'meta' }, kindBadge(it), liveRec ? h('span', { class: 'badge live' }, 'LIVE') : null, it.beta ? h('span', { class: 'badge live' }, 'BETA') : null, meta ? ` ${meta}` : ''))),
+        h('div', { class: 'meta' }, kindBadge(it), it.license === 'cc' ? h('span', { class: 'badge cc', title: t('ccBadgeTitle') }, 'CC BY') : null, liveRec ? h('span', { class: 'badge live' }, 'LIVE') : null, it.beta ? h('span', { class: 'badge live' }, 'BETA') : null, meta ? ` ${meta}` : ''))),
     note,
     videoRow,
     !it.noteKey && audioVariants.length ? audioControls(it, audioVariants, sizeText) : null,
-    it.kind === 'yt' && (it.apiState === 'failed' || it.dlFailed) ? h('div', { class: 'note' }, t('busyHint')) : null,
-    it.kind === 'yt' && showFallback(it) ? recControls(it) : null,
-    recordHidden(it) ? h('div', { class: 'note warn' }, t('ytRecordDisabledHint'), h('div', { class: 'actions' }, h('button', { class: 'primary small', onclick: enableRecordUi }, t('ytRecordEnable')))) : null,
+    it.kind === 'yt' && !it.noteKey && !it.live && (it.subs || []).length ? subsControls(it) : null,
+    it.kind === 'yt' && it.why === 'cut' ? h('div', { class: 'note warn' }, whyText(it)) : null,
+    it.kind === 'yt' && (it.why ? it.whyBusy : (it.apiState === 'failed' || it.dlFailed)) ? h('div', { class: 'note' }, t('busyHint')) : null,
+    it.kind === 'yt' && it.whyRecord !== 'no' && showFallback(it) ? recControls(it) : null,
+    it.whyRecord !== 'no' && recordHidden(it) ? h('div', { class: 'note warn' }, t('ytRecordDisabledHint'), h('div', { class: 'actions' }, h('button', { class: 'primary small', onclick: enableRecordUi }, t('ytRecordEnable')))) : null,
     it.kind === 'yt' && it.apiState === 'loading' && !it.variants.length ? h('div', { class: 'note' }, t('ytApiLoading')) : null);
+}
+
+// Subtitles: [language] [SRT] [with the video]. Default: the interface language, then its translation, then the first.
+function subsPick(it) {
+  const list = it.subs || [];
+  const chosen = selectedVariant.get(`${it.id}:subs`);
+  if (chosen && list.some((s) => s.id === chosen)) return list.find((s) => s.id === chosen);
+  const ui = (document.documentElement.lang || navigator.language || 'en').toLowerCase().split('-')[0];
+  const base = (l) => String(l || '').toLowerCase().split(/[-_]/)[0];
+  return list.find((s) => base(s.lang) === ui && !s.tlang && !/\(.*\)/.test(s.label)) || list.find((s) => base(s.lang) === ui) || list[0];
+}
+function subsControls(it) {
+  const pick = subsPick(it);
+  const sel = h('select', { class: 'subs', 'aria-label': t('subsTitle'), onchange: (e) => selectedVariant.set(`${it.id}:subs`, e.target.value) },
+    it.subs.map((s) => h('option', { value: s.id, selected: s.id === pick?.id }, s.label)));
+  const save = h('button', { title: t('subsSaveTitle'), onclick: async (e) => {
+    const b = e.currentTarget;
+    b.disabled = true;
+    try { await browser.runtime.sendMessage({ type: 'yt_subs', tabId, itemId: it.id, choice: sel.value }); } catch { /* shown by a notification */ }
+    b.disabled = false;
+  } }, 'SRT');
+  const box = h('input', { type: 'checkbox', checked: !!prefs.subsWithVideo, onchange: async (e) => { prefs.subsWithVideo = e.target.checked; try { await saveSettings({ subsWithVideo: e.target.checked }); } catch { /* ignore */ } } });
+  return h('div', { class: 'actions subsrow' },
+    h('span', { class: 'meta' }, t('subsTitle')), sel, save,
+    h('label', { class: 'subswith', title: t('subsWithVideoTitle') }, box, t('subsWithVideo')));
+}
+
+// Why YouTube gave nothing, in plain words (codes: lib/ytverdict.js)
+const WHY_KEYS = { age: 'ytWhyAge', bot: 'ytWhyBot', private: 'ytWhyPrivate', removed: 'ytWhyRemoved', region: 'ytWhyRegion', members: 'ytWhyMembers', paid: 'ytWhyPaid', upcoming: 'ytWhyUpcoming', contentCheck: 'ytWhyContentCheck', sabr: 'ytWhySabr', cut: 'ytWhyCut', rate: 'ytWhyRate', network: 'ytWhyNetwork', unknown: 'ytWhyUnknown' };
+function whyText(it) {
+  if (it.why === 'upcoming' && it.whyStart) {
+    let when = '';
+    try { when = new Date(it.whyStart * 1000).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' }); } catch { /* no date */ }
+    if (when) return t('ytWhyUpcomingAt').replace('{time}', when);
+  }
+  if (it.why === 'unknown') return it.whyReason ? t('ytWhyUnknownReason').replace('{reason}', it.whyReason) : t('ytWhyUnknown');
+  return t(WHY_KEYS[it.why] || 'ytUnavailable');
 }
 
 // The recording fallback is offered only when no method produced downloadable links,
@@ -236,7 +277,7 @@ function recControls(it) {
     : null;
   return h('div', { class: 'rec' },
     err,
-    h('div', { class: 'actions' }, h('button', { class: it.live || !(it.variants || []).length ? 'primary' : '', onclick: () => send('start') }, t(it.live ? 'ytLiveRecord' : 'ytRecord')), it.live ? null : h('span', { class: 'badge live' }, 'BETA')),
+    h('div', { class: 'actions recrow' }, h('button', { class: it.live || !(it.variants || []).length ? 'primary' : '', onclick: () => send('start') }, t(it.live ? 'ytLiveRecord' : 'ytRecord')), it.live ? null : h('span', { class: 'badge live' }, 'BETA')),
     h('div', { class: 'meta' }, t(it.live ? 'ytLiveHint' : 'ytRecordHint')));
 }
 
@@ -247,7 +288,7 @@ function renderItems(items, force = false) {
   const rank = (it) => ({ yt: 0, dash: 1, hls: 2 }[it.kind] ?? 3);
   const sorted = items.map((it, i) => ({ it, i })).sort((a, b) => rank(a.it) - rank(b.it) || a.i - b.i).map((x) => x.it);
   const hasStream = items.some((x) => ['yt', 'dash', 'hls'].includes(x.kind));
-  const small = (it) => it.kind === 'file' && (it.secondary || hasStream || (it.size > 0 && it.size < 1048576));
+  const small = (it) => (it.kind !== 'file' && !!it.secondary) || (it.kind === 'file' && (it.secondary || hasStream || (it.size > 0 && it.size < 1048576)));
   const main = sorted.filter((x) => !small(x));
   const rest = sorted.filter(small);
   const nodes = main.length ? main.map(card) : rest.map(card);
@@ -342,15 +383,18 @@ function renderBug(bug) {
     return;
   }
   if (bug.state === 'error') {
-    $p.replaceChildren(h('div', { class: 'panel' }, h('div', { class: 'note warn' }, t('bugNotifError'))));
+    $p.replaceChildren(h('div', { class: 'panel' }, h('div', { class: 'panelhead' }, h('div', { class: 'note warn' }, t('bugNotifError')), h('button', { class: 'close', title: t('dismiss'), 'aria-label': t('dismiss'), onclick: async () => { try { await browser.runtime.sendMessage({ type: 'bug_dismiss', tabId }); } catch { /* ignore */ } renderBug(null); } }, '✕'))));
     return;
   }
   const text = reportText(bug.file, bug.site);
   const title = encodeURIComponent(`VDL ${browser.runtime.getManifest().version_name || ''}: ${bug.site || 'YouTube'}`);
   const body = encodeURIComponent(text);
   const copy = (value) => async (e) => {
-    try { await navigator.clipboard.writeText(value); e.target.textContent = t('bugCopied'); } catch { e.target.textContent = t('bugCopyFail'); }
+    const b = e.currentTarget;
+    try { await navigator.clipboard.writeText(value); b.textContent = t('bugCopied'); } catch { b.textContent = t('bugCopyFail'); }
+    setTimeout(() => { b.textContent = t('bugCopy'); }, 2500);
   };
+  const dismiss = h('button', { class: 'close', title: t('dismiss'), 'aria-label': t('dismiss'), onclick: async () => { try { await browser.runtime.sendMessage({ type: 'bug_dismiss', tabId }); } catch { /* ignore */ } renderBug(null); } }, '✕');
   // One block: the short report (editable: fill in what you did / what happened) + the diagnostics file content.
   const SEP = '\n\n\n';
   const box = h('textarea', { class: 'bugjson', rows: 14, spellcheck: 'false' });
@@ -367,13 +411,13 @@ function renderBug(bug) {
   };
   box.addEventListener('input', relink);
   $p.replaceChildren(h('div', { class: 'panel' },
-    h('h3', {}, t('bugDoneTitle')),
+    h('div', { class: 'panelhead' }, h('h3', {}, t('bugDoneTitle')), dismiss),
     h('div', {}, `${t('bugDoneText')} `, h('b', {}, bug.file)),
     h('div', { class: 'note' }, t('bugPrivacy')),
     h('div', {}, t('bugSendIntro')),
     box,
-    h('div', { class: 'btns' },
-      h('button', { onclick: (e) => copy(box.value)(e) }, t('bugCopy')),
+    h('div', { class: 'btns bugbtns' },
+      h('button', { class: 'wide', onclick: (e) => copy(box.value)(e) }, t('bugCopy')),
       gh, mail),
     h('div', { class: 'note' }, t('bugAttachHint'))));
 }

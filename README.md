@@ -8,13 +8,15 @@
 
 [English](README.md) · [Русский](README.ru.md)
 
+[![Get the add-on for Firefox](https://img.shields.io/badge/Firefox_Add--ons-Get_the_add--on-FF7139?logo=firefoxbrowser&logoColor=white)](https://addons.mozilla.org/en-US/firefox/addon/video-downloader-legal/)
+
 ![Firefox 140+](https://img.shields.io/badge/Firefox-140%2B-orange?logo=firefoxbrowser&logoColor=white) ![Firefox Android 142+](https://img.shields.io/badge/Firefox%20Android-142%2B-orange?logo=firefoxbrowser&logoColor=white) ![Chrome 116+](https://img.shields.io/badge/Chrome-116%2B-4285F4?logo=googlechrome&logoColor=white) ![Edge 116+](https://img.shields.io/badge/Edge-116%2B-0078D7?logo=microsoftedge&logoColor=white) ![Manifest V3](https://img.shields.io/badge/Manifest-V3-blue) ![License MIT](https://img.shields.io/badge/license-MIT-green) ![Telemetry none](https://img.shields.io/badge/telemetry-none-brightgreen)
 
 <img src="docs/screenshots/en-0-anywhere.png" alt="Download anywhere: YouTube, Twitch, Vimeo, TikTok" width="760">
 
 </div>
 
-Video Downloader Legal is a **Firefox, Chrome and Microsoft Edge** extension (Manifest V3; other Chromium browsers such as Brave and Opera work too) that lists the videos and audio the open page plays and saves the one you choose. It also works in **Firefox for Android** (142+): open the extension from the menu *Extensions*; the popup fills the screen, downloads go to the phone's Downloads folder (no context menu, hotkeys, notifications or sidebar on Android). Everything runs inside your browser: there are no external servers, no analytics, no helper programs to install (no Native Messaging). The extension joins video and audio and converts MPEG-TS to MP4 with its **own** code, without re-encoding.
+Video Downloader Legal is a **Firefox, Chrome and Microsoft Edge** extension (Manifest V3; other Chromium browsers such as Brave and Opera work too) that lists the videos and audio the open page plays and saves the one you choose. It also works in **Firefox for Android** (142+): open the extension from the menu *Extensions*; the popup fills the screen, downloads go to the phone's Downloads folder (no hotkeys, notifications or sidebar on Android). Everything runs inside your browser: there are no external servers, no analytics, no helper programs to install (no Native Messaging). The extension joins video and audio and converts MPEG-TS to MP4 with its **own** code, without re-encoding.
 
 It is built to stay on the right side of the line: **DRM-protected streams are detected and refused, never decrypted**, and no tokens, signatures or credentials are forged.
 
@@ -26,12 +28,13 @@ Author: **AspidovSS** · License: **MIT** · Contact: <vdl@aspidov.ru>
 |---|---|
 | **Direct files, HLS (`m3u8`), DASH (`mpd`)** | Quality choice, separate audio track, AES-128, fMP4, byte ranges. Video and audio are joined into one file without re-encoding. |
 | **YouTube** | Choose type (MP4 / WEBM / AV1) and resolution; audio as MP3, M4A or WEBM; video + audio joined into one file. If a direct link is unavailable, a fallback records from the player. |
-| **Live streams** | **Twitch** and other HLS live streams: *Record* until you press *Stop* (or a time limit). **YouTube live (beta)**: recorded from the player in real time, saved as `.mkv`. Recordings start at 0:00. |
+| **Live streams** | **Twitch** and other HLS live streams: *Record* until you press *Stop* (or a time limit). **YouTube live (beta)**: recorded from the player in real time, saved as `.mp4`. Recordings start at 0:00. |
 | **TS → MP4** | HLS streams in MPEG-TS are saved as ordinary **MP4 by default** (H.264 + AAC, no re-encoding); **TS** stays available as the second choice. |
 | **TikTok** | The video on screen is always first, with its title and cover; other videos in the feed sit under **More**. |
 | **Other sites** | Vimeo, Dailymotion, RuTube, Dzen, Instagram, Facebook, X (Twitter), Bilibili, Canva, OK.ru, VK; any other site through general stream detection. Results on some sites are limited by what the page provides. |
 | **Audio only** | MP3 (converted in the browser, 128–320 kbps), M4A or WEBM. |
-| **Convenience** | Light and dark theme (follows your system), 10 interface languages, history, file name template, notifications, hotkey <kbd>Alt</kbd>+<kbd>↓</kbd>, context-menu item, built-in help. |
+| **YouTube subtitles** | Any track of the video (also automatic ones, or a YouTube translation) as `.srt`, or with the video: a switchable track inside `.webm`, else an `.srt` next to it. |
+| **Convenience** | Light and dark theme (follows your system), 10 interface languages, history, file name template, notifications, configurable hotkeys, built-in help. |
 | **Diagnostics** | One button creates a local diagnostics file (links masked) that you can attach to a bug report. An optional **debug log** (options, off by default) records what the extension does; you can view, copy, save or send it, and the auto-diagnostics result is added to it. Nothing is ever sent automatically. |
 
 Interface languages: English, Русский, 简体中文, Español, हिन्दी, Français, العربية, Português (Brasil), Deutsch, 日本語.
@@ -57,7 +60,7 @@ Interface languages: English, Русский, 简体中文, Español, हिन�
 
 ## Install
 
-**From Mozilla Add-ons (recommended):** search for *Video Downloader Legal* on <https://addons.mozilla.org/> and press *Add to Firefox*.
+**From Mozilla Add-ons (recommended):** open [Video Downloader Legal on addons.mozilla.org](https://addons.mozilla.org/en-US/firefox/addon/video-downloader-legal/) and press *Add to Firefox* (also in Firefox for Android).
 
 **From a release file:** download the signed `.xpi` from the [Releases](https://github.com/aspidovss/video-downloader-legal/releases) page and open it in Firefox.
 
@@ -83,7 +86,7 @@ Needs **Chrome or Edge 116 or newer**. Edge runs the Chrome package unchanged (E
 3. Pick the type and quality and press **Download** (**Record** for a live stream). Audio has its own row: MP3, M4A or WEBM.
 4. Finished files appear in **History** (clock icon) and in your downloads folder (folder icon).
 
-Shortcuts: <kbd>Alt</kbd>+<kbd>↓</kbd> downloads the first item, <kbd>Alt</kbd>+<kbd>↑</kbd> opens the window; the context menu has *Download this media*.
+Shortcuts (Settings → General): <kbd>Alt</kbd>+<kbd>↓</kbd> downloads the first video, <kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>↓</kbd> its audio, <kbd>Alt</kbd>+<kbd>↑</kbd> opens the window.
 
 If something does not work, press the 🐞 button: it runs a short self-test, saves a diagnostics file to your downloads folder and prepares a bug-report text. If the problem is hard to reproduce, turn on the **debug log** in the options (Diagnostics), repeat the problem and save the log to a file too. Attach the file(s) to a [GitHub issue](https://github.com/aspidovss/video-downloader-legal/issues/new/choose) or send it to <vdl@aspidov.ru>.
 

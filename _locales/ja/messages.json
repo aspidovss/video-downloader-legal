@@ -92,9 +92,6 @@
   "saved": {
     "message": "保存しました"
   },
-  "menuDownload": {
-    "message": "Video Downloader Legal でダウンロード"
-  },
   "cmdDefault": {
     "message": "最初に検出した動画をダウンロード"
   },
@@ -123,7 +120,7 @@
     "message": "YouTube がこの拡張機能へのこのリンクを拒否しました (HTTP 403)。代わりに「再生しながら録画」をお使いください。"
   },
   "ytRecord": {
-    "message": "代替手段：再生しながら録画"
+    "message": "再生しながら録画"
   },
   "ytRecordHint": {
     "message": "ページを再読み込みし、動画をミュートで高速再生します。終わるまでこのタブを開いたままにしてください。"
@@ -300,7 +297,7 @@
     "message": "コピーに失敗しました"
   },
   "bugGithub": {
-    "message": "GitHub の issue を開く"
+    "message": "GitHub の issue"
   },
   "bugEmail": {
     "message": "メールを送る"
@@ -450,7 +447,7 @@
     "message": "完了したファイルは「履歴」（時計アイコン）とダウンロードフォルダー（フォルダーアイコン）で確認できます。"
   },
   "helpS1q": {
-    "message": "ショートカット：Alt+↓ キーと右クリックメニューの項目。"
+    "message": "ショートカット：キーボードショートカット（設定 → 全般で変更できます）。"
   },
   "helpS2": {
     "message": "機能"
@@ -465,7 +462,7 @@
     "message": "**YouTube：** 種類（MP4、WEBM、AV1）と解像度の選択、音声のダウンロード（MP3、M4A、WEBM）、映像と音声を 1 ファイルに結合。直接リンクが使えない場合は、プレーヤーからの録画という代替手段があります。"
   },
   "helpF4": {
-    "message": "**YouTube ライブ配信（ベータ）：** ページを再読み込みせず、プレーヤーからリアルタイムで録画します。「停止」で録画を終了し、映像と音声を .mkv に結合します。音声だけのダウンロードはできません。"
+    "message": "**YouTube ライブ配信（ベータ）：** ページを再読み込みせず、プレーヤーからリアルタイムで録画します。「停止」で録画を終了し、映像と音声を .mp4 に結合します。音声だけのダウンロードはできません。"
   },
   "helpF5": {
     "message": "**その他のサイト：** Vimeo、Dailymotion、Instagram、Facebook、X (Twitter)、Twitch、TikTok、Bilibili、Canva、OK.ru、VK。その他は汎用のストリーム検出で対応します。サイトによっては、ページが提供する情報の範囲に限られます。"
@@ -805,5 +802,86 @@
   },
   "noAudioHere": {
     "message": "このページにはダウンロードできる音声がありません"
+  },
+  "ccBadgeTitle": {
+    "message": "クリエイティブ・コモンズ 表示（CC BY）：作者を表示すれば再利用できます。動画の説明でライセンスを確認してください。"
+  },
+  "ytWhyAge": {
+    "message": "年齢制限のある動画（18+）：YouTube は年齢確認済みのログイン中アカウントにのみ提供し、VDL はあなたのアカウントを使いません。再生しながら録画をお試しください。"
+  },
+  "ytWhyBot": {
+    "message": "YouTube がロボットでないことの確認を求めています：お使いのネットワークからのリクエストが多すぎます。数分〜1 時間待つか、ページを再読み込みしてください。"
+  },
+  "ytWhyPrivate": {
+    "message": "非公開動画：作成者が選んだ人とだけ共有しています。"
+  },
+  "ytWhyRemoved": {
+    "message": "動画は削除されたか、YouTube で利用できません。"
+  },
+  "ytWhyRegion": {
+    "message": "作成者はこの動画をお住まいの国で公開していません。"
+  },
+  "ytWhyMembers": {
+    "message": "チャンネルメンバー限定の動画です。アクセス権がある場合は再生しながら録画をお試しください。"
+  },
+  "ytWhyPaid": {
+    "message": "有料動画またはコピー保護（DRM）付きの映画：ダウンロードも録画もできません。"
+  },
+  "ytWhyUpcoming": {
+    "message": "配信またはプレミア公開はまだ始まっていません。"
+  },
+  "ytWhyUpcomingAt": {
+    "message": "配信またはプレミア公開はまだ始まっていません。開始：{time}。"
+  },
+  "ytWhyContentCheck": {
+    "message": "YouTube がこの動画を見るかどうかの確認を求めています。ページで確認してから再読み込みしてください。"
+  },
+  "ytWhySabr": {
+    "message": "YouTube はこの動画の直接リンクを提供しませんでした。再生しながら録画をご利用ください。"
+  },
+  "ytWhyCut": {
+    "message": "YouTube はこの動画のダウンロードを最初の部分で打ち切ります。再生しながら録画をご利用ください。"
+  },
+  "ytWhyRate": {
+    "message": "お使いのネットワークから YouTube へのリクエストが多すぎます。数分〜1 時間お待ちください。"
+  },
+  "ytWhyNetwork": {
+    "message": "YouTube に接続できません。インターネットを確認してページを再読み込みしてください。"
+  },
+  "ytWhyUnknown": {
+    "message": "YouTube はこの動画を提供しませんでした。理由は判別できませんでした。"
+  },
+  "ytWhyUnknownReason": {
+    "message": "YouTube はこの動画を提供しませんでした。理由は判別できませんでした。YouTube の応答：「{reason}」。"
+  },
+  "subsTitle": {
+    "message": "字幕"
+  },
+  "subsSaveTitle": {
+    "message": "字幕を .srt ファイルとして保存"
+  },
+  "subsWithVideo": {
+    "message": "動画と一緒に"
+  },
+  "subsWithVideoTitle": {
+    "message": "選んだ字幕を動画と一緒に保存：.webm ファイルの中（プレーヤーで切り替え可能）、それ以外は横に .srt ファイル"
+  },
+  "subsFailed": {
+    "message": "字幕を取得できませんでした。プレーヤーで数秒間字幕をオンにしてから、もう一度お試しください。"
+  },
+  "optJoinFormat": {
+    "message": "形式の異なる映像と音声の結合"
+  },
+  "joinMp4": {
+    "message": "MP4（推奨：Telegram で動画として送信）"
+  },
+  "joinMkv": {
+    "message": "MKV（Matroska）"
+  },
+  "hintJoinFormat": {
+    "message": "映像と音声の形式が異なる場合（AV1 または H.264 と Opus、VP9 と AAC）、再エンコードせずに結合します。MP4 はブラウザーやプレーヤーで再生でき、Telegram では動画として送信されます。.mkv は Telegram ではファイルとして送信されます。"
+  },
+  "helpLabelAmo": {
+    "message": "Firefox アドオン"
   }
 }

@@ -13,7 +13,8 @@ import { RESOLVERS } from '../lib/sites.js';
 import { IS_CHROME } from '../lib/env.js';
 import { hdr as ytHdr, installChromeRules } from './headers.js';
 import { isAccepted } from '../lib/consent.js';
-import { loadUiLang, tr } from '../utils/i18n.js';
+import { loadUiLang, tr, uiLangCode } from '../utils/i18n.js';
+import { subsChoices, subsUrl, json3ToCues, cuesToSrt, iso639b } from '../lib/subs.js';
 import { chromeBlobUrl, chromeRevoke, chromeMp3 } from './offscreen-client.js';
 import { recordLive } from '../lib/liverec.js';
 import { rebaseTimestamps } from '../lib/rebase.js';
@@ -30,6 +31,7 @@ import { getSettings, saveSettings, addHistory, DEFAULTS } from '../utils/settin
 import { COMMAND_OF, isValidShortcut } from '../lib/shortcuts.js';
 import { dlog, configureLog, flushLog, logEnabled } from '../utils/debuglog.js';
 import { diagLines } from '../lib/debuglog.js';
+import { classifyYt } from '../lib/ytverdict.js';
 
 const MAX_ITEMS_PER_TAB = 60;
 const HLS_TYPES = ['application/vnd.apple.mpegurl', 'application/x-mpegurl', 'audio/mpegurl', 'audio/x-mpegurl', 'application/mpegurl'];
@@ -76,6 +78,14 @@ const ready = (async () => {
       await browser.storage.local.set({ ccDefaultMigrated: true });
     }
   } catch { /* storage unavailable */ }
+  // 1.6.0dev6: the minimum size of a listed file is 150 KB again; installs that kept the old default 10 KB move to it once
+  try {
+    if (!(await browser.storage.local.get('minSizeMigrated')).minSizeMigrated) {
+      const cur = (await browser.storage.local.get('settings')).settings;
+      if (cur && Number(cur.minSizeKB) === 10) await saveSettings({ minSizeKB: 150 });
+      await browser.storage.local.set({ minSizeMigrated: true });
+    }
+  } catch { /* storage unavailable */ }
   settings = await getSettings();
   configureLog(settings);
   if (settings.debugLog) {
@@ -118,7 +128,7 @@ browser.storage.onChanged.addListener((changes, area) => {
     if (settings.ytCcOnly === false && wasOn) browser.storage.local.set({ ccOffAt: Date.now() }).catch(() => {});
     else if (settings.ytCcOnly !== false) browser.storage.local.remove('ccOffAt').catch(() => {});
     if (['hotkeys', 'hkExecute', 'hkVideo', 'hkAudio'].some((k) => settings[k] !== before[k])) applyHotkeys();
-    loadUiLang(settings.uiLang).then(() => { try { browser.contextMenus.update('vdl-download', { title: tr('menuDownload') }); } catch { /* menu not created yet */ } }).catch(() => {});
+    loadUiLang(settings.uiLang).catch(() => {});
     for (const [tabId, t] of tabs) if (t.yt?.summary) refreshYoutube(tabId); // e.g. CC-only toggled
   }
 });
@@ -283,6 +293,8 @@ function xMediaId(url) {
 }
 // Items to show: on X only the videos that are on screen or playing (when the page told us), else everything.
 const isTwitchPlaylist = (u) => /(^|\.)ttvnw\.net$/.test(hostOf(u));
+// Amazon IVS (Kick and others): the master and the quality playlists the player fetches come from *.live-video.net
+const isIvsPlaylist = (u) => /(^|\.)live-video\.net$/.test(hostOf(u));
 const TIKTOK_HOST = /(^|\.)(tiktok\.com|tiktokcdn\.com|tiktokcdn-us\.com|ibytedtos\.com)$/;
 const isTikTokFile = (it) => it.kind === 'file' && TIKTOK_HOST.test(hostOf(it.url));
 const ttKey = (u) => { try { return new URL(u).pathname.replace(/\/+$/, ''); } catch { return ''; } };
@@ -315,6 +327,11 @@ function shownItems(t) {
     const cur = (pageCh && masters.filter((m) => twChan(m.url) === pageCh).pop())
       || masters.filter((m) => (m.ts || 0) >= (t.pageChangedAt || 0)).pop();
     all = all.filter((it) => !twMaster(it) || it === cur);
+  }
+  // Kick / Amazon IVS: when the master playlist (all qualities) is there, the single quality playlists the player
+  // fetched go under "More" (they have no quality list of their own)
+  if (all.some((it) => it.kind === 'hls' && it.master && (it.variants || []).length && isIvsPlaylist(it.url))) {
+    all = all.map((it) => (it.kind === 'hls' && !it.master && isIvsPlaylist(it.url) ? { ...it, secondary: true } : it));
   }
   if (!t.xMedia || !t.xMedia.size) return all;
   const vis = all.filter((it) => { const x = t.xMedia.get(xMediaId(it.url)); return x && x.visible; });
@@ -396,13 +413,16 @@ function serialize(tabId, it) {
   return {
     id: it.id, kind: it.kind, url: it.url, title: displayTitle(tabId, it), thumbnail: it.thumbnail || t?.thumbnail || '',
     duration: it.duration || 0, size: it.size || 0, quality: it.quality || '', mime: it.mime || '', ext: it.ext || '',
+    license: it.kind === 'yt' ? (t?.yt?.summary?.license || '') : '', // 'cc' -> "CC BY" badge in the card
+    subs: it.kind === 'yt' ? subsChoices(ytSubsList(t?.yt), uiLangCode()).map((c) => ({ id: c.id, lang: c.lang, label: c.label, tlang: c.tlang })) : [],
     variants: it.kind === 'yt'
       ? (it.variants || []).map((v) => ({ label: v.label, atype: v.atype || '', kbps: v.kbps || 0, height: v.height || 0, muxed: !!v.muxed, type: v.type || '', typeLabel: v.typeLabel || '', codec: v.codec || '', size: v.size || 0, audio: !!v.audio, mp3: !!v.mp3, sizeEstimated: !!v.sizeEstimated, unavailable: !!v.unavailable, tooLong: !!v.tooLong }))
       : serializeStreamVariants(it),
     audioVariants: it.kind === 'dash' ? dashAudioVariants(it) : [],
     master: !!it.master, hasAudioTrack: !!it.hasAudioTrack,
-    beta: !!it.beta, live: !!it.live, protected: !!it.protected, noteKey: it.noteKey || '', rec: it.rec || null, limitMB: it.limitMB || 0, apiState: it.apiState || '', dlFailed: !!it.dlFailed,
+    beta: !!it.beta, live: !!it.live, protected: !!it.protected, noteKey: it.noteKey || '', why: it.why || '', whyReason: it.whyReason || '', whyStart: it.whyStart || 0, whyRecord: it.whyRecord || '', whyBusy: !!it.whyBusy, rec: it.rec || null, limitMB: it.limitMB || 0, apiState: it.apiState || '', dlFailed: !!it.dlFailed,
     status: it.status, error: it.error || '', source: it.source || '',
+    ...(it.secondary ? { secondary: true } : {}),
     ...tiktokExtras(tabId, it),
   };
 }
@@ -477,9 +497,9 @@ async function getState(tabId) {
   return {
     items: t ? shownItems(t).map((it) => serialize(tabId, it)).reverse() : [],
     jobs: [...jobs.values()].filter((j) => { if (j.finishedAt && Date.now() - j.finishedAt > 60000) { jobs.delete(j.id); return false; } return true; }).map(serializeJob),
-    prefs: { defaultQuality: settings.defaultQuality || 'best', defaultType: settings.defaultType || 'auto', defaultAudioFormat: settings.defaultAudioFormat || 'mp3', defaultAudioQuality: settings.defaultAudioQuality || 'best', ytRecordUi: !!settings.ytRecordUi },
+    prefs: { subsWithVideo: !!settings.subsWithVideo, defaultQuality: settings.defaultQuality || 'best', defaultType: settings.defaultType || 'auto', defaultAudioFormat: settings.defaultAudioFormat || 'mp3', defaultAudioQuality: settings.defaultAudioQuality || 'best', ytRecordUi: !!settings.ytRecordUi },
     yt: t?.yt ? { videoKnown: !!t.yt.summary } : null,
-    bug: t?.bug ? { ...t.bug, text: undefined } : null,
+    bug: t?.bug && (t.bug.state === 'running' || bugPageKey(t.bug.page) === bugPageKey(t.pageUrl)) ? { ...t.bug, text: undefined } : null, // a result belongs to the page (video) it was made on
   };
 }
 
@@ -652,6 +672,7 @@ async function fetchYtApi(tabId, videoId) {
         entry.params = p.formats.length ? urlParamNames(p.formats[0].url) : [];
         dlog('yt-api', `${c.key} (${mode}) playability ${p.status}`, { formats: p.formats.length, withN: entry.withN, hls: entry.hls, reason: p.reason || '' });
         if (p.status !== 'OK') continue;
+        if (p.captions?.tracks.length && !api.captions) api.captions = p.captions;
         if (p.hlsUrl && !api.hlsUrl) { api.hlsUrl = p.hlsUrl; api.hlsUa = c.ua; api.hlsClient = c.key; }
         if (p.formats.some((f) => f.mime.startsWith('video/'))) {
           const pack = { formats: p.formats, client: c.key, ua: c.ua, mode, limitBytes: Infinity };
@@ -730,6 +751,7 @@ async function fetchYtApiFromPage(tabId, opts = {}) {
     entry.params = p.formats.length ? urlParamNames(p.formats[0].url) : [];
     dlog('yt-api', `page method: ${c.key} status ${entry.status}, playability ${p.status}`, { formats: p.formats.length, withN: entry.withN, hls: entry.hls, reason: p.reason || '' });
     if (p.status !== 'OK') continue;
+    if (p.captions?.tracks.length && !api.captions) api.captions = p.captions;
     if (p.hlsUrl && !api.hlsUrl) { api.hlsUrl = p.hlsUrl; api.hlsUa = c.ua; api.hlsClient = c.key; }
     if (p.formats.some((f) => f.mime.startsWith('video/'))) {
       const pack = { formats: p.formats, client: c.key, ua: c.ua, mode: 'page', limitBytes: Infinity };
@@ -851,6 +873,16 @@ async function buildSiteDiagnostics(tabId) {
   return JSON.stringify(report, null, 2);
 }
 
+// The page a diagnostics result belongs to: the address without #fragment and the playback position (t=, start=).
+export function bugPageKey(url) {
+  try {
+    const u = new URL(url || '');
+    u.hash = '';
+    for (const k of ['t', 'start', 'pp', 'si']) u.searchParams.delete(k);
+    return u.href;
+  } catch { return String(url || ''); }
+}
+
 async function runBugReport(tabId) {
   await ready;
   const t = tabs.get(tabId);
@@ -860,7 +892,8 @@ async function runBugReport(tabId) {
   if (t.bug?.state === 'running') return { ok: false, error: 'running' };
   let host = isYt ? 'YouTube' : hostOf(t.pageUrl || [...t.items.values()][0]?.url || '') || 'site';
   dlog('bug', 'auto-diagnostics started', { site: host, youtube: isYt });
-  t.bug = { state: 'running', startedAt: Date.now(), file: '', site: host, yt: isYt };
+  const page = t.pageUrl || '';
+  t.bug = { state: 'running', startedAt: Date.now(), file: '', site: host, yt: isYt, page };
   notifyUI(tabId);
   notifyAlways(tr('bugNotifStart'));
   try {
@@ -885,13 +918,13 @@ async function runBugReport(tabId) {
     const url = IS_CHROME ? await chromeBlobUrl(new Blob([text], { type: 'application/json' })) : URL.createObjectURL(new Blob([text], { type: 'application/json' }));
     await browser.downloads.download({ url, filename: file, saveAs: false, conflictAction: 'uniquify' });
     setTimeout(() => (IS_CHROME ? chromeRevoke(url) : URL.revokeObjectURL(url)), 60000);
-    t.bug = { state: 'done', file, site: host, yt: isYt, startedAt: t.bug.startedAt, finishedAt: Date.now(), text, size: text.length };
+    t.bug = { state: 'done', file, site: host, yt: isYt, page, startedAt: t.bug.startedAt, finishedAt: Date.now(), text, size: text.length };
     dlog('bug', 'auto-diagnostics saved', { file });
     notifyAlways(`${tr('bugNotifDone')} ${file}`);
     return { ok: true, file };
   } catch (e) {
     dlog('bug', 'auto-diagnostics FAILED', { error: String(e?.message || e) });
-    t.bug = { state: 'error', file: '', site: host, yt: isYt, startedAt: t.bug?.startedAt, error: String(e?.message || e) };
+    t.bug = { state: 'error', file: '', site: host, yt: isYt, page, startedAt: t.bug?.startedAt, error: String(e?.message || e) };
     notifyAlways(tr('bugNotifError'));
     return { ok: false, error: 'failed' };
   } finally {
@@ -956,7 +989,7 @@ function makeYtFetch(dlog) {
   };
 }
 
-async function startDownload({ tabId, itemId, variant, variantLabel, audio }) {
+async function startDownload({ tabId, itemId, variant, variantLabel, audio, subs }) {
   await ready;
   if (!isAccepted(consent)) { notifyAlways(tr('consentNeeded')); return { ok: false, error: 'consent' }; }
   const it = tabs.get(tabId)?.items.get(itemId);
@@ -988,7 +1021,7 @@ async function startDownload({ tabId, itemId, variant, variantLabel, audio }) {
     const pick = plan && plan[variant ?? 0];
     if (pick) { variant = pick.src; rawTs = pick.raw; }
   }
-  runStreamJob(tabId, it, title, variant, variantLabel, audio, rawTs);
+  runStreamJob(tabId, it, title, variant, variantLabel, audio, rawTs, it.kind === 'yt' && !audio && typeof subs === 'string' ? subs : '');
   return { ok: true };
 }
 
@@ -1060,7 +1093,7 @@ async function toMp3Chrome(blob, title, job, tabId, kbps) {
   }
 }
 
-async function runStreamJob(tabId, it, title, variantIdx, variantLabel, audioOpt = null, rawTs = false) {
+async function runStreamJob(tabId, it, title, variantIdx, variantLabel, audioOpt = null, rawTs = false, subsChoice = '') {
   const toMp4 = !!settings.tsToMp4 && !rawTs;
   const job = {
     id: String(++jobSeq), itemId: it.id, title, state: 'running', fileIndex: 1, fileCount: 1, done: 0, total: 0, downloadIds: [],
@@ -1204,6 +1237,10 @@ async function runStreamJob(tabId, it, title, variantIdx, variantLabel, audioOpt
 
     job.fileCount = files.length;
     const savedNames = [];
+    // subtitles with the video (YouTube): embedded into a .webm, otherwise a .srt next to the video
+    let subs = null;
+    if (subsChoice) { try { subs = await fetchSubs(tabId, subsChoice); } catch (e) { dlog('subs', 'not fetched', { error: String(e?.message || e) }); notify(tr('subsFailed')); } }
+    let subsEmbedded = false;
     const mergeGroup = files.length === 2 && files[0].role === 'video' && files[1].role === 'audio' && files[0].container === files[1].container;
     let heldVideo = null;
     const saveOne = async (blob, f, i, ext = f.ext, suffix = f.suffix) => {
@@ -1235,8 +1272,9 @@ async function runStreamJob(tabId, it, title, variantIdx, variantLabel, audioOpt
       if (mergeGroup && i === 0) { heldVideo = blob; continue; }
       if (mergeGroup && i === 1) {
         // Join video + audio into ONE file without re-encoding; fall back to two files.
-        const merged = await globalThis.__vdlMux.mergeBlobs(heldVideo, blob, files[0].container);
+        const merged = await globalThis.__vdlMux.mergeBlobs(heldVideo, blob, files[0].container, subs ? { subs: [subs] } : undefined);
         if (merged) {
+          subsEmbedded = !!merged.vdlSubs;
           await saveOne(merged, files[0], 0, files[0].container, '');
         } else {
           await saveOne(heldVideo, files[0], 0);
@@ -1263,9 +1301,14 @@ async function runStreamJob(tabId, it, title, variantIdx, variantLabel, audioOpt
       }
       await saveOne(outBlob, f, i, outExt);
     }
+    if (subs && !subsEmbedded && savedNames.length) {
+      const srtName = `${savedNames[0].replace(/\.[^./\\]+$/, '')}.${subs.lang}.srt`;
+      await saveBlob(new Blob([cuesToSrt(subs.cues)], { type: 'text/plain' }), srtName, false, (id) => job.downloadIds.push(id));
+      savedNames.push(srtName);
+    }
     job.state = 'done';
     dlog('job', `#${job.id} done`, { files: savedNames.length, ms: Date.now() - job.startedAt });
-    if (it.kind === 'yt') { const yy = tabs.get(tabId)?.yt; if (yy) yy.dlFailed = false; }
+    if (it.kind === 'yt') { const yy = tabs.get(tabId)?.yt; if (yy) { yy.dlFailed = false; yy.dlLimited = false; yy.dl429 = false; } }
     if (settings.history) await addHistory({ title, url: it.url, kind: it.kind, filename: savedNames.join(' + ') });
     notify(`${tr('done')}: ${title}`);
   } catch (e) {
@@ -1280,6 +1323,7 @@ async function runStreamJob(tabId, it, title, variantIdx, variantLabel, audioOpt
       if (yl && it.kind === 'yt') yl.result = job.error;
       if (e instanceof StreamError && ['mp3Missing', 'mp3Decode', 'mp3TooLong'].includes(e.code)) job.errorKey = e.code;
       if (it.kind === 'yt' && e instanceof StreamError && e.code === 'http' && [403, 410].includes(e.status)) job.errorKey = e.limited ? 'ytLimited' : 'ytDirectBlocked';
+      if (it.kind === 'yt' && e instanceof StreamError && e.code === 'http') { const yy = tabs.get(tabId)?.yt; if (yy) { if ([403, 410].includes(e.status)) yy.dlLimited = true; if (e.status === 429) yy.dl429 = true; } }
       dlog('job', `#${job.id} FAILED`, { error: job.error, key: job.errorKey || '', status: e?.status, code: e?.code, ms: Date.now() - job.startedAt });
       notify(`${tr('failed')}: ${title} (${job.error})`);
     }
@@ -1428,6 +1472,69 @@ async function pickLiveStrategy(playlistUrl, signal) {
   return '';
 }
 
+// ---- Subtitles (1.6.0dev5) -------------------------------------------------------------------------
+// Tracks: from the API clients first (their timedtext addresses work without the player's token), else from the
+// page's own player data. The player's own timedtext requests (seen below) are a last resort for the same language.
+function ytSubsList(y) {
+  const api = y?.api?.captions?.tracks?.length ? y.api.captions : (y?.apiPage?.captions?.tracks?.length ? y.apiPage.captions : null);
+  return api || y?.summary?.captions || { tracks: [], translations: [] };
+}
+
+async function fetchSubs(tabId, choiceId) {
+  const y = tabs.get(tabId)?.yt;
+  if (!y?.summary) throw new Error('no video');
+  const list = ytSubsList(y);
+  const choice = subsChoices(list, uiLangCode()).find((c) => c.id === choiceId);
+  if (!choice) throw new Error('no such subtitles');
+  const track = list.tracks[choice.track];
+  const urls = [subsUrl(track, choice.tlang)];
+  for (const other of [y.summary.captions, y.api?.captions, y.apiPage?.captions]) {
+    const same = other?.tracks?.find((x) => x.lang === track.lang && x.auto === track.auto);
+    if (same) urls.push(subsUrl(same, choice.tlang));
+  }
+  const seen = y.subsSeen?.get(`${track.lang}:${track.auto ? 'asr' : ''}`);
+  if (seen) urls.push(subsUrl({ url: seen }, choice.tlang));
+  for (const url of [...new Set(urls)]) {
+    try {
+      const r = await fetch(url, { credentials: 'include' });
+      if (!r.ok) { dlog('subs', `timedtext ${r.status}`); continue; }
+      const text = await r.text();
+      if (!text.trim()) { dlog('subs', 'timedtext empty'); continue; }
+      const cues = json3ToCues(JSON.parse(text));
+      if (cues.length) return { lang: choice.lang, iso3: iso639b(choice.lang), name: choice.label, cues };
+    } catch (e) { dlog('subs', 'timedtext failed', { error: String(e?.name || e) }); }
+  }
+  throw new Error('empty');
+}
+
+async function saveSubsOnly(tabId, itemId, choiceId) {
+  await ready;
+  if (!isAccepted(consent)) { notifyAlways(tr('consentNeeded')); return { ok: false, error: 'consent' }; }
+  const it = tabs.get(tabId)?.items.get(itemId);
+  if (!it || it.kind !== 'yt') return { ok: false, error: 'not_found' };
+  let subs;
+  try { subs = await fetchSubs(tabId, choiceId); } catch { notify(tr('subsFailed')); return { ok: false, error: 'subsFailed' }; }
+  const title = displayTitle(tabId, it);
+  const filename = buildFilename(settings.template, { title, site: 'YouTube', ext: `${subs.lang}.srt` });
+  const r = await saveBlob(new Blob([cuesToSrt(subs.cues)], { type: 'text/plain' }), filename, settings.saveAs, () => {});
+  if (r === 'complete' && settings.history) await addHistory({ title, url: it.url, kind: 'yt', filename });
+  dlog('subs', 'saved', { lang: subs.lang, cues: subs.cues.length });
+  return { ok: r === 'complete' };
+}
+
+// Why YouTube gave nothing (1.6.0dev5): see lib/ytverdict.js
+function ytVerdict(y, noLinks) {
+  if (!y?.summary) return { code: '', record: 'maybe', busy: false, reason: '' };
+  const logs = [...(y.api?.log || []), ...(y.apiPage?.log || [])];
+  const test = y.testLog?.results || [];
+  return classifyYt({
+    summary: y.summary, logs, session: y.api?.session || y.apiPage?.session || '',
+    dlFailed: !!y.dlFailed, dlLimited: !!y.dlLimited, http429: !!y.dl429, iosOnly: !!y.api?.iosOnly,
+    testCut: test.some((r) => r.firstFailMiB !== null && r.firstFailMiB > 0),
+    apiDone: !y.api || !!y.api.done, noLinks,
+  });
+}
+
 function refreshYoutube(tabId) {
   const t = tabs.get(tabId);
   const y = t?.yt;
@@ -1442,11 +1549,13 @@ function refreshYoutube(tabId) {
   else if (s.isLive) noteKey = ''; // live: recorded from the player (BETA), no direct links expected
   else if (settings.ytCcOnly && s.license !== 'cc') noteKey = 'ytCcBlocked';
   else if (!variants.length && !apiPending) noteKey = 'ytNone';
+  const why = noteKey === 'ytUnavailable' || noteKey === 'ytNone' || y.dlFailed ? ytVerdict(y, !variants.length) : null;
 
   const id = `yt-${s.videoId}`;
   t.items.set(id, {
     id, kind: 'yt', videoId: s.videoId, url: `https://www.youtube.com/watch?v=${s.videoId}`, title: s.title || undefined,
     thumbnail: s.thumbnail, duration: s.lengthSeconds, variants, live: s.isLive && !noteKey.startsWith('yt'), beta: s.isLive && !noteKey.startsWith('yt'), noteKey,
+    why: why?.code || '', whyReason: why?.code === 'unknown' ? why.reason : '', whyStart: why?.startAt || 0, whyRecord: why?.record || '', whyBusy: !!why?.busy,
     rec: y.rec || null, limitMB: y.api?.limitBytes && isFinite(y.api.limitBytes) && y.api.formats.length ? Math.round(y.api.limitBytes / MIB) : 0, status: !variants.length && apiPending ? 'parsing' : 'ready', apiState: variants.length ? 'ok' : apiPending ? 'loading' : 'failed', dlFailed: !!y.dlFailed, source: 'youtube', ts: t.items.get(id)?.ts || Date.now(),
   });
   updateBadge(tabId);
@@ -1507,6 +1616,21 @@ browser.webRequest.onBeforeRequest.addListener(
   { urls: ['*://*.googlevideo.com/videoplayback*'], types: ['media', 'xmlhttprequest', 'other'] },
 );
 
+// the player's own subtitle requests (they carry its token): remembered per language as a fallback
+browser.webRequest.onBeforeRequest.addListener((d) => {
+  if (d.tabId < 0) return;
+  const y = tabs.get(d.tabId)?.yt;
+  if (!y) return;
+  try {
+    const u = new URL(d.url);
+    const lang = u.searchParams.get('lang');
+    if (!lang || u.searchParams.get('tlang')) return;
+    y.subsSeen ??= new Map();
+    y.subsSeen.set(`${lang}:${u.searchParams.get('kind') === 'asr' ? 'asr' : ''}`, d.url);
+  } catch { /* ignore */ }
+}, { urls: ['*://www.youtube.com/api/timedtext*', '*://youtube.com/api/timedtext*'], types: ['xmlhttprequest', 'other'] });
+
+
 async function getYtDiagnostics(tabId) {
   await ready;
   const y = tabs.get(tabId)?.yt;
@@ -1525,6 +1649,7 @@ async function getYtDiagnostics(tabId) {
       return li ? { status: li.status, error: li.error || '', variants: (li.variants || []).length, live: !!li.live, protected: !!li.protected } : null;
     })(),
   }, y?.captured || []);
+  if (y?.summary) { const v = ytVerdict(y, !variantsFor(y).length); report.verdict = { code: v.code || 'none', record: v.record }; }
   return { text: JSON.stringify(report, null, 2) };
 }
 
@@ -1653,7 +1778,7 @@ async function handleRecStatus(msg, sender) {
   if (t.yt.summary) refreshYoutube(tabId); else notifyUI(tabId);
 }
 
-// Video + audio of the same container are joined into one file by the recorder (VP9 + AAC and AV1 + Opus: into Matroska).
+// Video + audio of the same container are joined into one file by the recorder (VP9 + AAC and AV1 + Opus: into MP4, or Matroska by the setting).
 function canMergeTracks(list) {
   return list.length === 2 && list[0].kind === 'video' && list[1].kind === 'audio'
     && ((list[0].ext === 'webm' && list[1].ext === 'weba') || (list[0].ext === 'mp4' && list[1].ext === 'm4a') || (list[0].ext === 'webm' && list[1].ext === 'm4a') || (list[0].ext === 'mp4' && list[1].ext === 'weba'));
@@ -1667,7 +1792,7 @@ function recFilenames(tabId) {
     title: y?.summary?.isLive ? `youtube_${y.summary.videoId}_${stamp}` : (y?.summary?.title || 'youtube'),
     site: 'youtube.com',
     quality: tr.height ? `${tr.height}p` : '',
-    ext: list.length === 2 && ((list[0].ext === 'webm' && list[1].ext === 'm4a') || (list[0].ext === 'mp4' && list[1].ext === 'weba')) && canMergeTracks(list) ? (tr.kind === 'video' ? 'mkv' : tr.ext) : tr.ext, // VP9 + AAC and AV1 + Opus are joined into Matroska
+    ext: list.length === 2 && ((list[0].ext === 'webm' && list[1].ext === 'm4a') || (list[0].ext === 'mp4' && list[1].ext === 'weba')) && canMergeTracks(list) ? (tr.kind === 'video' ? (settings.joinFormat === 'mkv' ? 'mkv' : 'mp4') : tr.ext) : tr.ext, // VP9 + AAC and AV1 + Opus: MP4 (default) or Matroska
     suffix: list.length > 1 && tr.kind === 'audio' ? '.audio' : '',
   }));
 }
@@ -1714,6 +1839,8 @@ browser.runtime.onMessage.addListener((msg, sender) => {
       return getState(msg.tabId);
     case 'download':
       return startDownload(msg);
+    case 'yt_subs':
+      return saveSubsOnly(msg.tabId, msg.itemId, String(msg.choice || ''));
     case 'dismiss_job': {
       const j = jobs.get(msg.jobId);
       if (j && j.state !== 'running') jobs.delete(msg.jobId);
@@ -1743,6 +1870,11 @@ browser.runtime.onMessage.addListener((msg, sender) => {
       return handleYtPlayer(msg, sender).then(() => ({ ok: true }));
     case 'yt_page_download':
       return fetchYtApiFromPage(msg.tabId);
+    case 'bug_dismiss': {
+      const tb = tabs.get(msg.tabId);
+      if (tb?.bug && tb.bug.state !== 'running') tb.bug = null;
+      return Promise.resolve({ ok: true });
+    }
     case 'bug_text':
       return Promise.resolve({ text: tabs.get(msg.tabId)?.bug?.text || '' });
     case 'bug':
@@ -1795,28 +1927,11 @@ browser.tabs.onRemoved.addListener((tabId) => {
   scheduleSave();
 });
 
-// ------------------------------------------------- menu + hotkey + install ----
+// ------------------------------------------------------------------ hotkeys ----
 
-// Firefox for Android has no contextMenus, commands (hotkeys) and notifications API: every use is guarded,
+// Firefox for Android has no commands (hotkeys) and notifications API: every use is guarded,
 // so the background keeps working there (downloads are started from the popup).
-browser.runtime.onInstalled.addListener(() => {
-  try {
-    browser.contextMenus?.create({
-      id: 'vdl-download',
-      title: tr('menuDownload'),
-      contexts: ['video', 'audio', 'link'],
-    });
-  } catch { /* no context menu on this platform */ }
-});
-
-browser.contextMenus?.onClicked.addListener(async (info, tab) => {
-  if (info.menuItemId !== 'vdl-download') return;
-  const url = info.srcUrl || info.linkUrl;
-  if (!url || !/^https?:/i.test(url) || !tab) return;
-  await ready;
-  const it = addItem(tab.id, { kind: classifyPageUrl(url), url, source: 'menu', ext: FILE_EXTS.includes(urlExt(url)) ? urlExt(url) : '' });
-  if (it) startDownload({ tabId: tab.id, itemId: it.id });
-});
+// (The context-menu item was removed in 1.6.0dev5: the popup and the hotkeys do the same, more reliably.)
 
 // Hotkeys: "download the first video" and "download the audio of the first media" act on the newest detected item of
 // the active tab; "open the popup" is handled by the browser itself. The master switch is settings.hotkeys.

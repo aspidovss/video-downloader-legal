@@ -83,6 +83,7 @@ body.page .card .actions { margin: 0; }
 .badge.kind-hls { background: #7c3aed33; }
 .badge.kind-dash { background: #0891b233; }
 .badge.kind-file { background: #16a34a33; }
+.badge.cc { background: #16a34a; color: #fff; margin-left: 4px; }
 
 .note { font-size: 12px; margin-top: 4px; color: var(--muted); }
 .note.warn { background: var(--warn-bg); color: var(--warn-fg); padding: 3px 6px; border-radius: 4px; }
@@ -139,6 +140,14 @@ footer.toolbar button.icon:disabled { opacity: .4; }
 .panel h3 { margin: 0; font-size: 13px; }
 .panel pre { margin: 0; white-space: pre-wrap; word-break: break-word; font: 11px/1.4 ui-monospace, Consolas, monospace; background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 6px; max-height: 140px; overflow: auto; }
 .panel .btns { display: flex; gap: 6px; flex-wrap: wrap; }
+.panelhead { display: flex; align-items: flex-start; justify-content: space-between; gap: 6px; }
+.panelhead > :first-child { flex: 1 1 auto; min-width: 0; }
+.panelhead button.close { flex: none; border: 0; background: transparent; color: var(--muted); font-size: 14px; line-height: 1; padding: 2px 6px; border-radius: 6px; }
+.panelhead button.close:hover { background: var(--border); color: var(--fg); }
+/* diagnostics: copy on its own full-width line (its label changes, nothing moves); GitHub and e-mail side by side */
+.panel .btns.bugbtns { display: grid; grid-template-columns: 1fr 1fr; }
+.panel .btns.bugbtns > .wide { grid-column: 1 / -1; }
+.panel .btns.bugbtns > a.btn { text-align: center; display: flex; align-items: center; justify-content: center; overflow-wrap: anywhere; }
 a.btn { font: inherit; color: inherit; text-decoration: none; border: 1px solid var(--border); background: var(--bg); border-radius: 6px; padding: 5px 10px; }
 a.btn:hover { border-color: var(--accent); }
 .spinner { display: inline-block; width: 12px; height: 12px; border: 2px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 1s linear infinite; vertical-align: -2px; margin-right: 6px; }
@@ -180,6 +189,14 @@ button.small { font-size: 12px; padding: 3px 8px; }
 
 textarea.bugjson { width: 100%; min-height: 160px; resize: vertical; }
 .badge.live { background: #dc2626; color: #fff; margin-left: 4px; }
+/* record button and its BETA badge stay on one line; a long label wraps inside the button */
+.actions.recrow { flex-wrap: nowrap; }
+.actions.recrow button { flex: 0 1 auto; min-width: 0; white-space: normal; text-align: start; }
+.actions.recrow .badge { flex: none; }
+.actions.subsrow { margin-top: 8px; padding-top: 8px; border-top: 1px dashed var(--border, #ccd); }
+.actions.subsrow select { flex: 1 1 120px; }
+.actions.subsrow button { flex: none; }
+.subswith { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; color: var(--muted); white-space: nowrap; }
 
 /* help page */
 body.help main { max-width: 760px; line-height: 1.5; }

@@ -92,9 +92,6 @@
   "saved": {
     "message": "Saved"
   },
-  "menuDownload": {
-    "message": "Download with Video Downloader Legal"
-  },
   "cmdDefault": {
     "message": "Download the first detected video"
   },
@@ -123,7 +120,7 @@
     "message": "YouTube refuses this link for the extension (HTTP 403). Use “Record while playing” instead."
   },
   "ytRecord": {
-    "message": "Fallback: record while playing"
+    "message": "Record while playing"
   },
   "ytRecordHint": {
     "message": "Reloads the page and plays the video muted at higher speed. Keep this tab open until it finishes."
@@ -300,7 +297,7 @@
     "message": "Copy failed"
   },
   "bugGithub": {
-    "message": "Open a GitHub issue"
+    "message": "GitHub issue"
   },
   "bugEmail": {
     "message": "Send an e-mail"
@@ -450,7 +447,7 @@
     "message": "Finished files appear in “History” (clock icon) and in the downloads folder (folder icon)."
   },
   "helpS1q": {
-    "message": "Shortcuts: the Alt+↓ hotkey and the context-menu item."
+    "message": "Shortcuts: the keyboard shortcuts (set them in Settings → General)."
   },
   "helpS2": {
     "message": "What is implemented"
@@ -465,7 +462,7 @@
     "message": "**YouTube:** choice of type (MP4, WEBM, AV1) and resolution, audio download (MP3, M4A, WEBM), video and audio joined into one file. If a direct link is unavailable, there is a fallback: recording from the player."
   },
   "helpF4": {
-    "message": "**YouTube live streams (beta):** recording from the player in real time without reloading the page. “Stop” ends the recording and joins video and audio into an .mkv file. Audio cannot be downloaded separately."
+    "message": "**YouTube live streams (beta):** recording from the player in real time without reloading the page. “Stop” ends the recording and joins video and audio into an .mp4 file. Audio cannot be downloaded separately."
   },
   "helpF5": {
     "message": "**Other sites:** Vimeo, Dailymotion, Instagram, Facebook, X (Twitter), Twitch, TikTok, Bilibili, Canva, OK.ru, VK; other sites through general stream detection. On some sites the result is limited by what the page provides."
@@ -805,5 +802,86 @@
   },
   "noAudioHere": {
     "message": "No audio to download on this page"
+  },
+  "ccBadgeTitle": {
+    "message": "Creative Commons Attribution (CC BY): reuse is allowed with credit to the author. Check the license in the video description."
+  },
+  "ytWhyAge": {
+    "message": "Age-restricted video (18+): YouTube gives it only to a signed-in account with a confirmed age, and VDL does not use your account. Try recording while playing."
+  },
+  "ytWhyBot": {
+    "message": "YouTube asks to confirm you are not a robot: there were many requests from your network. Wait a few minutes to an hour or reload the page."
+  },
+  "ytWhyPrivate": {
+    "message": "Private video: the author shared it only with selected people."
+  },
+  "ytWhyRemoved": {
+    "message": "The video was removed or is not available on YouTube."
+  },
+  "ytWhyRegion": {
+    "message": "The author has not made this video available in your country."
+  },
+  "ytWhyMembers": {
+    "message": "Members-only video: it is open only to the channel's paying members. If you have access, try recording while playing."
+  },
+  "ytWhyPaid": {
+    "message": "Paid video or film with copy protection (DRM): it cannot be downloaded or recorded."
+  },
+  "ytWhyUpcoming": {
+    "message": "The stream or premiere has not started yet."
+  },
+  "ytWhyUpcomingAt": {
+    "message": "The stream or premiere has not started yet. Start: {time}."
+  },
+  "ytWhyContentCheck": {
+    "message": "YouTube asks you to confirm that you want to watch this video. Confirm it on the page and reload the page."
+  },
+  "ytWhySabr": {
+    "message": "YouTube gave no direct links to this video. Use recording while playing."
+  },
+  "ytWhyCut": {
+    "message": "YouTube cuts the download of this video off after the first part. Use recording while playing."
+  },
+  "ytWhyRate": {
+    "message": "Too many requests to YouTube from your network. Wait a few minutes to an hour."
+  },
+  "ytWhyNetwork": {
+    "message": "No connection to YouTube. Check the internet connection and reload the page."
+  },
+  "ytWhyUnknown": {
+    "message": "YouTube did not give this video; the reason was not recognised."
+  },
+  "ytWhyUnknownReason": {
+    "message": "YouTube did not give this video; the reason was not recognised. YouTube says: “{reason}”."
+  },
+  "subsTitle": {
+    "message": "Subtitles"
+  },
+  "subsSaveTitle": {
+    "message": "Save the subtitles as an .srt file"
+  },
+  "subsWithVideo": {
+    "message": "with video"
+  },
+  "subsWithVideoTitle": {
+    "message": "Save the chosen subtitles with the video: inside a .webm file (switchable in the player), otherwise as an .srt file next to it"
+  },
+  "subsFailed": {
+    "message": "Could not get the subtitles. Turn them on in the player for a few seconds and try again."
+  },
+  "optJoinFormat": {
+    "message": "Joining video and audio of different formats"
+  },
+  "joinMp4": {
+    "message": "MP4 (recommended: Telegram sends it as a video)"
+  },
+  "joinMkv": {
+    "message": "MKV (Matroska)"
+  },
+  "hintJoinFormat": {
+    "message": "When the video and the sound come in different formats (AV1 or H.264 with Opus, VP9 with AAC), they are joined without re-encoding. MP4 plays in browsers and players and Telegram sends it as a video; an .mkv goes to Telegram as a document."
+  },
+  "helpLabelAmo": {
+    "message": "Firefox Add-ons"
   }
 }

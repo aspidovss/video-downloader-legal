@@ -184,7 +184,7 @@ test('WebM video + AAC (MP4) audio are joined into one Matroska file (no re-enco
   const af = path.join(dir, 'a.mp4');
   ff('-f', 'lavfi', '-i', 'testsrc=size=160x90:rate=25', '-t', '6', '-c:v', 'libvpx-vp9', '-g', '25', '-f', 'webm', vf);
   ff('-f', 'lavfi', '-i', 'sine=frequency=440:sample_rate=48000', '-t', '6', '-c:a', 'aac', '-movflags', 'frag_keyframe+empty_moov+default_base_moof', af);
-  const blob = await mergeReps(await capture(vf, 'video/webm; codecs="vp9"'), await capture(af, 'audio/mp4; codecs="mp4a"'));
+  const blob = await mergeReps(await capture(vf, 'video/webm; codecs="vp9"'), await capture(af, 'audio/mp4; codecs="mp4a"'), { mkv: true });
   assert.ok(blob, 'merge succeeded');
   assert.equal(blob.type, 'video/x-matroska');
   const out = path.join(dir, 'm.mkv');
@@ -247,7 +247,7 @@ for (const [label, enc, mime, codec] of [['AV1', 'libsvtav1', 'video/mp4; codecs
     const af = path.join(dir, 'a.webm');
     ff('-f', 'lavfi', '-i', 'testsrc=size=160x96:rate=25', '-t', '8', '-c:v', enc, '-g', '50', '-movflags', 'frag_keyframe+empty_moov+default_base_moof', '-f', 'mp4', vf);
     ff('-f', 'lavfi', '-i', 'sine=frequency=440:sample_rate=48000', '-t', '8', '-c:a', 'libopus', '-f', 'webm', af);
-    const blob = await mergeReps(await capture(vf, mime), await capture(af, 'audio/webm; codecs="opus"'));
+    const blob = await mergeReps(await capture(vf, mime), await capture(af, 'audio/webm; codecs="opus"'), { mkv: true });
     assert.ok(blob, 'merge succeeded');
     assert.equal(blob.type, 'video/x-matroska');
     const out = path.join(dir, 'm.mkv');
@@ -376,11 +376,17 @@ for (const [label, make, enc] of [
     ff('-f', 'lavfi', '-i', 'sine=frequency=440:sample_rate=48000', '-t', '20', '-c:a', 'aac', '-movflags', 'frag_keyframe+empty_moov+default_base_moof', af);
     return [vf, 'video/webm; codecs="vp9"', af, 'audio/mp4; codecs="mp4a"'];
   }, 'libvpx-vp9'],
+  ['VP9 + Opus (.webm)', (dir) => {
+    const vf = path.join(dir, 'v.webm'); const af = path.join(dir, 'a.webm');
+    ff('-f', 'lavfi', '-i', 'testsrc=size=160x90:rate=25', '-t', '20', '-c:v', 'libvpx-vp9', '-g', '50', '-f', 'webm', vf);
+    ff('-f', 'lavfi', '-i', 'sine=frequency=440:sample_rate=48000', '-t', '20', '-c:a', 'libopus', '-f', 'webm', af);
+    return [vf, 'video/webm; codecs="vp9"', af, 'audio/webm; codecs="opus"'];
+  }, 'libvpx-vp9'],
 ]) {
   test(`${label} -> .mkv: known size, SeekHead, interleaved clusters, Cues; a seek reads only a part of the file`, { skip: !hasEnc(enc) || !hasEnc(label.includes('Opus') ? 'libopus' : 'aac') }, async () => {
     const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'vdl-seek-'));
     const [vf, vm, af, am] = make(dir);
-    const blob = await mergeReps(await capture(vf, vm), await capture(af, am));
+    const blob = await mergeReps(await capture(vf, vm), await capture(af, am), { mkv: true });
     assert.ok(blob);
     const buf = Buffer.from(await blob.arrayBuffer());
     const out = path.join(dir, 'm.mkv');
@@ -395,6 +401,9 @@ for (const [label, make, enc] of [
     for (const p of L.points) { assert.ok(at.has(p.pos), `cue ${p.time} -> cluster`); assert.equal(p.track, 1); }
     assert.ok(L.clusters.filter((c) => c.tracks.size === 2).length >= L.clusters.length - 1, 'both tracks share the clusters');
     ff('-i', out, '-f', 'null', '-');
+    const vPk = Number(String(spawnSync('ffprobe', ['-v', 'error', '-count_packets', '-select_streams', 'v:0', '-show_entries', 'stream=nb_read_packets', '-of', 'csv=p=0', out]).stdout).trim());
+    assert.equal(vPk, 500, 'all 20 s x 25 fps video frames'); // nothing lost on the way
+    if (label.includes('.webm')) { assert.equal(blob.type, 'video/webm'); assert.ok(buf.includes(Buffer.from('webm')), 'DocType webm'); }
     // seeking to 15 s with the index: far less than the whole file is read, and sound comes with the picture
     const r = spawnSync('ffmpeg', ['-v', 'debug', '-ss', '15', '-i', out, '-t', '1', '-f', 'null', '-']);
     const read = Number((/Statistics: (\d+) bytes read/.exec(String(r.stderr)) || [])[1]);
@@ -403,3 +412,56 @@ for (const [label, make, enc] of [
     assert.ok(pk.includes('0') && pk.includes('1'), 'both tracks right after the seek');
   });
 }
+
+
+// ---- default since 1.6.0dev6: the joins of different containers are written as an ordinary MP4 ----
+// (Telegram Desktop sends any MP4 / WebM as a video, an .mkv as a document: test of 17.10.2026)
+function topBoxes(buf) { const out = []; let i = 0; while (i + 8 <= buf.length) { let sz = buf.readUInt32BE(i); const ty = buf.toString('latin1', i + 4, i + 8); if (sz === 1) sz = Number(buf.readBigUInt64BE(i + 8)); out.push(ty); if (sz < 8) break; i += sz; } return out; }
+
+for (const [label, enc, vmime, amime, venc, aenc, vext, aext, codecs] of [
+  ['AV1 (MP4) + Opus', 'libsvtav1', 'video/mp4; codecs="av01.0.05M.08"', 'audio/webm; codecs="opus"', ['-c:v', 'libsvtav1', '-preset', '12', '-g', '50'], ['-c:a', 'libopus'], 'mp4', 'webm', 'av1,opus'],
+  ['H.264 with B-frames (MP4) + Opus', 'libx264', 'video/mp4; codecs="avc1.64001F"', 'audio/webm; codecs="opus"', ['-c:v', 'libx264', '-bf', '2', '-g', '50'], ['-c:a', 'libopus'], 'mp4', 'webm', 'h264,opus'],
+  ['VP9 (WebM) + AAC', 'libvpx-vp9', 'video/webm; codecs="vp9"', 'audio/mp4; codecs="mp4a"', ['-c:v', 'libvpx-vp9', '-deadline', 'realtime', '-cpu-used', '8', '-g', '50'], ['-c:a', 'aac'], 'webm', 'mp4', 'aac,vp9'],
+  ['AV1 (WebM) + AAC', 'libsvtav1', 'video/webm; codecs="av01"', 'audio/mp4; codecs="mp4a"', ['-c:v', 'libsvtav1', '-preset', '12', '-g', '50'], ['-c:a', 'aac'], 'webm', 'mp4', 'aac,av1'],
+]) {
+  test(`${label} -> ordinary MP4 (index first, both tracks complete, in sync, seekable)`, { skip: !hasEnc(enc) || !hasEnc(aenc[1]) }, async () => {
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'vdl-mp4j-'));
+    const vf = path.join(dir, `v.${vext}`); const af = path.join(dir, `a.${aext}`);
+    const fragV = vext === 'mp4' ? ['-movflags', 'frag_keyframe+empty_moov+default_base_moof', '-f', 'mp4'] : ['-f', 'webm'];
+    const fragA = aext === 'mp4' ? ['-movflags', 'frag_keyframe+empty_moov+default_base_moof', '-f', 'mp4'] : ['-f', 'webm'];
+    ff('-f', 'lavfi', '-i', 'testsrc=size=320x180:rate=25', '-t', '12', '-pix_fmt', 'yuv420p', ...venc, ...fragV, vf);
+    ff('-f', 'lavfi', '-i', 'sine=frequency=440:sample_rate=48000', '-t', '12', ...aenc, ...fragA, af);
+    const blob = await mergeReps(await capture(vf, vmime), await capture(af, amime));
+    assert.ok(blob, 'merge succeeded');
+    assert.equal(blob.type, 'video/mp4');
+    const buf = Buffer.from(await blob.arrayBuffer());
+    assert.deepEqual(topBoxes(buf), ['ftyp', 'moov', 'mdat'], 'index before the data');
+    const out = path.join(dir, 'm.mp4');
+    fs.writeFileSync(out, buf);
+    assert.equal(String(spawnSync('ffprobe', ['-v', 'error', '-show_entries', 'stream=codec_name', '-of', 'csv=p=0', out]).stdout).trim().split(/\s+/).sort().join(','), codecs);
+    ff('-i', out, '-f', 'null', '-');
+    const n = (sel) => Number(String(spawnSync('ffprobe', ['-v', 'error', '-count_packets', '-select_streams', sel, '-show_entries', 'stream=nb_read_packets', '-of', 'csv=p=0', out]).stdout).trim());
+    assert.equal(n('v:0'), 300, 'every video frame (12 s x 25 fps)');
+    assert.ok(n('a:0') > 400, `audio packets ${n('a:0')}`);
+    const st = String(spawnSync('ffprobe', ['-v', 'error', '-show_entries', 'stream=start_time,duration', '-of', 'csv=p=0', out]).stdout).trim().split(/\s+/).map((l) => l.split(',').map(Number));
+    for (const [start, dur] of st) { assert.ok(Math.abs(start) < 0.1, `start ${start}`); assert.ok(dur > 11.5 && dur < 12.3, `duration ${dur}`); }
+    const vol = spawnSync('ffmpeg', ['-i', out, '-vn', '-af', 'volumedetect', '-f', 'null', '-']);
+    assert.match(String(vol.stderr), /mean_volume: -\d+/);
+    // a seek to 8 s finds the frame through the index
+    const r = spawnSync('ffmpeg', ['-v', 'error', '-ss', '8', '-i', out, '-frames:v', '1', '-f', 'null', '-']);
+    assert.equal(r.status, 0);
+  });
+}
+
+test('MP4 writer: Opus packet durations from the TOC byte; the Opus head becomes dOps', () => {
+  const { opusPacketSamples, opusEntry } = ctx.module.exports;
+  assert.equal(opusPacketSamples(Uint8Array.of(0xfc)), 960); // CELT 20 ms, one frame
+  assert.equal(opusPacketSamples(Uint8Array.of(0xfd)), 1920); // two frames
+  assert.equal(opusPacketSamples(Uint8Array.of(0x78)), 960); // hybrid 20 ms
+  assert.equal(opusPacketSamples(Uint8Array.of(0x03, 0x03)), 1440); // SILK 10 ms x 3
+  const head = Uint8Array.from([...Buffer.from('OpusHead'), 1, 2, 0x38, 0x01, 0x80, 0xbb, 0, 0, 0, 0, 0]);
+  const e = opusEntry(head);
+  assert.equal(e.preSkip, 312);
+  assert.equal(e.channels, 2);
+  assert.ok(Buffer.from(e.entry).includes(Buffer.from('dOps')));
+});

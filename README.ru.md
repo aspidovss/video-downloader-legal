@@ -8,7 +8,9 @@
 
 [English](README.md) · [Русский](README.ru.md)
 
-![Firefox 140+](https://img.shields.io/badge/Firefox-140%2B-orange?logo=firefoxbrowser&logoColor=white) ![Chrome 116+](https://img.shields.io/badge/Chrome-116%2B-4285F4?logo=googlechrome&logoColor=white) ![Edge 116+](https://img.shields.io/badge/Edge-116%2B-0078D7?logo=microsoftedge&logoColor=white) ![Manifest V3](https://img.shields.io/badge/Manifest-V3-blue) ![License MIT](https://img.shields.io/badge/license-MIT-green) ![Telemetry none](https://img.shields.io/badge/telemetry-none-brightgreen)
+[![Установить из Firefox Add-ons](https://img.shields.io/badge/Firefox_Add--ons-%D0%A3%D1%81%D1%82%D0%B0%D0%BD%D0%BE%D0%B2%D0%B8%D1%82%D1%8C-FF7139?logo=firefoxbrowser&logoColor=white)](https://addons.mozilla.org/ru/firefox/addon/video-downloader-legal/)
+
+![Firefox 140+](https://img.shields.io/badge/Firefox-140%2B-orange?logo=firefoxbrowser&logoColor=white) ![Firefox Android 142+](https://img.shields.io/badge/Firefox%20Android-142%2B-orange?logo=firefoxbrowser&logoColor=white) ![Chrome 116+](https://img.shields.io/badge/Chrome-116%2B-4285F4?logo=googlechrome&logoColor=white) ![Edge 116+](https://img.shields.io/badge/Edge-116%2B-0078D7?logo=microsoftedge&logoColor=white) ![Manifest V3](https://img.shields.io/badge/Manifest-V3-blue) ![License MIT](https://img.shields.io/badge/license-MIT-green) ![Telemetry none](https://img.shields.io/badge/telemetry-none-brightgreen)
 
 <img src="docs/screenshots/ru-0-anywhere.png" alt="Скачивайте откуда угодно: YouTube, Twitch, Vimeo, TikTok" width="760">
 
@@ -24,12 +26,13 @@ Video Downloader Legal — расширение для **Firefox, Chrome и Micr
 
 * **Прямые файлы, HLS (`m3u8`), DASH (`mpd`):** выбор качества, отдельная звуковая дорожка, AES-128, fMP4, byte-range; видео и звук склеиваются в один файл без перекодирования.
 * **YouTube:** тип (MP4 / WEBM / AV1) и разрешение; аудио в MP3, M4A или WEBM; видео и звук в одном файле. Если прямая ссылка недоступна — запасной способ: запись из плеера.
-* **Прямые эфиры:** **Twitch** и другие HLS-эфиры — «Записывать» до «Стоп» или лимита времени; **YouTube live (бета)** — запись из плеера в реальном времени, файл `.mkv`. Записи начинаются с 0:00.
+* **Прямые эфиры:** **Twitch** и другие HLS-эфиры — «Записывать» до «Стоп» или лимита времени; **YouTube live (бета)** — запись из плеера в реальном времени, файл `.mp4`. Записи начинаются с 0:00.
 * **TS → MP4:** потоки HLS в формате MPEG-TS по умолчанию сохраняются как обычный **MP4** (H.264 + AAC, без перекодирования); вторым вариантом остаётся **TS**.
 * **TikTok:** видео на экране всегда первое, с названием и обложкой; остальные видео ленты — под кнопкой «Ещё».
 * **Другие сайты:** Vimeo, Dailymotion, RuTube, Дзен, Instagram, Facebook, X (Twitter), Bilibili, Canva, OK.ru, VK; остальные — через общий перехват потоков. Для части сайтов результат ограничен тем, что отдаёт страница.
 * **Только звук:** MP3 (кодируется в браузере, 128–320 кбит/с), M4A, WEBM.
-* **Удобства:** светлая и тёмная тема (по настройкам системы), 10 языков интерфейса, история, шаблон имени файла, уведомления, горячая клавиша Alt+↓, пункт контекстного меню, справка в расширении.
+* **Субтитры YouTube:** любая дорожка видео (в том числе автоматическая или перевод YouTube) файлом `.srt` или вместе с видео: отключаемая дорожка внутри `.webm`, иначе `.srt` рядом.
+* **Удобства:** светлая и тёмная тема (по настройкам системы), 10 языков интерфейса, история, шаблон имени файла, уведомления, настраиваемые горячие клавиши, справка в расширении.
 * **Диагностика:** одна кнопка создаёт локальный файл диагностики (ссылки скрыты) для отчёта об ошибке. Необязательный **журнал отладки** (в настройках, по умолчанию выключен) записывает действия расширения; его можно посмотреть, скопировать, сохранить или отправить, а результат автодиагностики добавляется в него. Ничего не отправляется автоматически.
 
 ### Чего расширение не делает
@@ -49,7 +52,7 @@ Video Downloader Legal — расширение для **Firefox, Chrome и Micr
 
 ## Установка
 
-* **Из каталога Mozilla Add-ons (рекомендуется):** найдите *Video Downloader Legal* на <https://addons.mozilla.org/> и нажмите «Добавить в Firefox».
+* **Из каталога Mozilla Add-ons (рекомендуется):** откройте [Video Downloader Legal на addons.mozilla.org](https://addons.mozilla.org/ru/firefox/addon/video-downloader-legal/) и нажмите «Добавить в Firefox» (работает и в Firefox для Android).
 * **Из релиза:** скачайте подписанный `.xpi` со страницы [Releases](https://github.com/aspidovss/video-downloader-legal/releases) и откройте его в Firefox.
 * **Для разработки (временно):** `about:debugging#/runtime/this-firefox` → «Загрузить временное дополнение…» → `manifest.json`. После перезапуска Firefox слетает.
 

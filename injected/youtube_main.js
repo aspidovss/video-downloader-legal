@@ -72,6 +72,21 @@
       isLive: !!(vd.isLive || vd.isUpcoming),
       status: pr.playabilityStatus?.status || '',
       reason: pr.playabilityStatus?.reason || '',
+      // for the "why is it not available" message (no links, no ids)
+      subreason: (() => { const sr = pr.playabilityStatus?.errorScreen?.playerErrorMessageRenderer?.subreason; return String(sr?.simpleText || (sr?.runs || []).map((r) => r.text || '').join('') || '').slice(0, 200); })(),
+      upcoming: !!vd.isUpcoming,
+      startAt: Number(pr.playabilityStatus?.liveStreamability?.liveStreamabilityRenderer?.offlineSlate?.liveStreamOfflineSlateRenderer?.scheduledStartTime) || 0,
+      familySafe: pr.microformat?.playerMicroformatRenderer?.isFamilySafe !== false,
+      paid: !!(pr.playabilityStatus?.errorScreen?.playerLegacyDesktopYpcOfferRenderer || pr.playabilityStatus?.errorScreen?.ypcTrailerRenderer),
+      // subtitle tracks the player offers (public timedtext addresses; checked again in the background)
+      captions: (() => {
+        const r = pr.captions?.playerCaptionsTracklistRenderer || {};
+        const txt = (n) => String(n?.simpleText || (n?.runs || []).map((x) => x.text || '').join('') || '');
+        return {
+          tracks: (r.captionTracks || []).slice(0, 60).map((c) => ({ url: String(c.baseUrl || ''), lang: String(c.languageCode || ''), name: txt(c.name), auto: c.kind === 'asr', translatable: !!c.isTranslatable })),
+          translations: (r.translationLanguages || []).slice(0, 200).map((l) => ({ lang: String(l.languageCode || ''), name: txt(l.languageName) })),
+        };
+      })(),
       sabr: !!sd.serverAbrStreamingUrl,
       hls: (vd.isLive && typeof sd.hlsManifestUrl === 'string') ? sd.hlsManifestUrl : '',
       license: licenseOf(data, vd.videoId),
