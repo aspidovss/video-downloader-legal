@@ -32,7 +32,7 @@ No Native Messaging, no external servers, no telemetry (`data_collection_permiss
 ## Versions
 - **1.5.0** — the first release of the 1.5 line: YouTube (two ways to get the links), a compact window with type/resolution choice, MP3, joining video and audio (DASH/HLS), the 🐞 diagnostics button (file + e-mail template), Instagram, Facebook, X, Bilibili, Canva, file names like `site_account_date_time`.
 - **1.5.5 / 1.5.6** — Chrome, terms of use, 10 languages and manual language choice, live stream recording, TS→MP4, TikTok, debug log (see below).
-- **1.6.0dev** (dev, dev1, dev2) — Microsoft Edge, Firefox for Android, building lamejs yourself, AV1+Opus joining, the sidebar button and configurable keyboard shortcuts. Details at the end of the log.
+- **1.6.0** — Microsoft Edge, Firefox for Android, YouTube subtitles, reasons why YouTube gives nothing, CC BY badge, joins into MP4 (Telegram), indexed joined files, configurable keyboard shortcuts, sidebar button, Kick, building lamejs yourself; context menu removed. The intermediate builds 1.6.0dev … dev7 are at the end of the log.
 
 Details of every build are in the log below.
 
@@ -142,6 +142,7 @@ Details of every build are in `CHANGELOG.md` and the git history.
 - **1.6.0dev1.** AV1/H.264 + Opus joined into one `.mkv` without re-encoding (`mergeMp4Opus`). FFmpeg deliberately not used: 25–30 MB core, harder AMO review, patents and GPL builds, phone memory. If re-encoding is ever needed, look at WebCodecs.
 - **1.6.0dev2.** Sidebar button (Firefox only); configurable shortcuts (open popup, download video, download audio); Chrome rejects a manifest with Ctrl+Alt shortcuts, a test guards this. AMO validator: no errors or warnings. 205 tests.
 - **1.6.0dev3.** Log trimmed; "Hotkeys" block inside "General"; new package names (`-ff-`, `-chrome-`, `-edge-`); separate "VDL DEV" add-on for AMO signing (`npm run build:dev`, branch `1.6.0dev_amo` kept local).
+- **1.6.0 (release).** The builds dev … dev7 became version 1.6.0: `version_name` without `dev`, one section in `CHANGELOG.md`, AMO description and release notes (`AMO/listing-en.md`, `AMO/listing-ru.md`), reviewer notes, `npm run build:amo` (`scripts/build-amo-dev.mjs --release`) makes the package, the source archive and the AMO form text. Firefox for Android has not yet been checked by the author on a real phone.
 - **1.6.0dev7.** Kick / Amazon IVS (`*.live-video.net`): single-quality playlists without a quality list go under "More" when the main playlist is there (like Twitch, but not hidden completely). Open question: in a Kick live recording after TS→MP4 some frames are a few bytes short (decoder errors in the bottom rows); the raw .ts is needed to compare.
 - **1.6.0dev6.** Joins of different containers are written as an ordinary MP4 (`writeMp4` in `lib/mux.js`: moov first, ~0.5 s chunks; Opus in MP4 — `Opus` + `dOps` from OpusHead, packet durations from the TOC; VP9 from WebM — `vp09` + `vpcC` from the keyframe header; AV1 from WebM — `av01` + `av1C`). Reason: Telegram Desktop test of 17.10 — any MP4 and WEBM goes as a video, MKV as a document; the author checked "The Wait" recording as MP4: video, sound, seeking. MKV is the `joinFormat` setting. *Ignore files smaller than* is 150 KB again (one-time migration from 10). AMO link in the README, the log and the help page. 240 tests.
 - **1.6.0dev5.** YouTube subtitles (`lib/subs.js`: the track list from the API clients and the page, timedtext json3 → SRT, a YouTube translation into the interface language; a D_WEBVTT/SUBTITLES track inside .webm, else an .srt next to the video). Why YouTube gave nothing (`lib/ytverdict.js`: status codes first, then the reason text in en/ru) and a `verdict` field in the diagnostics. CC BY badge. Indexed .webm join, cluster by cluster. Context menu removed (and the `contextMenus` permission). Diagnostics panel: ✕, tied to the page, buttons do not move. AMO builder `scripts/build-amo-dev.mjs`. Subtitles on live YouTube cannot be checked in this environment (no access to the site): the author checks them.
@@ -151,9 +152,7 @@ Details of every build are in `CHANGELOG.md` and the git history.
 - `ffmpeg`/`ffprobe` are needed only by tests (`tests/*.test.js` generate reference files with them). They are not part of the extension package, are not linked to the code and are not distributed, so they are not listed in `LICENSE`/`THIRD-PARTY.md`. It is a developer's external tool (its license, LGPL/GPL, depends on the build).
 
 ## Open questions and notes for the future
-- **Settings:** move the "Hotkeys" block inside "General", at its very end.
-- **Android:** test on a real phone (install via `web-ext`, download, HLS, MP3, hidden UI elements).
-- **Context menu** on `blob:` videos does nothing — not critical, deferred.
+- **Android:** test on a real phone (install, download, HLS, MP3, hidden UI elements).
 - **Chrome / Edge:** a side panel via `sidePanel` — not planned for now.
-- **Players:** since 1.6.0dev6 joins are MP4 by default (Telegram sends them as videos); the Windows player may need the "AV1 Video Extension" for AV1.
-- **Release:** after the Android check remove `dev` from `version_name`, prepare AMO Release Notes and the Edge Add-ons checklist (`EDGE/`).
+- **Players:** the Windows player may need the "AV1 Video Extension" from the Microsoft Store for AV1.
+- **Subtitles:** covered by tests; the author checks them on live YouTube (timedtext may need the player's token — turning subtitles on in the player for a couple of seconds helps then).

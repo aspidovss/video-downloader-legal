@@ -2,71 +2,35 @@
 
 Added features per version (fixes and internal changes are not listed). Version history before 1.5 is condensed from the development log; the short development log is in [docs/DEVLOG-en.md](docs/DEVLOG-en.md) (English) and [docs/DEVLOG-ru.md](docs/DEVLOG-ru.md) (Russian).
 
-## 1.6.0dev7
-
-### Changed
-* **Kick (Amazon IVS):** when the stream's main playlist with all qualities is found, the single-quality playlists the player fetches (no quality list) go under *More*.
-
-## 1.6.0dev6
-
-### Changed
-* **Joins into MP4 instead of MKV:** video and sound of different formats (AV1 or H.264 + Opus, VP9 + AAC — mostly YouTube recordings) are saved as an ordinary MP4 with the index at the start, still without re-encoding. Telegram Desktop sends such a file as a video (an `.mkv` went as a document — test of 17.10.2026); browsers and players open and seek it at once. *Settings → Download and recording → Joining video and audio of different formats* can switch back to MKV.
-* *Ignore files smaller than* is 150 KB by default again (installs that kept the old 10 KB move to 150 KB once).
-* The README, the development log and the help page link to the add-on on addons.mozilla.org.
-
-## 1.6.0dev5
+## 1.6.0
 
 ### Added
-* **YouTube subtitles:** the card has a *Subtitles* row with the video's tracks (also automatic ones, and a YouTube translation into the interface language). *SRT* saves `<title>.<lang>.srt`; with *with video* checked, the chosen subtitles go into a joined `.webm` as a switchable track (off by default) or are saved as an `.srt` next to the video.
-* **Why YouTube gave nothing:** instead of one general message the card says what happened — age restriction (18+), robot check, private, removed, not available in your country, members only, paid / DRM, not started yet, content confirmation, cut-off downloads, too many requests, no connection — and whether recording while playing can help. The diagnostics file has a `verdict` field. The "too many downloads" hint is shown only when it fits.
-* **Creative Commons badge:** a YouTube video under Creative Commons shows a green *CC BY* badge with an explanation.
-* **Joined .webm files seek properly:** VP9 + Opus downloads get a known size, an index (SeekHead + Cues) and both tracks in the same clusters; the join goes cluster by cluster, so long videos do not need their whole size in memory.
+* **Microsoft Edge and Firefox for Android.** The Chrome build runs in Edge 116+ unchanged (`video-downloader-legal-edge-<version>.zip`, checklist in `EDGE/`). On Firefox for Android 142+ the popup fills the screen with finger-sized buttons; what the phone does not have (hotkeys, notifications, sidebar) is skipped.
+* **YouTube subtitles:** a *Subtitles* row in the card (the video's tracks, automatic ones and a YouTube translation into the interface language). *SRT* saves `<title>.<lang>.srt`; *with video* puts them into a joined `.webm` as a switchable track (off by default) or saves an `.srt` next to the video.
+* **Why YouTube gave nothing:** the card names the reason — age restriction (18+), robot check, private, removed, not available in your country, members only, paid / DRM, not started yet, content confirmation, cut-off downloads, too many requests, no connection — and says whether recording while playing can help. The diagnostics file has a `verdict` field.
+* **Creative Commons badge:** a YouTube video under Creative Commons shows a green *CC BY* badge.
+* **Keyboard shortcuts you can set** (Settings → General): open the popup (`Alt+Up`), download the first video (`Alt+Down`), download its audio (`Alt+Shift+Down`), with a master switch. Firefox changes them on the settings page; Chrome / Edge show where to change them.
+* **Sidebar button** (Firefox): opens the sidebar from the popup and closes it from the sidebar; the same control in the settings.
+* **YouTube recordings in one file:** AV1 or H.264 video with Opus sound (and VP9 with AAC) are joined without re-encoding.
+* **Rebuild the MP3 encoder yourself:** `node scripts/build-lamejs.mjs` builds `vendor/lame.js` from the unmodified lamejs 1.2.1 sources and checks it (`--compare`: the same MP3 bytes as upstream).
 
 ### Changed
-* *Record while playing* (no "Fallback:" prefix); the *BETA* badge stays next to the button.
-* The diagnostics panel: a ✕ closes it; it belongs to the video it was made on and is not shown on another one; *Copy text* takes the whole width (nothing moves when its label changes), *GitHub issue* and *Send an e-mail* share one line.
-* **Removed:** the context-menu item *Download this media* (the popup and the keyboard shortcuts do the same); the extension no longer asks for the `contextMenus` permission.
-* `npm run build:amo-dev` makes everything one AMO upload of "VDL DEV" needs: the `.xpi`, the source archive and the text for the form; the build number only grows.
+* **Joins into MP4:** video and sound of different formats are saved as an ordinary MP4 (index first) — Telegram sends it as a video, browsers and players seek at once. MKV stays available in Settings → Download and recording.
+* **Joined files seek properly:** `.webm` (and `.mkv`, when chosen) get a known size, an index and both tracks in the same clusters; long `.webm` joins go cluster by cluster instead of holding the whole video in memory.
+* **Kick (Amazon IVS):** the single-quality playlists the player fetches go under *More* when the main playlist with all qualities is there.
+* *Record while playing* with the *BETA* badge on the same line; the diagnostics panel can be closed (✕), belongs to the video it was made on, its buttons no longer jump (*GitHub issue* and *Send an e-mail* on one line).
+* *Ignore files smaller than* is 150 KB by default again (installs that kept 10 KB move to 150 KB once).
+* Package names: `video-downloader-legal-ff-<version>.xpi`, `video-downloader-legal-chrome-<version>.zip`, `video-downloader-legal-edge-<version>.zip`. `npm run build:amo-dev` / `node scripts/build-amo-dev.mjs --release` make the upload set for AMO (package, source archive, form text).
+* Mozilla validator: no errors or warnings (readable `vendor/lame.js` instead of the minified file; Chrome-only code out of the Firefox package; `gecko_android` 142). Authors of lamejs / LAME named in `THIRD-PARTY.md` and `LICENSE`, `LICENSES/lamejs-LICENSE.txt` shipped.
+* The README, the help page and the development log link to the add-on on addons.mozilla.org.
 
-## 1.6.0dev4
-
-### Changed
-* **Joined .mkv files seek properly:** recordings joined into Matroska (AV1/H.264 + Opus, VP9 + AAC) now have a known file size, an index (SeekHead + Cues) and both tracks in the same clusters. Players jump to any point at once and the sound starts together with the picture after a seek.
-
-## 1.6.0dev3
-
-### Changed
-* Package names: `video-downloader-legal-ff-<version>.xpi` (Firefox, `npm run build`), `video-downloader-legal-chrome-<version>.zip` and `video-downloader-legal-edge-<version>.zip`.
-* `npm run build:dev` builds a separate Firefox add-on "VDL DEV" (own id, name and version) for unlisted signing on AMO; see `AMO/DEV-channel.md`.
-* The settings page: the *Keyboard shortcuts* block moved inside *General*, at its very end.
-
-## 1.6.0dev2
-
-### Added
-* **Sidebar button (Firefox):** a button in the popup opens the sidebar and closes the popup; in the sidebar the same button closes the panel. The settings page has the same control. Chrome, Edge and Firefox for Android do not show it.
-* **Keyboard shortcuts you can set:** a new settings block with a master switch and three shortcuts: open the popup (default `Alt+Up`), download the first video (`Alt+Down`) and the new *download the audio of the first media* (`Alt+Shift+Down`; the audio format and quality of the settings are used). Firefox: type the shortcut into the field (Backspace clears it, *Default* resets it). Chrome and Edge cannot change shortcuts from an extension, so the page shows the address `chrome://extensions/shortcuts` / `edge://extensions/shortcuts` with a copy button. Hidden on Android.
-
-## 1.6.0dev1
-
-### Added
-* **YouTube recording: AV1 video + Opus audio in one file.** The recorder used to leave them as two files (an MP4 and a `.weba`) because neither container can hold both. They are now joined into one Matroska file (`.mkv`) without re-encoding: the AV1 (or H.264) samples are cut out of the MP4 fragments and the Opus clusters are kept (`mergeMp4Opus` in `lib/mux.js`). Both tracks are cut to the span they have in common. If the join is not possible, the two files are saved as before.
+### Removed
+* The context-menu item *Download this media* and the `contextMenus` permission (the popup and the shortcuts do the same).
 
 ### Fixed
-* Settings: after *Save* the page did not apply a changed interface language until it was refreshed by hand (the language was compared after it had already been overwritten).
+* Settings: a changed interface language is applied right after *Save*.
 
-## 1.6.0dev
-
-### Added
-* **Firefox for Android:** the toolbar popup fills the screen and has finger-sized buttons; what the phone does not have is skipped: context menu, hotkeys, notifications and the sidebar (the background no longer fails on the missing `contextMenus` / `commands` APIs), the folder buttons and the "Save as" / notification options are hidden. Needs Firefox for Android 142+. The footer shows `Firefox Android`.
-* **Microsoft Edge:** the Chrome build runs in Edge 116+ unchanged; `npm run build:edge` names the package `video-downloader-legal-edge-<version>.zip`; the folder `EDGE/` has the install steps and the Edge Add-ons checklist; Edge is recognised in the page footer and in the bug-report template.
-* **Rebuild the MP3 encoder yourself:** `node scripts/build-lamejs.mjs` fetches lamejs 1.2.1 from GitHub, bundles it into `vendor/lame.js` and checks it against the file in the repository (`--compare`: same MP3 bytes as upstream's `lame.min.js`).
-* The "Download anywhere" banner is part of the store screenshots (`AMO/screenshots`).
-
-### Changed
-* Copyright notices for lamejs / LAME: the original authors are named in `THIRD-PARTY.md` and `LICENSE`, the licensing notes of lamejs are shipped (`LICENSES/lamejs-LICENSE.txt`), and the header of `vendor/lame.js` states that the code is not modified, only assembled.
-* `vendor/lame.min.js` is replaced by `vendor/lame.js`: the unmodified lamejs sources in one readable, non-minified file (clears the two `no-unsanitized` validator warnings).
-* Chrome-only code (offscreen document client) moved out of the Firefox package (clears the `offscreen.createDocument` warning); the Chrome build puts it back.
-* `gecko_android.strict_min_version` 142.0 (clears the Android warning about `data_collection_permissions`).
+The steps between 1.5.6 and 1.6.0 (1.6.0dev … dev7) are described in the development log.
 
 ## 1.5.6
 
