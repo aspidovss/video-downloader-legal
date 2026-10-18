@@ -17,13 +17,28 @@ export const hdr = {
   // requests from then on, like the page's player sends them (1.6.4). Never for YouTube / Google (own rules above).
   ref(domain) { return state.refs.get(domain) || ''; },
   setRef(domain, pageUrl) {
-    if (!domain || !/^https?:\/\//.test(pageUrl || '') || /(^|\.)(youtube\.com|googlevideo\.com|google\.com)$/.test(domain)) return false;
+    domain = String(domain || '').toLowerCase();
+    // a plain host name only: one bad entry (an IPv6 address, a port) would make Chrome refuse the whole rule set
+    if (!/^[a-z0-9-]+(\.[a-z0-9-]+)*$/.test(domain) || !/^https?:\/\//.test(pageUrl || '') || /(^|\.)(youtube\.com|googlevideo\.com|google\.com)$/.test(domain)) return false;
     if (state.refs.get(domain) === pageUrl) return false;
     state.refs.set(domain, pageUrl);
     if (state.refs.size > 40) state.refs.delete(state.refs.keys().next().value);
     listener?.();
+    hdr.onRefsChange?.();
     return true;
   },
+  // the Referer list outlives a sleeping background (Chrome service worker, Firefox event page): kept in storage.session
+  refEntries() { return [...state.refs]; },
+  restoreRefs(list) {
+    let n = 0;
+    for (const [d, p] of Array.isArray(list) ? list : []) {
+      if (typeof d === 'string' && typeof p === 'string' && !state.refs.has(d) && /^[a-z0-9-]+(\.[a-z0-9-]+)*$/.test(d) && /^https?:\/\//.test(p)) { state.refs.set(d, p); n++; }
+    }
+    if (n) listener?.();
+    return n;
+  },
+  onRefsChange: null,
+  onRulesError: null,
 };
 
 const YT = 'https://www.youtube.com';
@@ -87,7 +102,7 @@ export function installChromeRules(chromeApi = globalThis.chrome, initiator = ch
       const addRules = buildRules(state, initiator);
       await dnr.updateSessionRules({ removeRuleIds: applied, addRules });
       applied = addRules.map((r) => r.id);
-    }).catch(() => { /* rules unavailable: API calls may be refused, recording still works */ });
+    }).catch((e) => { hdr.onRulesError?.(e); /* rules unavailable: API calls may be refused, recording still works */ });
     return pending;
   };
   listener = apply;

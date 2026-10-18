@@ -78,3 +78,14 @@ test('mediaExt: a script address gives the media type named in its query, never 
   assert.equal(mediaExt('https://x.example/stream.php?id=5'), '');
   assert.equal(mediaExt('https://x.example/page.html'), '');
 });
+
+test('page Referers: only plain host names (one bad entry would break every Chrome rule); kept across a sleeping background', async () => {
+  const { hdr, buildRules } = await import('../service/headers.js');
+  assert.equal(hdr.setRef('[::1]', 'https://a.example/'), false);
+  assert.equal(hdr.setRef('host:8080', 'https://a.example/'), false);
+  assert.equal(hdr.setRef('JoyReactor.CC', 'https://joyreactor.cc/'), true);
+  assert.deepEqual(hdr.refEntries().find((e) => e[0] === 'joyreactor.cc'), ['joyreactor.cc', 'https://joyreactor.cc/']);
+  assert.equal(hdr.restoreRefs([['bad host', 'https://x/'], ['other.example', 'https://other.example/p'], ['joyreactor.cc', 'https://joyreactor.cc/']]), 1);
+  const rules = buildRules({ refs: new Map(hdr.refEntries()) }, 'extid');
+  assert.ok(rules.some((r) => r.condition.requestDomains?.[0] === 'other.example'));
+});

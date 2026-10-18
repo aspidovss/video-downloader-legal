@@ -112,7 +112,14 @@ const ready = (async () => {
       t.yt = d.yt || null;
     }
   } catch { /* ignore */ }
+  // the page Referers of servers that want them (1.6.4): back after the background slept
+  try {
+    const { refs } = await browser.storage.session.get('refs');
+    if (ytHdr.restoreRefs(refs)) dlog('headers', 'page Referers restored', { domains: (refs || []).map((r) => r[0]) });
+  } catch { /* ignore */ }
 })();
+ytHdr.onRefsChange = () => { browser.storage.session.set({ refs: ytHdr.refEntries() }).catch(() => {}); };
+ytHdr.onRulesError = (e) => dlog('headers', 'header rules were not applied', { error: String(e?.message || e) });
 
 browser.storage.onChanged.addListener((changes, area) => {
   if (area === 'local' && changes.consent) {
@@ -197,15 +204,22 @@ function jrVariant(fmt, url, size) {
     ? { url, ext: 'gif', type: 'gif', typeLabel: 'GIF', label: 'GIF', labelKey: 'gifOriginal', height: 9999, codec: '', size: size || 0, sizeEstimated: false } // first in the GIF list
     : { url, ext: fmt, type: fmt, typeLabel: fmt.toUpperCase(), label: fmt.toUpperCase(), height: 0, codec: fmt === 'webm' ? 'VP8/VP9' : 'H.264', size: size || 0, sizeEstimated: false };
 }
-function jrAddVariant(tabId, it, fmt, url, size) {
-  if (it.variants.some((v) => v.ext === fmt)) return false;
-  it.variants.push(jrVariant(fmt, url, size));
+function jrAddVariant(tabId, it, fmt, url, size, seen = false) {
+  const had = it.variants.find((v) => v.ext === fmt);
+  if (had) { if (seen) { had.seen = true; had.missing = false; } return false; }
+  it.variants.push({ ...jrVariant(fmt, url, size), ...(seen ? { seen: true } : {}) }); // seen: the page itself loaded it
   it.variants.sort((a, b) => JR_ORDER[a.ext] - JR_ORDER[b.ext]);
   it.url = it.variants[0].url; // the default download
   it.ext = it.variants[0].ext;
   it.mime = it.ext === 'gif' ? 'image/gif' : `video/${it.ext}`;
   it.size = it.variants[0].size || it.size || 0;
   return true;
+}
+// the pictures server answers 404 without the site as Referer: the extension's requests get the page's address,
+// like the page's own player sends it (only the extension's requests)
+function jrRef(tabId, url) {
+  const page = tabs.get(tabId)?.pageUrl || '';
+  return ytHdr.setRef(refDomain(url), isJoyreactorPage(page) ? page : `https://${refDomain(url)}/`);
 }
 function addJoyreactor(tabId, data, p) {
   const t = getTab(tabId);
@@ -219,16 +233,15 @@ function addJoyreactor(tabId, data, p) {
       thumbnail: data.thumbnail || undefined, duration: data.duration || 0,
     });
     if (!it) return null;
-    // the pictures server gets the site's page as Referer, like the page's own player (only the extension's requests)
-    ytHdr.setRef(refDomain(data.url), isJoyreactorPage(t.pageUrl || '') ? t.pageUrl : `https://${refDomain(data.url)}/`);
-    jrAddVariant(tabId, it, p.fmt, data.url, data.size);
+    jrRef(tabId, data.url);
+    jrAddVariant(tabId, it, p.fmt, data.url, data.size, data.source !== 'page');
     if (p.fmt !== 'gif') jrFindGif(tabId, it, p);
   } else {
     if (data.thumbnail && !it.thumbnail) it.thumbnail = data.thumbnail;
     if (data.duration && !it.duration) it.duration = data.duration;
     const v = it.variants.find((x) => x.ext === p.fmt);
     if (v && data.size && !v.size) v.size = data.size;
-    if (!jrAddVariant(tabId, it, p.fmt, data.url, data.size) && !data.thumbnail && !data.duration) return it;
+    if (!jrAddVariant(tabId, it, p.fmt, data.url, data.size, data.source !== 'page') && !data.thumbnail && !data.duration) return it;
   }
   fileVariantSizes(tabId, it);
   scheduleSave();
@@ -624,13 +637,13 @@ function serialize(tabId, it) {
 // A file offered in several qualities (site page data): the size of each from its first byte (Content-Range), in turn.
 async function fileVariantSizes(tabId, it) {
   for (const v of it.variants) {
-    if (v.size) continue;
+    if (v.size || v.missing) continue;
     try {
       const r = await fetch(v.url, { credentials: 'include', headers: { Range: 'bytes=0-0' } });
       const total = Number((/\/(\d+)\s*$/.exec(r.headers?.get?.('content-range') || '') || [])[1]) || 0;
       r.body?.cancel?.().catch(() => {});
       // a file the page names but the server does not have (JoyReactor: the MP4 of some posts) is not offered (1.6.4)
-      if (r.status === 404 || r.status === 410) {
+      if ((r.status === 404 || r.status === 410) && !v.seen) { // a file the page loaded itself is there (the request may lack something)
         v.missing = true;
         dlog('detect', 'variant not on the server', { tab: tabId, status: r.status, url: v.url });
         const first = availableVariants(it)[0];
@@ -1318,9 +1331,13 @@ async function startDownload({ tabId, itemId, variant, variantLabel, audio, subs
   const title = displayTitle(tabId, it);
   dlog('download', `start ${it.kind}`, { tab: tabId, variant: variant ?? null, label: variantLabel || '', audio: audio ? (audio.type || true) : false, url: it.url });
 
+  if (it.jr) jrRef(tabId, it.url); // the Referer rule again (it may have been lost while the background slept)
   const offer = it.kind === 'file' ? fileOffer(tabId, it) : null;
   const fv = offer ? offer[variant ?? 0] || offer[0] : null;
-  if (it.kind === 'file' && !isTikTokFile(it) && !it.referer && !fv?.makeGif) {
+  // Chrome: the browser's own download (downloads.download) gets no header rules, so a file whose server wants the
+  // page as Referer is fetched by the extension instead (the rules apply there) and saved from memory (1.6.4)
+  const chromeRef = IS_CHROME && it.kind === 'file' && !!ytHdr.ref(refDomain(fv?.url || it.url));
+  if (it.kind === 'file' && !isTikTokFile(it) && !it.referer && !fv?.makeGif && !chromeRef) {
     const fileUrl = fv?.url || it.url;
     const filename = buildFilename(settings.template, {
       title, site: it.site || hostOf(tabs.get(tabId)?.pageUrl || '') || hostOf(fileUrl), quality: it.jr ? '' : it.quality, ext: fv?.ext || pickExt(it),
