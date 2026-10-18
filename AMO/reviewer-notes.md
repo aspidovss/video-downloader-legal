@@ -1,4 +1,6 @@
-# Notes for the AMO reviewer — Video Downloader Legal 1.6.1
+# Notes for the AMO reviewer — Video Downloader Legal 1.6.2
+
+**1.6.2 = 1.6.1 re-numbered.** Version 1.6.1 on AMO was uploaded by mistake from an earlier test build; 1.6.2 is the intended 1.6.1 code (the "1.6.1" notes below apply).
 
 **What it does.** Detects media on web pages (direct files, HLS, DASH) and saves it through the browser's downloads API.
 It never decrypts or bypasses DRM: DRM-protected streams are detected and refused.
