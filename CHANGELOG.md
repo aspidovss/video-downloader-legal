@@ -2,6 +2,10 @@
 
 Added features per version (fixes and internal changes are not listed). Version history before 1.5 is condensed from the development log; the short development log is in [docs/DEVLOG-en.md](docs/DEVLOG-en.md) (English) and [docs/DEVLOG-ru.md](docs/DEVLOG-ru.md) (Russian).
 
+## 1.6.2
+
+The same code as 1.6.1, under a new version number: on addons.mozilla.org version 1.6.1 was uploaded by mistake from an earlier test build (1.6.1dev2), and AMO never accepts a version number twice. Everything listed under 1.6.1 is in 1.6.2.
+
 ## 1.6.1
 
 ### Added

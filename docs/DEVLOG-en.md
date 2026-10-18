@@ -3,7 +3,7 @@
 # Video Downloader Legal (VDL)
 
 An extension for Firefox (including Firefox for Android), Chrome and Microsoft Edge (Manifest V3): it finds the video on a page and saves it.
-Author: AspidovSS · License: MIT · Current version: 1.6.1 (`version` and `version_name` 1.6.1 in the manifest)
+Author: AspidovSS · License: MIT · Current version: 1.6.2 (`version` and `version_name` 1.6.2 in the manifest)
 
 ## What it does
 
@@ -142,6 +142,7 @@ Details of every build are in `CHANGELOG.md` and the git history.
 - **1.6.0dev1.** AV1/H.264 + Opus joined into one `.mkv` without re-encoding (`mergeMp4Opus`). FFmpeg deliberately not used: 25–30 MB core, harder AMO review, patents and GPL builds, phone memory. If re-encoding is ever needed, look at WebCodecs.
 - **1.6.0dev2.** Sidebar button (Firefox only); configurable shortcuts (open popup, download video, download audio); Chrome rejects a manifest with Ctrl+Alt shortcuts, a test guards this. AMO validator: no errors or warnings. 205 tests.
 - **1.6.0dev3.** Log trimmed; "Hotkeys" block inside "General"; new package names (`-ff-`, `-chrome-`, `-edge-`); separate "VDL DEV" add-on for AMO signing (`npm run build:dev`, branch `1.6.0dev_amo` kept local).
+- **1.6.2 (release).** The same code as 1.6.1: on AMO version 1.6.1 was uploaded by mistake from an early test build (1.6.1dev2), and AMO never accepts a version number twice.
 - **1.6.1 (release).** Builds 1.6.1dev1 … dev7: subtitle settings, Firefox for Android saves files, Low-Latency HLS as one card, separate video and sound without a master into one MP4, feeds of short videos, fMP4 with an index, .xpi/.zip writer without zip/tar. Checked by the author on the phone (Firefox 160, Android 15) and on the desktop. The "?" buttons of the settings on the phone are round again (36 px) and stay at the right of their line — touch screens and Firefox for Android only, the desktop is unchanged. Open: long LL-HLS recordings.
 - **1.6.1dev7.** HLS fMP4 with video and sound in one playlist (xhamster: AV1 + AAC, an init with two tracks) was saved as moof/mdat pieces without an index — players seeked badly. `defragMp4` in `lib/mux.js` reads every traf/trun of every moof and writes the same samples with `writeMp4` (index first, tracks interleaved in ~0.5 s chunks); checked on the author's file (412 s, 1080p, 82 MB): the same packets (framemd5), 0.4 s. Single fMP4 files from HLS/DASH and live recordings are saved the same way. Android: the save link is clicked without being put into the page (m.youtube.com caught the click and opened the video in a new window). 253 tests.
 - **1.6.1dev6.** Android, after the author's check: saving through the page works (files of 5.6 and 9.9 MB). The "Download file?" dialog sometimes vanished at once — the file was handed to the tab while the popup was on top of it; now the tab waits until it is on screen again (`visibilitychange`) and saves the files one by one 1.5 s apart; while it waits, a notification says to go back to the video page. The Settings, History and Help buttons of the popup on Android open a new tab and close the popup (the settings used to open behind the popup until "Back"); the "Open folder" button is hidden on Android.
