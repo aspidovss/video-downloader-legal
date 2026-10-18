@@ -5,6 +5,7 @@ import { DEFAULT_SHORTCUTS, COMMAND_OF, isValidShortcut, shortcutFromEvent } fro
 import { getConsent, revokeConsent } from '../utils/consent.js';
 import { isAccepted } from '../lib/consent.js';
 import { readLog, clearLog } from '../utils/debuglog.js';
+import { isUpdaterBuild, isNewer } from '../lib/updatecheck.js';
 import { LOG_KEY, formatLog } from '../lib/debuglog.js';
 
 await loadUiLang();
@@ -57,6 +58,8 @@ async function load() {
     if (el.type === 'checkbox') el.checked = !!s[el.name];
     else el.value = el.name === 'template' && !String(s.template || '').includes('{title}') ? DEFAULTS.template : s[el.name];
   }
+  // before 1.6.4 TS had only the "convert to MP4" checkbox
+  if (form.elements.tsFormat && !['mp4', 'mkv', 'ts'].includes(s.tsFormat)) form.elements.tsFormat.value = s.tsToMp4 === false ? 'ts' : 'mp4';
   await showActualShortcuts(s);
   subsDeps();
   snapshot = formValues();
@@ -107,6 +110,24 @@ if (!canSetShortcuts) {
 }
 
 // Sidebar (Firefox desktop): open / close from the settings too
+// Updater package (Chrome / Edge, #62): the GitHub release check, its state and "Check now" (1.6.4)
+if (isUpdaterBuild(browser.runtime.getManifest())) {
+  document.getElementById('update-row').hidden = false;
+  const $st = document.getElementById('update-status');
+  const show = (u) => {
+    if (!u || !u.checkedAt) { $st.textContent = ''; return; }
+    const when = new Date(u.checkedAt).toLocaleString(uiLangCode());
+    const cur = browser.runtime.getManifest().version;
+    $st.textContent = u.error ? `${t('updateCheckFailed')}: ${u.error} (${when})`
+      : isNewer(u.version, cur) ? `${t('updateAvailable').replace('{v}', u.version)} (${when})` : `${t('updateLatest')} (${when})`;
+  };
+  browser.storage.local.get('vdlUpdate').then(({ vdlUpdate }) => show(vdlUpdate));
+  document.getElementById('update-now').addEventListener('click', async (e) => {
+    e.target.disabled = true;
+    try { show(await browser.runtime.sendMessage({ type: 'vdl_update_check' })); } finally { e.target.disabled = false; }
+  });
+}
+
 const $sideRow = document.getElementById('sidebar-row');
 const $sideBtn = document.getElementById('sidebar-toggle');
 if (typeof browser.sidebarAction?.toggle === 'function') {
@@ -124,6 +145,8 @@ form.addEventListener('submit', async (e) => {
     patch[el.name] = el.type === 'checkbox' ? el.checked : el.type === 'number' ? Number(el.value) : el.value;
   }
   if (!UI_LANGS.includes(patch.uiLang)) patch.uiLang = 'auto';
+  if (!['mp4', 'mkv', 'ts'].includes(patch.tsFormat)) patch.tsFormat = 'mp4';
+  patch.tsToMp4 = patch.tsFormat !== 'ts'; // older builds read this one
   for (const k of Object.keys(DEFAULT_SHORTCUTS)) if (!isValidShortcut(String(patch[k] ?? ''))) patch[k] = DEFAULT_SHORTCUTS[k];
   patch.template = String(patch.template || '').trim();
   if (!patch.template.includes('{title}')) patch.template = DEFAULTS.template;

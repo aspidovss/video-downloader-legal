@@ -551,12 +551,6 @@
   "helpC5": {
     "message": "Dieses Projekt enthält Code oder Teile davon, die von KI erzeugt wurden. Texte, Kommentare und Lokalisierungen sind KI-generiert."
   },
-  "optTsToMp4": {
-    "message": "TS nach Download oder Aufnahme in MP4 umwandeln"
-  },
-  "hintTsToMp4": {
-    "message": "Streams im TS-Format werden ohne Neukodierung als normales MP4 (H.264 + AAC) gespeichert und lassen sich in jedem Player abspielen. Verwendet der Stream andere Codecs oder ist er größer als etwa 700 MB, wird die TS-Datei unverändert gespeichert."
-  },
   "consentTitle": {
     "message": "Nutzungsbedingungen"
   },
@@ -907,5 +901,98 @@
   },
   "androidSaveOnPage": {
     "message": "Die Datei ist fertig: Gehen Sie zurück zur Videoseite — Firefox bietet dort das Speichern an."
+  },
+  "etaCalc": {
+    "message": "wird berechnet…"
+  },
+  "etaLeft": {
+    "message": "noch {t}"
+  },
+  "unitSec": {
+    "message": "s"
+  },
+  "unitMin": {
+    "message": "Min."
+  },
+  "unitHour": {
+    "message": "Std."
+  },
+  "optTsFormat": {
+    "message": "TS-Streams speichern als"
+  },
+  "tsFmtMp4": {
+    "message": "MP4 (empfohlen)"
+  },
+  "tsFmtMkv": {
+    "message": "MKV (Matroska)"
+  },
+  "tsFmtTs": {
+    "message": "TS (unverändert)"
+  },
+  "hintTsFormat": {
+    "message": "TS-Streams (H.264 + AAC) werden ohne Neukodierung gespeichert: MP4 öffnet jeder Player, auch auf Handys; MKV verkraftet Lücken in einer Aufnahme besser und läuft in VLC, mpv und Desktop-Playern; TS wird so gespeichert, wie es kam. Das Format lässt sich auch in der Videokarte wählen. Bei anderen Codecs oder über etwa 700 MB wird die TS-Datei gespeichert. WEBM ist für TS ohne Neukodierung nicht möglich."
+  },
+  "optGifMake": {
+    "message": "GIF aus Video"
+  },
+  "gifMakeJr": {
+    "message": "Nur JoyReactor"
+  },
+  "gifMakeAll": {
+    "message": "Auf allen Websites"
+  },
+  "gifMakeOff": {
+    "message": "Aus"
+  },
+  "hintGifMake": {
+    "message": "Kurze Videos (bis 60 s) erhalten in der Karte das Format GIF: das Original-GIF der Website, falls vorhanden, und ein direkt im Browser aus dem Video erstelltes GIF (480 oder 320 Pixel breit, 10 Bilder pro Sekunde, ohne Ton). Ein GIF ist um ein Vielfaches größer als das Video und braucht Zeit. Nur Firefox."
+  },
+  "gifOriginal": {
+    "message": "{w} · Original"
+  },
+  "gifMade": {
+    "message": "{w} · aus Video"
+  },
+  "gifTooLong": {
+    "message": "Das Video ist länger als 60 Sekunden: daraus wird kein GIF erstellt."
+  },
+  "gifDecode": {
+    "message": "Das Video konnte für das GIF nicht gelesen werden."
+  },
+  "gifFromWebm": {
+    "message": "{w} · aus WEBM"
+  },
+  "gifFromMp4": {
+    "message": "{w} · aus MP4"
+  },
+  "updateAvailable": {
+    "message": "Version {v} ist verfügbar"
+  },
+  "updateDownload": {
+    "message": "Herunterladen"
+  },
+  "updateWhatsNew": {
+    "message": "Was ist neu"
+  },
+  "updateHow": {
+    "message": "Entpacken Sie das Archiv über die alten Dateien in den Ordner der Erweiterung und klicken Sie auf der Erweiterungsseite auf „Aktualisieren“."
+  },
+  "optUpdateCheck": {
+    "message": "Über neue Versionen informieren (GitHub-Prüfung einmal am Tag)"
+  },
+  "hintUpdateCheck": {
+    "message": "Einmal am Tag sieht die Erweiterung nach der neuesten Version auf GitHub (eine normale Anfrage an api.github.com, über Sie wird nichts gesendet) und zeigt im Fenster eine Zeile, wenn es eine neue Version gibt. Sie installiert nichts selbst. Nur im Paket „updater“ für Chrome und Edge."
+  },
+  "updateCheckNow": {
+    "message": "Jetzt prüfen"
+  },
+  "updateLatest": {
+    "message": "Aktuell"
+  },
+  "updateCheckFailed": {
+    "message": "Prüfung fehlgeschlagen"
+  },
+  "updateBuildNote": {
+    "message": "Dies ist das Paket „updater“ für Chrome und Edge: Es prüft einmal am Tag selbst auf GitHub, ob eine neue Version erschienen ist, und zeigt einen Hinweis im Fenster der Erweiterung. Mit dem Häkchen oben lassen sich Prüfung und Hinweise abschalten. Das normale Paket und die Firefox-Version prüfen nicht auf Updates."
   }
 }

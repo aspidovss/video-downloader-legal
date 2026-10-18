@@ -3,10 +3,12 @@ import { loadUiLang } from '../utils/i18n.js';
 
 await loadUiLang();
 import { formatBytes, formatDuration } from '../lib/util.js';
+import { etaText } from '../lib/rate.js';
 import { hasConsent, acceptConsent } from '../utils/consent.js';
 import { saveSettings } from '../utils/settings.js';
 import { groupByType, pickQuality, pickType, groupAudio, pickAudioQuality } from '../lib/youtube.js';
 import { defaultSubs } from '../lib/subs.js';
+import { isNewer } from '../lib/updatecheck.js';
 
 let tabId = null;
 
@@ -48,8 +50,12 @@ let prefs = { subs: true, subsSrt: true, subsWithVideo: false, defaultQuality: '
 // Per card: chosen type + quality for YouTube videos (indexes refer to it.variants).
 function ytPick(it, groups) {
   const sel = selectedVariant.get(it.id) || {};
-  const group = groups.find((g) => g.type === sel.type) || pickType(groups, prefs.defaultType, prefs.defaultQuality);
-  const chosen = group.items.find((v) => v.index === sel.index) || pickQuality(group.items, prefs.defaultQuality);
+  // TS stream offered as MP4 / MKV / TS: the format chosen in the settings (1.6.4)
+  const tsGroup = groups.find((g) => g.items.some((v) => v.tsDefault));
+  // a file offered in several forms (site list, GIF): the first one (the file itself) unless another is picked
+  const fileGroup = it.kind === 'file' ? groups.find((g) => g.items.some((v) => v.index === 0)) : null;
+  const group = groups.find((g) => g.type === sel.type) || tsGroup || fileGroup || pickType(groups, prefs.defaultType, prefs.defaultQuality);
+  const chosen = group.items.find((v) => v.index === sel.index) || (group.type === 'gif' ? group.items[0] : pickQuality(group.items, prefs.defaultQuality));
   return { group, chosen };
 }
 
@@ -81,19 +87,23 @@ function card(it) {
   // ---- video row: [type] [resolution · size] [Download]. Same for YouTube, DASH and HLS; plain files: just the button.
   let videoRow = null;
   const quick = (e, variant) => download(e, variant);
-  if (!it.noteKey && videoVariants.length && (it.kind === 'yt' || it.kind === 'dash' || it.kind === 'hls')) {
+  if (!it.noteKey && videoVariants.length && (it.kind === 'yt' || it.kind === 'dash' || it.kind === 'hls' || it.kind === 'file')) { // file: several qualities from the site's page data
     const groups = groupByType(videoVariants);
     const { group, chosen } = ytPick(it, groups);
     const typeSel = groups.length > 1 || it.kind === 'yt' ? h('select', {
       class: 'type', 'aria-label': t('videoType'), title: group.codec,
       onchange: (e) => { selectedVariant.set(it.id, { type: e.target.value }); refresh(true); },
     }, groups.map((g) => h('option', { value: g.type, selected: g.type === group.type, title: g.codec }, g.label))) : null;
-    const qSel = h('select', {
+    const optText = (v) => `${v.labelKey ? t(v.labelKey).replace('{w}', v.label) : (v.label || `#${v.index + 1}`).split(' · ')[0]}${v.fmt ? ` · ${v.fmt.toUpperCase()}` : ''}${sizeText(v)}`;
+    // one choice in the format (a single file): no list, just its size (1.6.4)
+    const single = group.items.length === 1;
+    const qSel = single ? null : h('select', {
       class: 'quality', 'aria-label': t('quality'),
       onchange: (e) => selectedVariant.set(it.id, { type: group.type, index: Number(e.target.value) }),
-    }, group.items.map((v) => h('option', { value: v.index, selected: v.index === chosen.index }, `${(v.label || `#${v.index + 1}`).split(' · ')[0]}${v.fmt ? ` · ${v.fmt.toUpperCase()}` : ''}${sizeText(v)}`)));
-    videoRow = h('div', { class: 'row-dl' }, typeSel, qSel,
-      h('button', { class: 'primary', disabled, onclick: (e) => quick(e, Number(qSel.value)) }, t(liveRec ? 'liveRecord' : 'download')));
+    }, group.items.map((v) => h('option', { value: v.index, selected: v.index === chosen.index }, optText(v))));
+    const qInfo = single ? h('span', { class: 'qinfo' }, it.kind === 'file' && (chosen.type === chosen.label?.toLowerCase()) ? sizeText(chosen).replace(/^ · /, '') : optText(chosen)) : null;
+    videoRow = h('div', { class: 'row-dl' }, typeSel, qSel || qInfo,
+      h('button', { class: 'primary', disabled, onclick: (e) => quick(e, single ? chosen.index : Number(qSel.value)) }, t(liveRec ? 'liveRecord' : 'download')));
   } else if (!it.noteKey && !(it.kind === 'yt' && it.live)) {
     videoRow = h('div', { class: 'row-dl' }, h('button', { class: 'primary wide', disabled, onclick: (e) => download(e, 0) }, t(liveRec ? 'liveRecord' : 'download')));
   }
@@ -287,7 +297,8 @@ function renderItems(items, force = false) {
   const rank = (it) => ({ yt: 0, dash: 1, hls: 2 }[it.kind] ?? 3);
   const sorted = items.map((it, i) => ({ it, i })).sort((a, b) => rank(a.it) - rank(b.it) || a.i - b.i).map((x) => x.it);
   const hasStream = items.some((x) => ['yt', 'dash', 'hls'].includes(x.kind));
-  const small = (it) => (it.kind !== 'file' && !!it.secondary) || (it.kind === 'file' && (it.secondary || hasStream || (it.size > 0 && it.size < 1048576)));
+  // a file with a quality list (site page data) is a main card like a stream
+  const small = (it) => (it.kind !== 'file' && !!it.secondary) || (it.kind === 'file' && (it.secondary || (!it.multi && (hasStream || (it.size > 0 && it.size < 1048576)))));
   const main = sorted.filter((x) => !small(x));
   const rest = sorted.filter(small);
   const nodes = main.length ? main.map(card) : rest.map(card);
@@ -299,11 +310,19 @@ function renderItems(items, force = false) {
   $empty.hidden = items.length > 0;
 }
 
+// speed and remaining time next to the percentage while pieces are downloading (1.6.4)
+function pace(j) {
+  if (j.phase || j.recording || !j.total || j.done >= j.total) return '';
+  if (!j.speed && !j.eta) return ` · ${t('etaCalc')}`;
+  const eta = etaText(j.eta, { s: t('unitSec'), min: t('unitMin'), h: t('unitHour') });
+  return `${j.speed ? ` · ${formatBytes(j.speed)}/s` : ''}${eta ? ` · ${t('etaLeft').replace('{t}', eta)}` : ''}`;
+}
+
 function renderJobs(jobs) {
   $jobs.replaceChildren(...jobs.map((j) => {
     const pct = j.total ? Math.round((j.done / j.total) * 100) : 0;
     const label = j.recording ? `● ${t('liveRecording')} ${clock(j.seconds || 0)} · ${formatBytes(j.bytes || 0)}` : {
-      running: `${j.phase === 'mp3' ? 'MP3 ' : j.phase === 'convert' ? 'MP4 ' : ''}${pct}%${j.fileCount > 1 ? ` (${j.fileIndex}/${j.fileCount})` : ''}`,
+      running: `${j.phase === 'mp3' ? 'MP3 ' : j.phase === 'convert' ? 'MP4 ' : j.phase === 'mkv' ? 'MKV ' : j.phase === 'gif' ? 'GIF ' : ''}${pct}%${j.fileCount > 1 ? ` (${j.fileIndex}/${j.fileCount})` : ''}${pace(j)}`,
       done: t('done'),
       canceled: t('canceled'),
       error: j.errorKey ? t(j.errorKey) : `${t('failed')}: ${j.error}`,
@@ -451,6 +470,26 @@ async function setupSidebarButton() {
   };
 }
 
+// Updater package (Chrome / Edge, #62): a newer release on GitHub -> one line with the download (1.6.4).
+// Other packages never have vdlUpdate in their storage.
+async function showUpdate() {
+  const { vdlUpdate: u, settings: st } = await browser.storage.local.get(['vdlUpdate', 'settings']);
+  const $u = document.getElementById('update');
+  if (st?.updateCheck === false) { $u.hidden = true; return; } // update notices switched off
+  const current = browser.runtime.getManifest().version;
+  if (!u || !u.version || !isNewer(u.version, current) || u.dismissed === u.version) { $u.hidden = true; return; }
+  const open = (url) => { browser.tabs.create({ url }); window.close(); };
+  $u.replaceChildren(
+    h('div', { class: 'row' },
+      h('strong', {}, t('updateAvailable').replace('{v}', u.version)),
+      h('button', { class: 'close', title: t('dismiss'), 'aria-label': t('dismiss'), onclick: async () => { await browser.storage.local.set({ vdlUpdate: { ...u, dismissed: u.version } }); $u.hidden = true; } }, '✕')),
+    h('div', { class: 'btns' },
+      h('button', { class: 'primary small', onclick: () => open(u.zip || u.page) }, t('updateDownload')),
+      h('button', { class: 'small', onclick: () => open(u.page) }, t('updateWhatsNew'))),
+    h('div', { class: 'faint' }, t('updateHow')));
+  $u.hidden = false;
+}
+
 async function init() {
   translatePage();
   if (!(await hasConsent())) await consentGate();
@@ -484,6 +523,7 @@ async function init() {
   browser.runtime.onMessage.addListener((msg) => {
     if (msg.type === 'state_changed') refresh();
   });
+  showUpdate().catch(() => {});
   await refresh();
   setInterval(refresh, 2000);
 }

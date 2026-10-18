@@ -551,12 +551,6 @@
   "helpC5": {
     "message": "Este projeto contém código, ou partes dele, gerado por IA. Textos, comentários e localizações foram gerados por IA."
   },
-  "optTsToMp4": {
-    "message": "Converter TS em MP4 após o download ou a gravação"
-  },
-  "hintTsToMp4": {
-    "message": "Fluxos no formato TS são salvos como um MP4 comum (H.264 + AAC) sem recodificar, então abrem em qualquer player. Se o fluxo tiver outros codecs ou passar de cerca de 700 MB, o arquivo TS é salvo como está."
-  },
   "consentTitle": {
     "message": "Termos de uso"
   },
@@ -907,5 +901,98 @@
   },
   "androidSaveOnPage": {
     "message": "O arquivo está pronto: volte à página do vídeo e o Firefox oferecerá salvá-lo lá."
+  },
+  "etaCalc": {
+    "message": "calculando…"
+  },
+  "etaLeft": {
+    "message": "faltam {t}"
+  },
+  "unitSec": {
+    "message": "s"
+  },
+  "unitMin": {
+    "message": "min"
+  },
+  "unitHour": {
+    "message": "h"
+  },
+  "optTsFormat": {
+    "message": "Salvar fluxos TS como"
+  },
+  "tsFmtMp4": {
+    "message": "MP4 (recomendado)"
+  },
+  "tsFmtMkv": {
+    "message": "MKV (Matroska)"
+  },
+  "tsFmtTs": {
+    "message": "TS (como veio)"
+  },
+  "hintTsFormat": {
+    "message": "Fluxos TS (H.264 + AAC) são salvos sem recodificação: MP4 abre em qualquer player e no celular; MKV lida melhor com falhas numa gravação e toca no VLC, mpv e players de computador; TS é salvo como veio. O formato também pode ser escolhido no cartão do vídeo. Com outros codecs ou acima de cerca de 700 MB, o arquivo TS é salvo. WEBM não é possível para TS sem recodificação."
+  },
+  "optGifMake": {
+    "message": "GIF a partir de vídeo"
+  },
+  "gifMakeJr": {
+    "message": "Só JoyReactor"
+  },
+  "gifMakeAll": {
+    "message": "Em todos os sites"
+  },
+  "gifMakeOff": {
+    "message": "Desativado"
+  },
+  "hintGifMake": {
+    "message": "Vídeos curtos (até 60 s) ganham o formato GIF no cartão: o GIF original do site, se houver, e um GIF feito do vídeo no próprio navegador (480 ou 320 pixels de largura, 10 quadros por segundo, sem som). Um GIF é muitas vezes maior que o vídeo e demora para ser feito. Só Firefox."
+  },
+  "gifOriginal": {
+    "message": "{w} · original"
+  },
+  "gifMade": {
+    "message": "{w} · do vídeo"
+  },
+  "gifTooLong": {
+    "message": "O vídeo tem mais de 60 segundos: não é feito GIF dele."
+  },
+  "gifDecode": {
+    "message": "Não foi possível ler o vídeo para fazer o GIF."
+  },
+  "gifFromWebm": {
+    "message": "{w} · do WEBM"
+  },
+  "gifFromMp4": {
+    "message": "{w} · do MP4"
+  },
+  "updateAvailable": {
+    "message": "Versão {v} disponível"
+  },
+  "updateDownload": {
+    "message": "Baixar"
+  },
+  "updateWhatsNew": {
+    "message": "Novidades"
+  },
+  "updateHow": {
+    "message": "Descompacte o arquivo na pasta da extensão sobre os arquivos antigos e clique em \"Atualizar\" na página de extensões."
+  },
+  "optUpdateCheck": {
+    "message": "Avisar sobre novas versões (verificação no GitHub uma vez por dia)"
+  },
+  "hintUpdateCheck": {
+    "message": "Uma vez por dia a extensão consulta a versão mais recente no GitHub (uma requisição comum a api.github.com; nada sobre você é enviado) e mostra uma linha na janela quando há versão nova. Ela não instala nada sozinha. Só no pacote \"updater\" para Chrome e Edge."
+  },
+  "updateCheckNow": {
+    "message": "Verificar agora"
+  },
+  "updateLatest": {
+    "message": "Atualizada"
+  },
+  "updateCheckFailed": {
+    "message": "Não foi possível verificar"
+  },
+  "updateBuildNote": {
+    "message": "Este é o pacote \"updater\" para Chrome e Edge: uma vez por dia ele verifica sozinho no GitHub se saiu uma versão nova e mostra um aviso na janela da extensão. A caixa acima desliga a verificação e os avisos. O pacote normal e a versão do Firefox não procuram atualizações."
   }
 }

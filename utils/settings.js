@@ -10,7 +10,10 @@ export const DEFAULTS = {
   liveMaxMinutes: 180, // 1.5.1: limit of one live recording
   saveAs: false,
   joinFormat: 'mp4',   // 1.6.0dev6: video + audio of different containers are joined into 'mp4' (Telegram sends it as a video) or 'mkv'
-  tsToMp4: true,       // 1.5.2: TS streams are saved as MP4 (no re-encoding)
+  tsToMp4: true,       // 1.5.2: TS streams are saved as MP4 (no re-encoding); kept for older settings
+  gifMake: 'joyreactor', // 1.6.4: GIF made from a video file in the browser: 'joyreactor' (only there) | 'all' | 'off'
+  updateCheck: true,   // 1.6.4: updater package (Chrome / Edge) only: look at the latest GitHub release once a day
+  tsFormat: '',        // 1.6.4: TS streams are saved as 'mp4' | 'mkv' | 'ts'; '' = from tsToMp4 (MP4 unless it was switched off)
   ytCcOnly: true,
   ytRecordSpeed: 2,
   ytApi: true,

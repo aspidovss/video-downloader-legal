@@ -3,7 +3,7 @@
 // (service/main.js); Chrome MV3 has no blocking webRequest, so the same state is turned into
 // declarativeNetRequest session rules (buildRules) and every fetch waits until they are in place.
 
-const state = { ua: '', live: false, on: true };
+const state = { ua: '', live: false, on: true, refs: new Map() }; // refs: site domain -> page address (Referer)
 let listener = null;
 
 export const hdr = {
@@ -13,6 +13,17 @@ export const hdr = {
   set live(v) { v = !!v; if (v !== state.live) { state.live = v; listener?.(); } },
   get on() { return state.on; },
   set on(v) { v = !!v; if (v !== state.on) { state.on = v; listener?.(); } },
+  // A media server that refused the extension (403 / 412) gets the page's Referer and Origin on the extension's own
+  // requests from then on, like the page's player sends them (1.6.4). Never for YouTube / Google (own rules above).
+  ref(domain) { return state.refs.get(domain) || ''; },
+  setRef(domain, pageUrl) {
+    if (!domain || !/^https?:\/\//.test(pageUrl || '') || /(^|\.)(youtube\.com|googlevideo\.com|google\.com)$/.test(domain)) return false;
+    if (state.refs.get(domain) === pageUrl) return false;
+    state.refs.set(domain, pageUrl);
+    if (state.refs.size > 40) state.refs.delete(state.refs.keys().next().value);
+    listener?.();
+    return true;
+  },
 };
 
 const YT = 'https://www.youtube.com';
@@ -55,6 +66,13 @@ export function buildRules(s, initiator) {
 
   // TikTok: the video servers refuse requests without the site as Referer
   add(1, { requestDomains: TIKTOK }, [remove('origin'), set('referer', 'https://www.tiktok.com/')]);
+
+  // servers that refused the extension: the page's Referer / Origin (1.6.4)
+  for (const [domain, page] of (s.refs || new Map())) {
+    let origin = '';
+    try { origin = new URL(page).origin; } catch { continue; }
+    add(1, { requestDomains: [domain] }, [set('referer', page), set('origin', origin)]);
+  }
   return rules;
 }
 

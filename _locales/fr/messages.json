@@ -551,12 +551,6 @@
   "helpC5": {
     "message": "Ce projet contient du code, ou des parties de code, généré par IA. Les textes, commentaires et traductions sont générés par IA."
   },
-  "optTsToMp4": {
-    "message": "Convertir le TS en MP4 après le téléchargement ou l'enregistrement"
-  },
-  "hintTsToMp4": {
-    "message": "Les flux au format TS sont enregistrés en MP4 classique (H.264 + AAC) sans réencodage, ils se lisent donc dans n'importe quel lecteur. Si le flux utilise d'autres codecs ou dépasse environ 700 Mo, le fichier TS est enregistré tel quel."
-  },
   "consentTitle": {
     "message": "Conditions d’utilisation"
   },
@@ -907,5 +901,98 @@
   },
   "androidSaveOnPage": {
     "message": "Le fichier est prêt : revenez à la page de la vidéo, Firefox proposera de l’enregistrer."
+  },
+  "etaCalc": {
+    "message": "calcul…"
+  },
+  "etaLeft": {
+    "message": "reste {t}"
+  },
+  "unitSec": {
+    "message": "s"
+  },
+  "unitMin": {
+    "message": "min"
+  },
+  "unitHour": {
+    "message": "h"
+  },
+  "optTsFormat": {
+    "message": "Enregistrer les flux TS en"
+  },
+  "tsFmtMp4": {
+    "message": "MP4 (recommandé)"
+  },
+  "tsFmtMkv": {
+    "message": "MKV (Matroska)"
+  },
+  "tsFmtTs": {
+    "message": "TS (tel quel)"
+  },
+  "hintTsFormat": {
+    "message": "Les flux TS (H.264 + AAC) sont enregistrés sans réencodage : le MP4 s'ouvre dans tout lecteur et sur mobile ; le MKV supporte mieux les coupures d'un enregistrement et se lit dans VLC, mpv et les lecteurs de bureau ; le TS est enregistré tel quel. Le format se choisit aussi dans la carte de la vidéo. Avec d'autres codecs ou au-delà d'environ 700 Mo, le fichier TS est enregistré. Le WEBM n'est pas possible pour le TS sans réencodage."
+  },
+  "optGifMake": {
+    "message": "GIF à partir d'une vidéo"
+  },
+  "gifMakeJr": {
+    "message": "JoyReactor uniquement"
+  },
+  "gifMakeAll": {
+    "message": "Sur tous les sites"
+  },
+  "gifMakeOff": {
+    "message": "Désactivé"
+  },
+  "hintGifMake": {
+    "message": "Les vidéos courtes (jusqu'à 60 s) proposent le format GIF dans la carte : le GIF original du site s'il existe, et un GIF créé à partir de la vidéo directement dans le navigateur (480 ou 320 pixels de large, 10 images par seconde, sans son). Un GIF est bien plus lourd que la vidéo et prend du temps à créer. Firefox uniquement."
+  },
+  "gifOriginal": {
+    "message": "{w} · original"
+  },
+  "gifMade": {
+    "message": "{w} · depuis la vidéo"
+  },
+  "gifTooLong": {
+    "message": "La vidéo dure plus de 60 secondes : aucun GIF n'est créé."
+  },
+  "gifDecode": {
+    "message": "La vidéo n'a pas pu être lue pour créer le GIF."
+  },
+  "gifFromWebm": {
+    "message": "{w} · depuis WEBM"
+  },
+  "gifFromMp4": {
+    "message": "{w} · depuis MP4"
+  },
+  "updateAvailable": {
+    "message": "La version {v} est disponible"
+  },
+  "updateDownload": {
+    "message": "Télécharger"
+  },
+  "updateWhatsNew": {
+    "message": "Nouveautés"
+  },
+  "updateHow": {
+    "message": "Décompressez l'archive dans le dossier de l'extension par-dessus les anciens fichiers et cliquez sur « Actualiser » dans la page des extensions."
+  },
+  "optUpdateCheck": {
+    "message": "Signaler les nouvelles versions (vérification GitHub une fois par jour)"
+  },
+  "hintUpdateCheck": {
+    "message": "Une fois par jour, l'extension consulte la dernière version sur GitHub (une requête ordinaire à api.github.com ; rien vous concernant n'est envoyé) et affiche une ligne dans la fenêtre si une nouvelle version existe. Elle n'installe rien d'elle-même. Uniquement dans le paquet « updater » pour Chrome et Edge."
+  },
+  "updateCheckNow": {
+    "message": "Vérifier maintenant"
+  },
+  "updateLatest": {
+    "message": "À jour"
+  },
+  "updateCheckFailed": {
+    "message": "Vérification impossible"
+  },
+  "updateBuildNote": {
+    "message": "Ceci est le paquet « updater » pour Chrome et Edge : une fois par jour, il vérifie lui-même sur GitHub si une nouvelle version est sortie et affiche un avis dans la fenêtre de l'extension. La case ci-dessus désactive la vérification et les avis. Le paquet normal et la version Firefox ne recherchent pas de mises à jour."
   }
 }

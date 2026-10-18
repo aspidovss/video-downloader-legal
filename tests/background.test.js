@@ -145,8 +145,8 @@ test('HLS master is parsed, children hidden, variant download joins decrypted se
   const master = st.items.find((i) => i.kind === 'hls');
   assert.ok(master?.master, 'master detected');
   assert.equal(st.items.filter((i) => i.kind === 'hls').length, 1, 'child playlist hidden');
-  assert.deepEqual(master.variants.map((v) => v.label), ['720p', '360p', '720p', '360p']);
-  assert.deepEqual(master.variants.map((v) => v.typeLabel), ['MP4', 'MP4', 'TS', 'TS'], 'TS stream: MP4 (default) and TS');
+  assert.deepEqual(master.variants.map((v) => v.label), ['720p', '360p', '720p', '360p', '720p', '360p']);
+  assert.deepEqual(master.variants.map((v) => v.typeLabel), ['MP4', 'MP4', 'MKV', 'MKV', 'TS', 'TS'], 'TS stream: MP4 (default), MKV and TS');
 
   // Captured blob contents.
   let captured;
@@ -194,10 +194,38 @@ test('HLS with real TS segments is saved as .mp4 (own converter); the setting tu
   // the second offered variant keeps the TS file
   const again = await send({ type: 'get_state', tabId: 13 });
   const sv = again.items.find((i) => i.kind === 'hls').variants;
-  assert.deepEqual(sv.map((v) => v.typeLabel), ['MP4', 'TS']);
-  assert.equal((await send({ type: 'download', tabId: 13, itemId: item.id, variant: 1 })).ok, true);
+  assert.deepEqual(sv.map((v) => v.typeLabel), ['MP4', 'MKV', 'TS']);
+  assert.deepEqual(sv.map((v) => !!v.tsDefault), [true, false, false]);
+  assert.equal((await send({ type: 'download', tabId: 13, itemId: item.id, variant: 2 })).ok, true);
   await tick(400);
   assert.match(downloadsStarted.at(-1).filename, /\.ts$/);
+  // MKV (1.6.4): the same pieces written as Matroska without re-encoding
+  URL.createObjectURL = (b) => { captured = b; return origCreate(b); };
+  assert.equal((await send({ type: 'download', tabId: 13, itemId: item.id, variant: 1 })).ok, true);
+  await tick(400);
+  assert.match(downloadsStarted.at(-1).filename, /\.mkv$/);
+  assert.equal(captured.type, 'video/x-matroska');
+  assert.deepEqual([...new Uint8Array(await captured.slice(0, 4).arrayBuffer())], [0x1a, 0x45, 0xdf, 0xa3]);
+  // the default format of the settings comes first and is what a download without a choice (hotkey) takes
+  const store0 = { ...store.local.settings };
+  store.local.settings = { ...store0, tsFormat: 'mkv' };
+  listeners['storage.onChanged'][0].fn({ settings: { newValue: store.local.settings } }, 'local');
+  const st2 = await send({ type: 'get_state', tabId: 13 });
+  const sv2 = st2.items.find((i) => i.kind === 'hls').variants;
+  assert.deepEqual(sv2.map((v) => v.typeLabel), ['MKV', 'MP4', 'TS']);
+  assert.equal(sv2[0].tsDefault, true);
+  assert.equal(st2.prefs.tsFormat, 'mkv');
+  assert.equal((await send({ type: 'download', tabId: 13, itemId: item.id })).ok, true);
+  await tick(400);
+  assert.match(downloadsStarted.at(-1).filename, /\.mkv$/);
+  // older settings: "convert TS" switched off means TS first
+  store.local.settings = { ...store0, tsToMp4: false, tsFormat: '' };
+  listeners['storage.onChanged'][0].fn({ settings: { newValue: store.local.settings } }, 'local');
+  const sv3 = (await send({ type: 'get_state', tabId: 13 })).items.find((i) => i.kind === 'hls').variants;
+  assert.deepEqual(sv3.map((v) => v.typeLabel), ['TS', 'MP4', 'MKV']);
+  URL.createObjectURL = origCreate;
+  store.local.settings = store0;
+  listeners['storage.onChanged'][0].fn({ settings: { newValue: store0 } }, 'local');
 });
 
 test('TikTok: only the video on screen is offered, named after author and id; the promo clip is ignored; download saves an mp4', async () => {
@@ -1261,9 +1289,10 @@ test('LIVE HLS master: duplicate (backup CDN) variants are merged; variants show
   const st = await send({ type: 'get_state', tabId: 1 });
   const it = st.items.find((i) => i.url === 'https://dw.io/master.m3u8');
   assert.equal(it.live, true);
-  assert.equal(it.variants.length, 4, 'duplicate removed (2 qualities x MP4/TS)');
+  assert.equal(it.variants.length, 6, 'duplicate removed (2 qualities x MP4/MKV/TS)');
   assert.equal(it.variants[0].typeLabel, 'MP4');
-  assert.equal(it.variants[2].typeLabel, 'TS');
+  assert.equal(it.variants[2].typeLabel, 'MKV');
+  assert.equal(it.variants[4].typeLabel, 'TS');
   assert.equal(it.variants[0].perMin, true);
   assert.equal(it.variants[0].size, 45000000); // 6 Mbit/s = 0.75 MB/s = 45 MB per minute
 });
@@ -1279,7 +1308,7 @@ test('Twitch: quality playlists the player fetches are hidden behind the usher m
   const hls = st.items.filter((i) => i.kind === 'hls');
   assert.equal(hls.length, 1, 'only the master is listed');
   assert.match(hls[0].title, /^twitch_somechan_\d{4}-\d\d-\d\d_\d\d-\d\d-\d\d$/);
-  assert.deepEqual(hls[0].variants.map((v) => v.label), ['1080p60', '720p60', '720p', '1080p60', '720p60', '720p']);
+  assert.deepEqual(hls[0].variants.map((v) => v.label), ['1080p60', '720p60', '720p', '1080p60', '720p60', '720p', '1080p60', '720p60', '720p']);
 });
 
 test('Twitch SPA switch: after moving to another channel the old channel master is not offered until the new one appears', async () => {
@@ -1648,6 +1677,156 @@ test('HLS fMP4 with video and sound in one playlist is saved as an ordinary MP4 
   assert.equal(same(file), same(src), 'the same packets in the same tracks');
 });
 
+test('HLS refused with 412: again with the page\'s Referer (header rule), else through the page; the page itself is not an item', async () => {
+  const { hdr } = await import('../service/headers.js');
+  const tabId = 47;
+  const sender = { tab: { id: tabId } };
+  const PAGE = 'https://www.tube.example/view_video.php?viewkey=1';
+  await send({ type: 'page_info', top: true, url: PAGE, title: 'T', thumbnail: '', videos: [{ url: PAGE, poster: '', duration: 0 }] }, sender);
+  const M = 'https://hv.cdn-ref.example/hls/master.m3u8?h=1';
+  const V = 'https://hv.cdn-ref.example/hls/index-v1-a1.m3u8?h=1';
+  const origFetch = globalThis.fetch;
+  globalThis.fetch = async (url, init) => {
+    if (String(url).includes('cdn-ref.example')) {
+      if (!hdr.ref('cdn-ref.example')) return { ok: false, status: 412 }; // the server wants the page as Referer
+      if (url === M) return { ok: true, status: 200, text: async () => `#EXTM3U\n#EXT-X-STREAM-INF:BANDWIDTH=4000000,RESOLUTION=1280x720\n${V}\n` };
+      if (url === V) return { ok: true, status: 200, text: async () => '#EXTM3U\n#EXT-X-TARGETDURATION:4\n#EXTINF:4,\ns0.ts\n#EXT-X-ENDLIST\n' };
+    }
+    return origFetch(url, init);
+  };
+  try {
+    hit(M, { 'content-type': 'application/vnd.apple.mpegurl' }, { tabId });
+    await tick(150);
+    const st = await send({ type: 'get_state', tabId }, sender);
+    assert.ok(!st.items.some((i) => i.url === PAGE), 'the page address is not offered as a file');
+    const it = st.items.find((i) => i.url === M);
+    assert.equal(it.status, 'ready');
+    assert.ok(it.variants.length && it.variants.every((v) => v.label === '720p'), 'the master was read: 720p (MP4 and TS)');
+    assert.equal(hdr.ref('cdn-ref.example'), PAGE);
+  } finally { globalThis.fetch = origFetch; }
+
+  // a server that answers only the page: the playlist comes through the page script
+  const P = 'https://cdn.page-only.example/v/index.m3u8';
+  const origSend = browser.tabs.sendMessage;
+  const viaPage = [];
+  browser.tabs.sendMessage = async (id, msg, opts) => {
+    if (msg.type === 'vdl_fetch') {
+      viaPage.push(msg.url);
+      const body = new TextEncoder().encode('#EXTM3U\n#EXT-X-TARGETDURATION:4\n#EXTINF:4,\na.ts\n#EXT-X-ENDLIST\n');
+      return { ok: true, status: 200, ct: 'application/vnd.apple.mpegurl', buf: body.buffer };
+    }
+    return origSend(id, msg, opts);
+  };
+  globalThis.fetch = async (url, init) => (String(url).includes('page-only.example') ? { ok: false, status: 403 } : origFetch(url, init));
+  try {
+    hit(P, { 'content-type': 'application/vnd.apple.mpegurl' }, { tabId });
+    await tick(150);
+    const it = (await send({ type: 'get_state', tabId }, sender)).items.find((i) => i.url === P);
+    assert.equal(it.status, 'ready');
+    assert.equal(it.duration, 4);
+    assert.deepEqual(viaPage, [P]);
+  } finally { globalThis.fetch = origFetch; browser.tabs.sendMessage = origSend; }
+});
+
+test('Site page data: one card with the MP4 qualities and their sizes; the chosen one is downloaded by the extension; HLS with one quality under "More"', async () => {
+  const { hdr } = await import('../service/headers.js');
+  const tabId = 48;
+  const sender = { tab: { id: tabId } };
+  const PAGE = 'https://www.pornhub.com/view_video.php?viewkey=abc123';
+  const fv = { video_title: 'Clip', image_url: 'https://ei.phncdn.com/c.jpg', video_duration: 12, mediaDefinitions: [
+    { format: 'hls', videoUrl: 'https://hv.phncdn.com/hls/720P/master.m3u8', quality: '720' },
+    { format: 'hls', videoUrl: 'https://hv.phncdn.com/hls/480P/master.m3u8', quality: '480' },
+    { format: 'mp4', videoUrl: 'https://www.pornhub.com/video/get_media?s=1', quality: [] }] };
+  const FILE = 'https://cv.phncdn.com/videos/720P.mp4?x=1';
+  const F480 = 'https://cv.phncdn.com/videos/480P.mp4?x=1';
+  const origFetch = globalThis.fetch;
+  globalThis.fetch = async (url, init) => {
+    if (url === PAGE) return { ok: true, status: 200, text: async () => `<script>var flashvars_1 = ${JSON.stringify(fv)};</script>` };
+    if (String(url).includes('/video/get_media')) return { ok: true, status: 200, json: async () => [{ format: 'mp4', videoUrl: F480, quality: '480' }, { format: 'mp4', videoUrl: FILE, quality: '720' }] };
+    if (url === FILE || url === F480) {
+      if (hdr.ref('phncdn.com') !== PAGE) return { ok: false, status: 412 };
+      if (init?.headers?.Range === 'bytes=0-0') return { ok: true, status: 206, headers: { get: (n) => (n === 'content-range' ? `bytes 0-0/${url === FILE ? 7000000 : 3000000}` : '') }, body: null };
+      return { ok: true, status: 200, headers: { get: () => '' }, arrayBuffer: async () => new TextEncoder().encode(url === FILE ? 'MP4-720' : 'MP4-480').buffer };
+    }
+    const hm = /hls\/(720P|480P)\/(master|index)\.m3u8$/.exec(String(url));
+    if (hm) {
+      if (hdr.ref('phncdn.com') !== PAGE) return { ok: false, status: 412 };
+      return { ok: true, status: 200, text: async () => (hm[2] === 'master' ? '#EXTM3U\n#EXT-X-STREAM-INF:BANDWIDTH=4000000,RESOLUTION=1280x720\nindex.m3u8\n' : '#EXTM3U\n#EXT-X-TARGETDURATION:4\n#EXTINF:4,\ns.ts\n#EXT-X-ENDLIST\n') };
+    }
+    if (/hls\/(720P|480P)\/s\.ts$/.test(String(url))) return { ok: true, status: 200, arrayBuffer: async () => new TextEncoder().encode(`TS-${url.includes('480P') ? 480 : 720}`).buffer };
+    return origFetch(url, init);
+  };
+  let captured;
+  const origCreate = URL.createObjectURL;
+  URL.createObjectURL = (b) => { captured = b; return origCreate(b); };
+  try {
+    await send({ type: 'page_info', top: true, url: PAGE, title: 'Page', thumbnail: '', videos: [] }, sender);
+    hit('https://hv.phncdn.com/hls/720P/master.m3u8', { 'content-type': 'application/vnd.apple.mpegurl' }, { tabId });
+    await tick(200);
+    const st = await send({ type: 'get_state', tabId }, sender);
+    const main = st.items.filter((i) => !i.secondary);
+    assert.equal(main.length, 1, 'one main card');
+    assert.equal(main[0].kind, 'hls', 'HLS of every quality is the default');
+    assert.deepEqual(main[0].variants.map((v) => [v.label.split(' · ')[0], v.size]), [['720p', 7000000], ['480p', 3000000]], 'HLS qualities with the MP4 sizes as an estimate');
+    const it = st.items.find((i) => i.kind === 'file' && i.source === 'pornhub');
+    assert.equal(it.secondary, true, 'the MP4 list is under "More"');
+    assert.deepEqual(it.variants.map((v) => [v.label, v.size]), [['720p', 7000000], ['480p', 3000000]], 'MP4 qualities with their sizes');
+    assert.equal(it.title, 'Clip');
+    const fetched = st.items.filter((i) => i.kind === 'hls' && i.id !== main[0].id);
+    assert.equal(fetched.length, 1, 'the playlist the player fetched is a separate entry');
+    assert.equal(fetched[0].secondary, true, 'the one-quality HLS the player fetched goes under "More"');
+    // HLS 480p: the nested master is read, its stream downloaded
+    const b0 = downloadsStarted.length;
+    await send({ type: 'download', tabId, itemId: main[0].id, variant: 1, variantLabel: '480p' }, sender);
+    for (let i = 0; i < 60 && downloadsStarted.length === b0; i++) await tick(50);
+    assert.equal(downloadsStarted.length - b0, 1);
+    const before = downloadsStarted.length;
+    await send({ type: 'download', tabId, itemId: it.id, variant: 1, variantLabel: '480p' }, sender);
+    for (let i = 0; i < 60 && downloadsStarted.length === before; i++) await tick(50);
+    assert.equal(downloadsStarted.length - before, 1);
+    assert.ok(downloadsStarted.at(-1).blob, 'saved from the bytes the extension fetched');
+    assert.match(downloadsStarted.at(-1).filename, /\.mp4$/);
+    assert.equal(await captured.text(), 'MP4-480', 'the chosen quality');
+  } finally { globalThis.fetch = origFetch; URL.createObjectURL = origCreate; }
+});
+
+test('HLS refused before the page script reported the page: the Referer comes from the player\'s request (documentUrl)', async () => {
+  const { hdr } = await import('../service/headers.js');
+  const tabId = 49;
+  const M = 'https://hv.early-ref.example/hls/master.m3u8';
+  const DOC = 'https://www.early.example/watch?v=1';
+  const origFetch = globalThis.fetch;
+  globalThis.fetch = async (url, init) => {
+    if (url === M) return hdr.ref('early-ref.example') === DOC ? { ok: true, status: 200, text: async () => '#EXTM3U\n#EXT-X-TARGETDURATION:4\n#EXTINF:4,\na.ts\n#EXT-X-ENDLIST\n' } : { ok: false, status: 412 };
+    return origFetch(url, init);
+  };
+  try {
+    hit(M, { 'content-type': 'application/vnd.apple.mpegurl' }, { tabId, documentUrl: DOC });
+    await tick(150);
+    const it = (await send({ type: 'get_state', tabId }, { tab: { id: tabId } })).items.find((i) => i.url === M);
+    assert.equal(it.status, 'ready');
+  } finally { globalThis.fetch = origFetch; }
+});
+
+test('A file served by a script (remote_control.php?file=….mp4) is saved as .mp4, named after the page\'s site, not the media server', async () => {
+  const tabId = 50;
+  const sender = { tab: { id: tabId } };
+  await send({ type: 'page_info', top: true, url: 'https://www.site-noname.example/category', title: '', thumbnail: '', videos: [] }, sender);
+  const U = 'https://cdn-08.media-store.example/remote_control.php?file=abcDEF.mp4&acctoken=xyz';
+  hit(U, { 'content-type': 'video/mp4', 'content-range': 'bytes 0-1023/366124677' }, { tabId, statusCode: 206 });
+  await tick(80);
+  const it = (await send({ type: 'get_state', tabId }, sender)).items.find((i) => i.url === U);
+  assert.equal(it.title, 'site-noname.example');
+  const before = downloadsStarted.length;
+  await send({ type: 'download', tabId, itemId: it.id }, sender);
+  await tick(50);
+  const name = downloadsStarted.slice(before)[0].filename;
+  assert.match(name, /\.mp4$/);
+  assert.doesNotMatch(name, /media-store|php/);
+  assert.match(name, /site-noname/);
+  assert.equal(name.split('site-noname').length, 2, 'the site is not written twice');
+});
+
 test('Kick / Amazon IVS: quality playlists without a quality list go under "More" when the master is there', async () => {
   const M = 'https://fa1.us-west-2.playback.live-video.net/api/video/v1/us-west-2.x.channel.y.m3u8?token=t';
   fixtures[M] = '#EXTM3U\n#EXT-X-STREAM-INF:BANDWIDTH=9000000,RESOLUTION=1920x1080,FRAME-RATE=60.000\nhttps://fa1.euw12.playlist.live-video.net/v1/playlist/A.m3u8\n#EXT-X-STREAM-INF:BANDWIDTH=3400000,RESOLUTION=1280x720,FRAME-RATE=60.000\nhttps://fa1.euw12.playlist.live-video.net/v1/playlist/B.m3u8\n';
@@ -1661,4 +1840,83 @@ test('Kick / Amazon IVS: quality playlists without a quality list go under "More
   assert.equal(hls.length, 3);
   assert.deepEqual(hls.filter((i) => !i.secondary).map((i) => i.url), [M], 'only the master stays in the main list');
   assert.equal(hls.filter((i) => i.secondary).length, 2);
+});
+
+test('JoyReactor: one card per post (MP4, WEBM, the original GIF), named after the tags; the chosen form is saved; GIFs made from the video by the setting', async () => {
+  const tabId = 140;
+  const sender = { tab: { id: tabId } };
+  const W = 'https://img0.joyreactor.com/pics/post/webm/videogif-gif-parrot-9524498.webm';
+  const M = 'https://img0.joyreactor.com/pics/post/mp4/videogif-gif-parrot-9524498.mp4';
+  const G = 'https://img0.joyreactor.com/pics/post/videogif-gif-parrot-9524498.gif';
+  const P = 'https://img0.joyreactor.com/pics/post/videogif-gif-parrot-9524498.jpeg';
+  const origFetch = globalThis.fetch;
+  globalThis.fetch = async (url, init) => (url === G
+    ? { ok: true, status: 206, headers: new Headers({ 'content-type': 'image/gif', 'content-range': 'bytes 0-0/4000000' }), body: null }
+    : origFetch(url, init));
+  const store0 = { ...store.local.settings };
+  const setSettings = (patch) => { store.local.settings = { ...store0, ...patch }; listeners['storage.onChanged'][0].fn({ settings: { newValue: store.local.settings } }, 'local'); };
+  fixtures[M] = 'mp4 is there';
+  try {
+    await send({ type: 'page_info', top: true, url: 'https://joyreactor.com/', title: 'Homepage - funny pictures and r34 on JoyReactor', videos: [] }, sender);
+    hit(W, { 'content-type': 'video/webm', 'content-length': 1200000 }, { tabId });
+    await tick(30);
+    await send({ type: 'page_info', top: true, url: 'https://joyreactor.com/', title: 'Homepage - funny pictures and r34 on JoyReactor', videos: [{ url: W, poster: P, duration: 10 }, { url: M, poster: P, duration: 10 }] }, sender);
+    await tick(80);
+    let st = await send({ type: 'get_state', tabId });
+    const jr = st.items.filter((i) => /joyreactor/.test(i.url));
+    assert.equal(jr.length, 1, 'webm + mp4 + gif of one post = one card');
+    const it = jr[0];
+    assert.equal(it.title, 'parrot');
+    assert.equal(it.thumbnail, P);
+    assert.equal(it.duration, 10);
+    assert.deepEqual(it.variants.map((v) => v.typeLabel), ['MP4', 'WEBM', 'GIF'], 'no document here: no GIFs made from the video');
+    assert.equal(it.variants[1].size, 1200000);
+    assert.equal(it.variants[2].size, 4000000);
+    assert.equal(it.variants[2].labelKey, 'gifOriginal');
+    assert.equal(it.multi, true);
+    assert.equal((await send({ type: 'download', tabId, itemId: it.id, variant: 2 })).ok, true);
+    assert.equal(downloadsStarted.at(-1).url, G);
+    assert.match(downloadsStarted.at(-1).filename, /^parrot.*\.gif$/);
+    assert.equal((await send({ type: 'download', tabId, itemId: it.id, variant: 1 })).ok, true);
+    assert.equal(downloadsStarted.at(-1).url, W);
+    assert.match(downloadsStarted.at(-1).filename, /\.webm$/);
+    assert.equal((await send({ type: 'download', tabId, itemId: it.id })).ok, true);
+    assert.equal(downloadsStarted.at(-1).url, M, 'the default is the MP4');
+
+    // with a document (the Firefox background page): GIFs made from the video (from the WEBM), by the setting
+    globalThis.document = {};
+    st = await send({ type: 'get_state', tabId });
+    let v = st.items.find((i) => i.id === it.id).variants;
+    assert.deepEqual(v.map((x) => `${x.typeLabel}:${x.label}`), ['MP4:MP4', 'WEBM:WEBM', 'GIF:GIF', 'GIF:480px', 'GIF:320px', 'GIF:480px', 'GIF:320px'], 'a GIF from each video file');
+    assert.deepEqual(v.slice(3).map((x) => `${x.labelKey}:${x.url === W ? 'W' : 'M'}`), ['gifFromWebm:W', 'gifFromWebm:W', 'gifFromMp4:M', 'gifFromMp4:M']);
+    // a post whose MP4 the server does not have (404): only the WEBM and GIFs from it
+    const W2 = 'https://img10.joyreactor.com/pics/post/webm/s_nobody-breasts-erotic-9503574.webm';
+    const M2 = 'https://img10.joyreactor.com/pics/post/mp4/s_nobody-breasts-erotic-9503574.mp4';
+    fixtures[W2] = 'webm is there';
+    await send({ type: 'page_info', top: true, url: 'https://joyreactor.com/', title: 'x', videos: [{ url: W2, poster: P, duration: 12 }, { url: M2, poster: P, duration: 12 }] }, sender);
+    await tick(80);
+    const it2 = (await send({ type: 'get_state', tabId })).items.find((i) => /9503574/.test(i.url));
+    assert.equal(it2.title, 's_nobody breasts erotic');
+    assert.deepEqual(it2.variants.map((x) => `${x.typeLabel}:${x.label}:${x.labelKey || ''}`), ['WEBM:WEBM:', 'GIF:480px:gifMade', 'GIF:320px:gifMade']);
+    assert.equal((await send({ type: 'download', tabId, itemId: it2.id })).ok, true);
+    assert.equal(downloadsStarted.at(-1).url, W2, 'the default is the file that is there');
+    // another site: only with "on all sites"; a long video gets none
+    hit('https://cdn.other.example/clip.mp4', { 'content-type': 'video/mp4', 'content-length': 3000000 }, { tabId: 141 });
+    await tick(30);
+    const other = async () => (await send({ type: 'get_state', tabId: 141 })).items.find((i) => i.url === 'https://cdn.other.example/clip.mp4');
+    assert.equal((await other()).variants, null, 'JoyReactor only (default)');
+    setSettings({ gifMake: 'all' });
+    const o = await other();
+    assert.deepEqual(o.variants.map((x) => `${x.typeLabel}:${x.label}`), ['MP4:MP4', 'GIF:480px', 'GIF:320px']);
+    assert.equal(o.multi, false, 'still a plain file for the "More" rule');
+    setSettings({ gifMake: 'off' });
+    v = (await send({ type: 'get_state', tabId })).items.find((i) => i.id === it.id).variants;
+    assert.deepEqual(v.map((x) => x.typeLabel), ['MP4', 'WEBM', 'GIF'], 'off: only the files of the site');
+    delete fixtures[M];
+  } finally {
+    globalThis.fetch = origFetch;
+    delete globalThis.document;
+    store.local.settings = store0;
+    listeners['storage.onChanged'][0].fn({ settings: { newValue: store0 } }, 'local');
+  }
 });

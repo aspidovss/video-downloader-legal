@@ -1,8 +1,11 @@
 // Background (event page). Detects media via webRequest + page reports, parses
 // HLS/DASH manifests, runs downloads. No external services, no native helper.
 
+import { makeRate } from '../lib/rate.js';
+import { jrParse, jrTitle, jrGifCandidates, isJoyreactorPage } from '../lib/joyreactor.js';
+import { videoToGif, GIF_MAX_SECONDS } from '../lib/gifvideo.js';
 import {
-  FILE_EXTS, SKIP_EXTS, urlExt, normalizeUrl, hashId, mimeToExt, hostOf, buildFilename, stripLlHls,
+  FILE_EXTS, SKIP_EXTS, urlExt, mediaExt, normalizeUrl, hashId, mimeToExt, hostOf, buildFilename, stripLlHls, refDomain,
 } from '../lib/util.js';
 import { buildSynthGroups, trackInfo, playlistDir } from '../lib/hlsgroup.js';
 import { fileStem, playlistStems, matchFeed, humanStem } from '../lib/feed.js';
@@ -21,7 +24,7 @@ import { subsChoices, defaultSubs, subsUrl, json3ToCues, cuesToSrt, iso639b } fr
 import { chromeBlobUrl, chromeRevoke, chromeMp3 } from './offscreen-client.js';
 import { recordLive } from '../lib/liverec.js';
 import { rebaseTimestamps } from '../lib/rebase.js';
-import { tsToMp4 } from '../lib/ts2mp4.js';
+import { tsToMp4, tsToMkv } from '../lib/ts2mp4.js';
 import { describeInit } from '../lib/mp4info.js';
 import { maskUrl, repType, estimateSize, probeInfo } from '../lib/sitediag.js';
 import {
@@ -158,10 +161,16 @@ function updateBadge(tabId) {
 // ------------------------------------------------------------ detection ----
 
 function addItem(tabId, data) {
+  if (!data.jr) {
+    const jp = jrParse(data.url);
+    if (jp) return addJoyreactor(tabId, data, jp);
+  }
   const t = getTab(tabId);
   const key = normalizeUrl(data.url);
   if (t.hidden.has(key)) return null;
-  const id = hashId(`${data.kind}:${key}`);
+  // a site's page data gives its own id (the addresses are signed and change on every load); a playlist the player
+  // fetched with the same address stays a separate entry
+  const id = data.siteList && data.id ? data.id : hashId(`${data.kind}:${key}`);
   let it = t.items.get(id);
   if (it) {
     for (const [k, v] of Object.entries(data)) if (v !== undefined && v !== null && v !== '' && k !== 'id') it[k] ??= v;
@@ -170,13 +179,118 @@ function addItem(tabId, data) {
   if (t.items.size >= MAX_ITEMS_PER_TAB) t.items.delete(t.items.keys().next().value);
   it = { status: 'ready', ts: Date.now(), ...data, id };
   t.items.set(id, it);
+  if (it.referer) ytHdr.setRef(refDomain(it.url), it.referer); // the media server wants the page as Referer / Origin
+  if (it.kind === 'file' && (it.variants || []).length) fileVariantSizes(tabId, it);
   dlog('detect', `${it.kind} via ${it.source || 'network'}`, { tab: tabId, url: it.url });
-  if (it.kind === 'hls') enrichHls(tabId, it);
+  if (it.kind === 'hls' && !it.siteList) enrichHls(tabId, it);
   else if (it.kind === 'dash') enrichDash(tabId, it);
   updateBadge(tabId);
   scheduleSave();
   notifyUI(tabId);
   return it;
+}
+
+// ---- JoyReactor (1.6.4): one card per post with MP4, WEBM and the original GIF -----------------
+const JR_ORDER = { mp4: 0, webm: 1, gif: 2 };
+function jrVariant(fmt, url, size) {
+  return fmt === 'gif'
+    ? { url, ext: 'gif', type: 'gif', typeLabel: 'GIF', label: 'GIF', labelKey: 'gifOriginal', height: 9999, codec: '', size: size || 0, sizeEstimated: false } // first in the GIF list
+    : { url, ext: fmt, type: fmt, typeLabel: fmt.toUpperCase(), label: fmt.toUpperCase(), height: 0, codec: fmt === 'webm' ? 'VP8/VP9' : 'H.264', size: size || 0, sizeEstimated: false };
+}
+function jrAddVariant(tabId, it, fmt, url, size) {
+  if (it.variants.some((v) => v.ext === fmt)) return false;
+  it.variants.push(jrVariant(fmt, url, size));
+  it.variants.sort((a, b) => JR_ORDER[a.ext] - JR_ORDER[b.ext]);
+  it.url = it.variants[0].url; // the default download
+  it.ext = it.variants[0].ext;
+  it.mime = it.ext === 'gif' ? 'image/gif' : `video/${it.ext}`;
+  it.size = it.variants[0].size || it.size || 0;
+  return true;
+}
+function addJoyreactor(tabId, data, p) {
+  const t = getTab(tabId);
+  if (t.hidden.has(normalizeUrl(data.url))) return null;
+  const id = hashId(`jr:${p.host.replace(/^img\d*\./, '')}:${p.id}`);
+  let it = t.items.get(id);
+  if (!it) {
+    it = addItem(tabId, {
+      kind: 'file', url: data.url, ext: p.fmt, mime: p.fmt === 'gif' ? 'image/gif' : `video/${p.fmt}`, title: jrTitle(p.slug) || `joyreactor ${p.id}`,
+      site: 'joyreactor', source: data.source || 'network', siteList: true, id, jr: { host: p.host, slug: p.slug, post: p.id }, variants: [],
+      thumbnail: data.thumbnail || undefined, duration: data.duration || 0,
+    });
+    if (!it) return null;
+    // the pictures server gets the site's page as Referer, like the page's own player (only the extension's requests)
+    ytHdr.setRef(refDomain(data.url), isJoyreactorPage(t.pageUrl || '') ? t.pageUrl : `https://${refDomain(data.url)}/`);
+    jrAddVariant(tabId, it, p.fmt, data.url, data.size);
+    if (p.fmt !== 'gif') jrFindGif(tabId, it, p);
+  } else {
+    if (data.thumbnail && !it.thumbnail) it.thumbnail = data.thumbnail;
+    if (data.duration && !it.duration) it.duration = data.duration;
+    const v = it.variants.find((x) => x.ext === p.fmt);
+    if (v && data.size && !v.size) v.size = data.size;
+    if (!jrAddVariant(tabId, it, p.fmt, data.url, data.size) && !data.thumbnail && !data.duration) return it;
+  }
+  fileVariantSizes(tabId, it);
+  scheduleSave();
+  notifyUI(tabId);
+  return it;
+}
+// the post's original GIF: the first candidate address the server answers with a GIF
+async function jrFindGif(tabId, it, p) {
+  for (const url of jrGifCandidates(p)) {
+    try {
+      const r = await fetch(url, { credentials: 'include', headers: { Range: 'bytes=0-0' } });
+      const ct = (r.headers?.get?.('content-type') || '').toLowerCase();
+      const total = Number((/\/(\d+)\s*$/.exec(r.headers?.get?.('content-range') || '') || [])[1]) || Number(r.headers?.get?.('content-length')) || 0;
+      r.body?.cancel?.().catch(() => {});
+      if ((r.status === 200 || r.status === 206) && ct.startsWith('image/gif')) {
+        dlog('detect', 'joyreactor: original GIF found', { tab: tabId, url });
+        if (jrAddVariant(tabId, it, 'gif', url, r.status === 206 ? total : 0)) { scheduleSave(); notifyUI(tabId); }
+        return;
+      }
+    } catch { /* try the next address */ }
+  }
+  dlog('detect', 'joyreactor: no original GIF', { tab: tabId, post: p.id });
+}
+
+// ---- GIF made from the video in the browser (1.6.4; Firefox: needs the background page's document) --------
+// settings.gifMake: 'joyreactor' (default) | 'all' | 'off'
+function gifMode() { return ['off', 'joyreactor', 'all'].includes(settings.gifMake) ? settings.gifMake : 'joyreactor'; }
+// the files the server really has (a variant answered 404 is left out while another one is there)
+function availableVariants(it) {
+  const vs = it.variants || [];
+  const ok = vs.filter((v) => !v.missing);
+  return ok.length ? ok : vs;
+}
+// the videos a GIF can be made from: every available video file (WEBM first: Firefox always decodes it)
+function gifSources(it) {
+  const vs = it.variants?.length ? availableVariants(it) : [{ url: it.url, ext: pickExt(it) }];
+  const video = vs.filter((v) => ['webm', 'mp4', 'm4v', 'mov'].includes(v.ext));
+  return video.sort((a, b) => Number(b.ext === 'webm') - Number(a.ext === 'webm'));
+}
+const gifSource = (it) => gifSources(it)[0] || null;
+function gifAllowed(tabId, it) {
+  if (IS_CHROME || it.kind !== 'file' || typeof document === 'undefined') return false;
+  const mode = gifMode();
+  if (mode === 'off') return false;
+  if (mode === 'joyreactor' && !it.jr && !isJoyreactorPage(tabs.get(tabId)?.pageUrl || '')) return false;
+  if (/^audio\//.test(it.mime || '') || it.duration > GIF_MAX_SECONDS + 0.5) return false;
+  return !!gifSource(it);
+}
+// What a file card offers: the site's variants (or the file itself) + GIFs made from the video. null: just the file.
+function fileOffer(tabId, it) {
+  const base = it.variants?.length ? availableVariants(it) : null;
+  if (!gifAllowed(tabId, it)) return base;
+  const ext = pickExt(it);
+  const list = base ? base.slice() : [{ url: it.url, ext, type: ext, typeLabel: ext.toUpperCase(), label: ext.toUpperCase(), height: 0, codec: '', size: it.size || 0, sizeEstimated: false }];
+  // from every available video: "480px · from WEBM", "320px · from WEBM", "480px · from MP4" ...
+  const sources = gifSources(it);
+  for (const src of sources) {
+    for (const w of [480, 320]) {
+      list.push({ url: src.url, ext: 'gif', type: 'gif', typeLabel: 'GIF', label: `${w}px`, labelKey: sources.length > 1 ? `gifFrom${src.ext === 'webm' ? 'Webm' : 'Mp4'}` : 'gifMade', height: w - (src.ext === 'webm' ? 0 : 1), codec: '', size: 0, sizeEstimated: false, makeGif: w, srcExt: src.ext });
+    }
+  }
+  return list;
 }
 
 function header(details, name) {
@@ -213,7 +327,10 @@ function onHeaders(details) {
 
   if (kind === 'file' && size && size < settings.minSizeKB * 1024) return;
 
+  // the page that asked for it (the player's document): its address is the Referer for a server that refuses the extension
+  const docUrl = /^https?:\/\//.test(details.documentUrl || '') ? details.documentUrl : (/^https?:\/\//.test(details.initiator || '') ? `${details.initiator}/` : '');
   ready.then(() => addItem(details.tabId, {
+    docUrl: docUrl || undefined,
     kind, url: kind === 'hls' ? stripLlHls(details.url) : details.url, size, mime: ct, ext: FILE_EXTS.includes(ext) ? ext : '', source: 'network',
   }));
 }
@@ -227,7 +344,7 @@ browser.webRequest.onHeadersReceived.addListener(
 async function enrichHls(tabId, it) {
   it.status = 'parsing';
   try {
-    const pl = parsePlaylist(await fetchText(it.url), it.url);
+    const pl = parsePlaylist(await fetchTextFor(tabId, it, it.url), it.url);
     if (pl.type === 'master') {
       it.master = true;
       // The same quality is often listed twice (primary + backup CDN): keep the first of each resolution/bitrate.
@@ -245,7 +362,7 @@ async function enrichHls(tabId, it) {
       updateSynth(tabId); // the real master is there: an entry put together from its playlists is not needed
       // Is it a live stream? Look at the best variant's playlist (no #EXT-X-ENDLIST).
       try {
-        const first = parsePlaylist(await fetchText(pl.variants[0].url), pl.variants[0].url);
+        const first = parsePlaylist(await fetchTextFor(tabId, it, pl.variants[0].url), pl.variants[0].url);
         if (first.type !== 'master') { it.live = first.live; it.fmt = first.hasMap ? 'mp4' : 'ts'; if (first.protected) it.protected = true; }
       } catch { /* the playlist is checked again when the download starts */ }
     } else {
@@ -253,7 +370,7 @@ async function enrichHls(tabId, it) {
       it.fmt = pl.hasMap ? 'mp4' : 'ts';
       it.live = pl.live;
       it.protected = pl.protected;
-      if (pl.hasMap && !pl.protected) await probeTrack(it, pl);
+      if (pl.hasMap && !pl.protected) await probeTrack(it, pl, it.via === 'page' ? pageFetchFn(tabId) : fetch);
       // names to find this playlist's <video> in a feed of short videos (cover picture, title)
       const media = [pl.segments[0]?.url, pl.segments.find((s) => s.map)?.map?.url].filter(Boolean);
       it.stems = playlistStems(it.url, media);
@@ -273,7 +390,7 @@ async function enrichHls(tabId, it) {
 
 // fMP4 media playlist: what its init segment holds (video / sound, size, codec). A playlist with only video or only
 // sound also gets a bitrate from its last segment, to label and sort the qualities of an entry put together below.
-async function probeTrack(it, pl) {
+async function probeTrack(it, pl, fetch = globalThis.fetch) {
   const map = pl.segments.find((s) => s.map)?.map;
   if (!map) return;
   try {
@@ -393,6 +510,10 @@ function shownItems(t) {
       || masters.filter((m) => (m.ts || 0) >= (t.pageChangedAt || 0)).pop();
     all = all.filter((it) => !twMaster(it) || it === cur);
   }
+  // Qualities from the site's page data (HLS list, MP4 list): the playlists the player fetched (one quality) go under "More"
+  if (all.some((it) => it.siteList || (it.kind === 'file' && (it.variants || []).length > 1))) {
+    all = all.map((it) => (it.kind === 'hls' && !it.siteList && (it.variants || []).length <= 1 ? { ...it, secondary: true } : it));
+  }
   // Separate video / audio playlists put together into one entry: the single playlists (and a master of that folder
   // that could not be read) go under "More"
   const synthDirs = new Set(all.filter((it) => it.synthetic).map((it) => it.dir));
@@ -477,7 +598,7 @@ function displayTitle(tabId, it) {
     const p2 = (n) => String(n).padStart(2, '0');
     return `${(it.site || 'instagram.com').split('.')[0]}_${it.igAccount}_${d.getFullYear()}-${p2(d.getMonth() + 1)}-${p2(d.getDate())}_${p2(d.getHours())}-${p2(d.getMinutes())}-${p2(d.getSeconds())}`;
   }
-  return it.title || t?.pageTitle || hostOf(it.url) || 'video';
+  return it.title || t?.pageTitle || hostOf(t?.pageUrl || '') || hostOf(it.url) || 'video'; // the page's site before the media server
 }
 
 function serialize(tabId, it) {
@@ -489,7 +610,8 @@ function serialize(tabId, it) {
     subs: it.kind === 'yt' && settings.subs !== false ? subsChoices(ytSubsList(t?.yt), uiLangCode()).map((c) => ({ id: c.id, lang: c.lang, label: c.label, tlang: c.tlang })) : [],
     variants: it.kind === 'yt'
       ? (it.variants || []).map((v) => ({ label: v.label, atype: v.atype || '', kbps: v.kbps || 0, height: v.height || 0, muxed: !!v.muxed, type: v.type || '', typeLabel: v.typeLabel || '', codec: v.codec || '', size: v.size || 0, audio: !!v.audio, mp3: !!v.mp3, sizeEstimated: !!v.sizeEstimated, unavailable: !!v.unavailable, tooLong: !!v.tooLong }))
-      : serializeStreamVariants(it),
+      : it.kind === 'file' ? fileOffer(tabId, it) : serializeStreamVariants(it),
+    multi: it.kind === 'file' && (it.variants || []).length > 0, // the site's own list (a plain file with GIFs stays a small file)
     audioVariants: it.kind === 'dash' ? dashAudioVariants(it) : [],
     master: !!it.master, hasAudioTrack: !!it.hasAudioTrack,
     beta: !!it.beta, live: !!it.live, protected: !!it.protected, noteKey: it.noteKey || '', why: it.why || '', whyReason: it.whyReason || '', whyStart: it.whyStart || 0, whyRecord: it.whyRecord || '', whyBusy: !!it.whyBusy, rec: it.rec || null, limitMB: it.limitMB || 0, apiState: it.apiState || '', dlFailed: !!it.dlFailed,
@@ -499,6 +621,35 @@ function serialize(tabId, it) {
     ...feedExtras(tabId, it),
   };
 }
+// A file offered in several qualities (site page data): the size of each from its first byte (Content-Range), in turn.
+async function fileVariantSizes(tabId, it) {
+  for (const v of it.variants) {
+    if (v.size) continue;
+    try {
+      const r = await fetch(v.url, { credentials: 'include', headers: { Range: 'bytes=0-0' } });
+      const total = Number((/\/(\d+)\s*$/.exec(r.headers?.get?.('content-range') || '') || [])[1]) || 0;
+      r.body?.cancel?.().catch(() => {});
+      // a file the page names but the server does not have (JoyReactor: the MP4 of some posts) is not offered (1.6.4)
+      if (r.status === 404 || r.status === 410) {
+        v.missing = true;
+        dlog('detect', 'variant not on the server', { tab: tabId, status: r.status, url: v.url });
+        const first = availableVariants(it)[0];
+        if (it.jr && first && !first.missing) { it.url = first.url; it.ext = first.ext; it.mime = first.ext === 'gif' ? 'image/gif' : `video/${first.ext}`; }
+        notifyUI(tabId);
+        continue;
+      }
+      if (total) {
+        v.size = total;
+        // the HLS list of the same video (site page data) shows the same quality's size as an estimate
+        for (const o of tabs.get(tabId)?.items.values() || []) {
+          if (o.kind === 'hls' && o.siteList && o.source === it.source) for (const ov of o.variants || []) if (ov.height && ov.height === v.height && !ov.size) ov.size = total;
+        }
+        notifyUI(tabId);
+      }
+    } catch { /* no size: the list still works */ }
+  }
+}
+
 // Feed of short videos: the <video> this playlist plays in (by file names), or null
 function feedVideo(t, it) {
   return it.kind === 'hls' && !it.master && it.stems && t?.feed?.length ? matchFeed(it.stems, t.feed) : null;
@@ -524,36 +675,46 @@ function tiktokExtras(tabId, it) {
   return { caption: x?.desc || '', thumbnail: x?.poster || '', secondary: anyVisible && !x?.visible };
 }
 
-// HLS in the TS format is offered twice: MP4 (converted without re-encoding, the default) and TS (as it is).
-// The popup sends the position in this list; the plan maps it back to the real variant and the "keep TS" flag.
+// How TS streams are saved by default (1.6.4): 'mp4' | 'mkv' | 'ts'. Before 1.6.4 there was only the tsToMp4 checkbox.
+const TS_FORMATS = ['mp4', 'mkv', 'ts'];
+function tsFormat() {
+  if (TS_FORMATS.includes(settings.tsFormat)) return settings.tsFormat;
+  return settings.tsToMp4 === false ? 'ts' : 'mp4';
+}
+
+// HLS in the TS format (H.264) is offered three times: MP4 and MKV (both without re-encoding) and TS (as it is).
+// The default format of the settings comes first (a hotkey takes the first entry).
+// The popup sends the position in this list; the plan maps it back to the real variant and the output format.
+// WEBM is not offered: TS in HLS carries H.264 / HEVC with AAC / MP3 / AC-3, which WebM cannot hold without re-encoding.
 function hlsVariantPlan(it) {
   const base = it.variants && it.variants.length ? it.variants : (it.kind === 'hls' && it.fmt === 'ts' ? [{ label: it.quality || 'TS', bandwidth: 0, synthetic: true }] : null);
   if (!base) return null;
-  const tsOn = it.kind === 'hls' && it.fmt === 'ts' && !!settings.tsToMp4 && !it.protected;
-  const mp4 = [];
+  const tsOn = it.kind === 'hls' && it.fmt === 'ts' && !it.protected;
+  const def = tsFormat();
+  const order = [def, ...TS_FORMATS.filter((f) => f !== def)];
+  const byFmt = { mp4: [], mkv: [], ts: [] };
   const other = [];
-  const raw = [];
   base.forEach((v, src) => {
-    if (tsOn && repType(v.mime || '', v.codecs || '').key === 'mp4') { mp4.push({ v, src, raw: false, as: 'mp4' }); raw.push({ v, src, raw: true, as: 'ts' }); } else other.push({ v, src, raw: false, as: '' });
+    if (tsOn && repType(v.mime || '', v.codecs || '').key === 'mp4') { for (const f of TS_FORMATS) byFmt[f].push({ v, src, raw: f === 'ts', as: f, out: f }); } else other.push({ v, src, raw: false, as: '', out: it.fmt === 'ts' ? def : '' });
   });
-  return [...mp4, ...other, ...raw];
+  return [...byFmt[order[0]], ...other, ...byFmt[order[1]], ...byFmt[order[2]]];
 }
 
 // DASH / HLS variants for the popup: index, label, resolution, codec type and an estimated size.
 function serializeStreamVariants(it) {
   if (!it.variants && !(it.kind === 'hls' && it.fmt === 'ts')) return null;
-  if (it.kind !== 'dash' && it.kind !== 'hls') return it.variants;
+  if (it.kind !== 'dash' && it.kind !== 'hls') return it.variants;  // files: fileOffer() in serialize
   const bestAudio = Math.max(0, ...(it.audioReps || []).map((a) => a.bandwidth || 0));
   const plan = it.kind === 'hls' ? hlsVariantPlan(it) : it.variants.map((v, src) => ({ v, src, raw: false, as: '' }));
   return plan.map(({ v, as }, index) => {
     const vt = repType(v.mime || '', v.codecs || '');
     const live = it.kind === 'hls' && !!it.live;
     // DASH/HLS file: bitrate x duration; a live stream has no length, so show the data rate per minute instead.
-    const size = it.kind === 'dash' ? estimateSize((v.bandwidth || 0) + bestAudio, it.duration)
+    const size = v.size ? v.size : it.kind === 'dash' ? estimateSize((v.bandwidth || 0) + bestAudio, it.duration)
       : live ? Math.round(((v.bandwidth || 0) / 8) * 60)
         : it.kind === 'hls' && it.duration > 0 ? estimateSize(v.bandwidth || 0, it.duration) : 0;
     const label = v.synthetic ? '' : v.label;
-    if (as) return { index, label, height: v.height || 0, width: v.width || 0, bandwidth: v.bandwidth || 0, type: as === 'ts' ? 'ts' : vt.key, typeLabel: as === 'ts' ? 'TS' : 'MP4', codec: vt.codec, size, sizeEstimated: true, perMin: live, fmt: '' };
+    if (as) return { index, label, height: v.height || 0, width: v.width || 0, bandwidth: v.bandwidth || 0, type: as === 'mp4' ? vt.key : as, typeLabel: as.toUpperCase(), codec: vt.codec, size, sizeEstimated: true, perMin: live, fmt: '', tsDefault: as === tsFormat() };
     return { index, label, height: v.height || 0, width: v.width || 0, bandwidth: v.bandwidth || 0, type: vt.key, typeLabel: it.kind === 'hls' && it.fmt === 'ts' ? vt.short.replace('MP4', 'TS') : vt.short, codec: vt.codec, size, sizeEstimated: true, perMin: live, fmt: it.kind === 'hls' ? (it.fmt || '') : '' };
   });
 }
@@ -577,7 +738,7 @@ function dashAudioVariants(it) {
 }
 
 function serializeJob(j) {
-  return { id: j.id, itemId: j.itemId || '', title: j.title, state: j.state, fileIndex: j.fileIndex, fileCount: j.fileCount, done: j.done, total: j.total, phase: j.phase || '', error: j.error || '', errorKey: j.errorKey || '', downloadId: j.downloadIds?.[0] ?? null, recording: !!j.recording, seconds: Math.round(j.seconds || 0), bytes: j.bytes || 0, segments: j.segments || 0, stopping: !!j.stopping };
+  return { id: j.id, itemId: j.itemId || '', title: j.title, state: j.state, fileIndex: j.fileIndex, fileCount: j.fileCount, done: j.done, total: j.total, phase: j.phase || '', error: j.error || '', errorKey: j.errorKey || '', downloadId: j.downloadIds?.[0] ?? null, recording: !!j.recording, seconds: Math.round(j.seconds || 0), bytes: j.bytes || 0, speed: Math.round(j.speed || 0), eta: j.eta || 0, segments: j.segments || 0, stopping: !!j.stopping };
 }
 
 async function getState(tabId) {
@@ -586,7 +747,7 @@ async function getState(tabId) {
   return {
     items: t ? shownItems(t).map((it) => serialize(tabId, it)).reverse() : [],
     jobs: [...jobs.values()].filter((j) => { if (j.finishedAt && Date.now() - j.finishedAt > 60000) { jobs.delete(j.id); return false; } return true; }).map(serializeJob),
-    prefs: { subs: settings.subs !== false, subsSrt: settings.subsSrt !== false, subsWithVideo: !!settings.subsWithVideo, defaultQuality: settings.defaultQuality || 'best', defaultType: settings.defaultType || 'auto', defaultAudioFormat: settings.defaultAudioFormat || 'mp3', defaultAudioQuality: settings.defaultAudioQuality || 'best', ytRecordUi: !!settings.ytRecordUi },
+    prefs: { tsFormat: tsFormat(), subs: settings.subs !== false, subsSrt: settings.subsSrt !== false, subsWithVideo: !!settings.subsWithVideo, defaultQuality: settings.defaultQuality || 'best', defaultType: settings.defaultType || 'auto', defaultAudioFormat: settings.defaultAudioFormat || 'mp3', defaultAudioQuality: settings.defaultAudioQuality || 'best', ytRecordUi: !!settings.ytRecordUi },
     yt: t?.yt ? { videoKnown: !!t.yt.summary } : null,
     bug: t?.bug && (t.bug.state === 'running' || bugPageKey(t.bug.page) === bugPageKey(t.pageUrl)) ? { ...t.bug, text: undefined } : null, // a result belongs to the page (video) it was made on
   };
@@ -603,8 +764,9 @@ async function notify(message) {
   } catch { /* ignore */ }
 }
 
+// a script address (".php", ".aspx" …) is not the file type: the media extension in the address, else the server's type
 function pickExt(it) {
-  return it.ext || urlExt(it.url) || mimeToExt(it.mime) || 'mp4';
+  return it.ext || mediaExt(it.url) || mimeToExt(it.mime) || 'mp4';
 }
 
 // ---- YouTube mobile-client API (main way) ------------------------------------
@@ -670,6 +832,66 @@ if (!IS_CHROME) try {
     return { requestHeaders: hs };
   }, { urls: ['https://*.tiktok.com/*', 'https://*.tiktokcdn.com/*', 'https://*.tiktokcdn-us.com/*', 'https://*.tiktokcdn-eu.com/*', 'https://*.ibytedtos.com/*', 'https://*.ibyteimg.com/*', 'https://*.byteimg.com/*'] }, ['blocking', 'requestHeaders']);
 } catch { /* header rule unavailable */ }
+
+// Servers that refused the extension (403 / 412): the page's Referer and Origin on the extension's own requests (1.6.4).
+if (!IS_CHROME) try {
+  const ownRef = browser.runtime.getURL('');
+  browser.webRequest.onBeforeSendHeaders.addListener((d) => {
+    if (d.tabId !== -1) return {};
+    const page = ytHdr.ref(refDomain(d.url));
+    if (!page) return {};
+    const from = d.originUrl || d.documentUrl || '';
+    if (from && !from.startsWith(ownRef)) return {};
+    let origin = '';
+    try { origin = new URL(page).origin; } catch { return {}; }
+    const hs = (d.requestHeaders || []).filter((h) => !['referer', 'origin'].includes(h.name.toLowerCase()));
+    hs.push({ name: 'Referer', value: page }, { name: 'Origin', value: origin });
+    return { requestHeaders: hs };
+  }, { urls: ['http://*/*', 'https://*/*'] }, ['blocking', 'requestHeaders']);
+} catch { /* header rule unavailable */ }
+
+// Last resort for such servers: the page fetches the file itself (the site's own address and cookies), the bytes come back here.
+function pageFetchFn(tabId) {
+  return async (url, init = {}) => {
+    const range = init.headers?.Range || init.headers?.range || '';
+    let r = null;
+    try { r = await browser.tabs.sendMessage(tabId, { type: 'vdl_fetch', url, range }, { frameId: 0 }); } catch (e) { r = { ok: false, status: 0, error: String(e?.message || e) }; }
+    if (!r) r = { ok: false, status: 0, error: 'no page script' };
+    const buf = r.buf instanceof ArrayBuffer ? r.buf : new ArrayBuffer(0);
+    return {
+      ok: !!r.ok, status: r.status || 0, statusText: r.error || '',
+      headers: { get: (n) => (String(n).toLowerCase() === 'content-type' ? (r.ct || '') : String(n).toLowerCase() === 'content-length' ? String(buf.byteLength) : '') },
+      arrayBuffer: async () => buf,
+      text: async () => new TextDecoder().decode(buf),
+      json: async () => JSON.parse(new TextDecoder().decode(buf)),
+      blob: async () => new Blob([buf], { type: r.ct || '' }),
+      body: null,
+    };
+  };
+}
+const refusedStatus = (e) => { const m = /HTTP (403|412)\b/.exec(String(e?.message || '')); return m ? Number(m[1]) : 0; };
+
+// Text of a playlist / manifest for an item of a tab: a plain request, then with the page's Referer / Origin, then through
+// the page. it.via records what worked ('ref' / 'page'), so the download uses the same way.
+async function fetchTextFor(tabId, it, url, opts = {}) {
+  if (it.via === 'page') return fetchText(url, { ...opts, fetchFn: pageFetchFn(tabId) });
+  try {
+    return await fetchText(url, opts);
+  } catch (e) {
+    const status = refusedStatus(e);
+    const page = tabs.get(tabId)?.pageUrl || it.docUrl || it.referer || '';
+    if (!status || !page) throw e;
+    if (!ytHdr.ref(refDomain(url))) {
+      ytHdr.setRef(refDomain(url), page);
+      dlog('detect', `HTTP ${status}: trying again with the page's Referer / Origin`, { host: hostOf(url) });
+      try { const text = await fetchText(url, opts); it.via = 'ref'; return text; } catch (e2) { if (!refusedStatus(e2)) throw e2; }
+    }
+    dlog('detect', `HTTP ${status}: trying through the page`, { host: hostOf(url) });
+    const text = await fetchText(url, { ...opts, fetchFn: pageFetchFn(tabId) });
+    it.via = 'page';
+    return text;
+  }
+}
 
 async function fetchJsonTimeout(url, init, ms) {
   const ctl = new AbortController();
@@ -1096,15 +1318,18 @@ async function startDownload({ tabId, itemId, variant, variantLabel, audio, subs
   const title = displayTitle(tabId, it);
   dlog('download', `start ${it.kind}`, { tab: tabId, variant: variant ?? null, label: variantLabel || '', audio: audio ? (audio.type || true) : false, url: it.url });
 
-  if (it.kind === 'file' && !isTikTokFile(it)) {
+  const offer = it.kind === 'file' ? fileOffer(tabId, it) : null;
+  const fv = offer ? offer[variant ?? 0] || offer[0] : null;
+  if (it.kind === 'file' && !isTikTokFile(it) && !it.referer && !fv?.makeGif) {
+    const fileUrl = fv?.url || it.url;
     const filename = buildFilename(settings.template, {
-      title, site: it.site || hostOf(it.url), quality: it.quality, ext: pickExt(it),
+      title, site: it.site || hostOf(tabs.get(tabId)?.pageUrl || '') || hostOf(fileUrl), quality: it.jr ? '' : it.quality, ext: fv?.ext || pickExt(it),
     });
-    const record = { title, url: it.url, kind: 'file', filename };
+    const record = { title, url: fileUrl, kind: 'file', filename };
     if (onAndroid()) {
       // no downloads API on the phone: fetch the file here and hand it to the page
       try {
-        const res = await fetch(it.url, { credentials: 'include' });
+        const res = await fetch(fileUrl, { credentials: 'include' });
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         await saveViaPage(tabId, await res.blob(), filename);
         if (settings.history) await addHistory(record);
@@ -1115,7 +1340,7 @@ async function startDownload({ tabId, itemId, variant, variantLabel, audio, subs
       }
     }
     try {
-      const id = await browser.downloads.download({ url: it.url, filename, saveAs: settings.saveAs, conflictAction: 'uniquify' });
+      const id = await browser.downloads.download({ url: fileUrl, filename, saveAs: settings.saveAs, conflictAction: 'uniquify' });
       track(id, { record, direct: true });
       return { ok: true };
     } catch (e) {
@@ -1124,11 +1349,11 @@ async function startDownload({ tabId, itemId, variant, variantLabel, audio, subs
     }
   }
 
-  let rawTs = false;
+  let tsOut = tsFormat();
   if (it.kind === 'hls') {
     const plan = hlsVariantPlan(it);
     const pick = plan && plan[variant ?? 0];
-    if (pick) { variant = pick.src; rawTs = pick.raw; }
+    if (pick) { variant = pick.src; if (pick.out) tsOut = pick.out; }
   }
   // Subtitles go with the video only when they are on and "+ with the video" is ticked. The popup sends its choice;
   // a hotkey sends nothing, then the default track is taken.
@@ -1137,7 +1362,7 @@ async function startDownload({ tabId, itemId, variant, variantLabel, audio, subs
     if (typeof subs === 'string') subsChoice = subs;
     else subsChoice = defaultSubs(subsChoices(ytSubsList(tabs.get(tabId)?.yt), uiLangCode()), uiLangCode())?.id || '';
   }
-  runStreamJob(tabId, it, title, variant, variantLabel, audio, rawTs, subsChoice);
+  runStreamJob(tabId, it, title, variant, variantLabel, audio, tsOut, subsChoice);
   return { ok: true };
 }
 
@@ -1255,15 +1480,17 @@ async function toMp3Chrome(blob, title, job, tabId, kbps) {
   }
 }
 
-async function runStreamJob(tabId, it, title, variantIdx, variantLabel, audioOpt = null, rawTs = false, subsChoice = '') {
-  const toMp4 = !!settings.tsToMp4 && !rawTs;
+async function runStreamJob(tabId, it, title, variantIdx, variantLabel, audioOpt = null, tsOut = tsFormat(), subsChoice = '') {
+  if (!TS_FORMATS.includes(tsOut)) tsOut = tsFormat();
+  const toMp4 = tsOut !== 'ts'; // TS is rewritten (MP4 or MKV) without re-encoding
   const job = {
     id: String(++jobSeq), itemId: it.id, title, state: 'running', fileIndex: 1, fileCount: 1, done: 0, total: 0, downloadIds: [],
     abort: new AbortController(),
   };
   jobs.set(job.id, job);
   job.startedAt = Date.now();
-  dlog('job', `#${job.id} running`, { kind: it.kind, label: variantLabel || '', toMp4 });
+  job.rate = makeRate();
+  dlog('job', `#${job.id} running`, { kind: it.kind, label: variantLabel || '', ts: tsOut });
   startKeepAlive();
   notifyUI(tabId);
 
@@ -1272,24 +1499,63 @@ async function runStreamJob(tabId, it, title, variantIdx, variantLabel, audioOpt
     signal: job.abort.signal,
     maxBytes: settings.maxStreamMB * 1024 * 1024,
     credentials: it.kind === 'yt' ? 'omit' : 'include', // googlevideo URLs are self-authenticating
-    onProgress: ({ done, total }) => {
+    onProgress: ({ done, total, bytes }) => {
       job.done = done;
       job.total = total;
+      job.rate.add(bytes || 0, done);
+      job.speed = job.rate.speed();
+      job.eta = job.rate.eta(total);
       notifyUI(tabId);
     },
   };
 
+  // a server that refused the extension and answered only to the page: the page fetches the pieces (1.6.4)
+  if (it.via === 'page' && it.kind !== 'yt') dlOpts.fetchFn = pageFetchFn(tabId);
+  // download the pieces; refused (403 / 412): again with the page's Referer / Origin, then through the page
+  const getParts = async (parts) => {
+    try {
+      return await downloadParts(parts, dlOpts);
+    } catch (e) {
+      const status = refusedStatus(e);
+      const page = tabs.get(tabId)?.pageUrl || it.docUrl || it.referer || '';
+      if (!status || !page || it.kind === 'yt' || !parts[0]) throw e;
+      const dom = refDomain(parts[0].url);
+      if (!ytHdr.ref(dom) && dlOpts.fetchFn === undefined) {
+        ytHdr.setRef(dom, page);
+        dlog('job', `HTTP ${status}: pieces again with the page's Referer / Origin`, { host: hostOf(parts[0].url) });
+        try { const out = await downloadParts(parts, dlOpts); it.via = 'ref'; return out; } catch (e2) { if (!refusedStatus(e2)) throw e2; }
+      }
+      if (it.via === 'page') throw e;
+      dlog('job', `HTTP ${status}: pieces through the page`, { host: hostOf(parts[0].url) });
+      dlOpts.fetchFn = pageFetchFn(tabId);
+      const out = await downloadParts(parts, dlOpts);
+      it.via = 'page';
+      return out;
+    }
+  };
+
   try {
     if (it.ua) ytHdr.ua = it.ua;
-    const site = it.site || hostOf(it.url);
+    const site = it.site || hostOf(tabs.get(tabId)?.pageUrl || '') || hostOf(it.url); // the page's site, not the media server
     const files = []; // { parts, ext, type, suffix, quality }
 
     if (it.kind === 'hls') {
       let tracks = [{ url: it.url, suffix: '', quality: '' }];
       if (it.master) {
         const v = it.variants[variantIdx ?? 0] || it.variants[0];
-        tracks = [{ url: v.url, suffix: '', quality: v.label }];
-        if (v.audioUrl) tracks.push({ url: v.audioUrl, suffix: '.audio', quality: v.label });
+        let url = v.url;
+        let audioUrl = v.audioUrl || '';
+        if (v.nested) {
+          // a quality from the site's page data is a master playlist of its own: take its (best) stream
+          const pl = parsePlaylist(await fetchTextFor(tabId, it, v.url, { signal: job.abort.signal }), v.url);
+          if (pl.type === 'master' && pl.variants.length) {
+            const best = pl.variants.slice().sort((a, b) => (b.bandwidth || 0) - (a.bandwidth || 0))[0];
+            url = best.url;
+            audioUrl = best.audio?.url || '';
+          }
+        }
+        tracks = [{ url, suffix: '', quality: v.label }];
+        if (audioUrl) tracks.push({ url: audioUrl, suffix: '.audio', quality: v.label });
       }
       if (it.live) {
         // LIVE: record every track until Stop / end of the stream / a limit; video and audio run side by side.
@@ -1313,7 +1579,7 @@ async function runStreamJob(tabId, it, title, variantIdx, variantLabel, audioOpt
         const agg = tracks.map(() => ({ seconds: 0, bytes: 0, segments: 0 }));
         const maxBytes = (settings.maxStreamMB * 1024 * 1024) / tracks.length;
         const recs = await Promise.all(tracks.map((tr, i) => recordLive(tr.url, {
-          signal: job.abort.signal, stopSignal: job.stopCtl.signal, maxBytes, credentials: liveCred,
+          signal: job.abort.signal, stopSignal: job.stopCtl.signal, maxBytes, credentials: liveCred, ...(it.via === 'page' ? { fetchFn: pageFetchFn(tabId) } : {}),
           maxSeconds: Math.max(1, Number(settings.liveMaxMinutes) || 180) * 60, concurrency: settings.concurrency,
           onProgress: (p) => {
             agg[i] = p;
@@ -1347,13 +1613,20 @@ async function runStreamJob(tabId, it, title, variantIdx, variantLabel, audioOpt
         });
       } else {
         for (const tr of tracks) {
-          const { parts, ext } = await hlsParts(tr.url, { signal: job.abort.signal });
+          const { parts, ext } = await hlsParts(tr.url, { signal: job.abort.signal, ...(it.via === 'page' ? { fetchFn: pageFetchFn(tabId) } : {}) });
           files.push({ parts, ext, type: ext === 'mp4' ? 'video/mp4' : 'video/mp2t', suffix: tr.suffix, quality: tr.quality, role: tr.suffix ? 'audio' : 'video', container: ext === 'mp4' ? 'mp4' : ext });
         }
       }
     } else if (it.kind === 'file') {
-      // TikTok video file: fetched here (Referer rule above), saved as an mp4
-      files.push({ parts: [{ url: it.url }], ext: pickExt(it) === 'mp4' || !FILE_EXTS.includes(pickExt(it)) ? 'mp4' : pickExt(it), type: 'video/mp4', suffix: '', quality: '', role: 'video', container: 'mp4', tiktok: true });
+      // TikTok video file, or a file whose server wants the page as Referer: fetched here (header rules above), saved as an mp4;
+      // a file offered in several qualities: the chosen one
+      const fv = (fileOffer(tabId, it) || [])[variantIdx ?? 0] || null;
+      // size known from the server's Content-Range: pieces of 4 MB in parallel (progress, and faster where each connection is limited)
+      const fileParts = fv?.size > 8 * 1048576
+        ? Array.from({ length: Math.ceil(fv.size / 4194304) }, (_, i) => ({ url: fv.url, range: { start: i * 4194304, end: Math.min(fv.size, (i + 1) * 4194304) - 1 } }))
+        : [{ url: fv?.url || it.url }];
+      const fext = fv?.makeGif ? fv.srcExt || mediaExt(fv.url) || 'webm' : fv?.ext || pickExt(it);
+      files.push({ parts: fileParts, ext: fext === 'mp4' || !FILE_EXTS.includes(fext) ? 'mp4' : fext, type: fext === 'webm' ? 'video/webm' : 'video/mp4', suffix: '', quality: fv?.makeGif || it.jr ? '' : fv?.label || it.quality || '', role: 'video', container: 'mp4', tiktok: isTikTokFile(it), makeGif: fv?.makeGif || 0 });
     } else if (it.kind === 'yt') {
       const y = tabs.get(tabId)?.yt;
       const dlog = { time: new Date().toISOString(), variant: '', urlShape: [], attempts: [], result: '' };
@@ -1417,6 +1690,9 @@ async function runStreamJob(tabId, it, title, variantIdx, variantLabel, audioOpt
       job.done = 0;
       job.total = f.recorded ? 1 : f.parts.length;
       if (f.recorded) job.done = 1;
+      job.rate.reset();
+      job.speed = 0;
+      job.eta = 0;
       notifyUI(tabId);
       let blobs;
       if (f.recorded) blobs = f.recorded;
@@ -1429,7 +1705,7 @@ async function runStreamJob(tabId, it, title, variantIdx, variantLabel, audioOpt
           if (!res || !res.ok || !res.blob) throw e;
           blobs = [res.blob];
         }
-      } else blobs = await downloadParts(f.parts, dlOpts);
+      } else blobs = await getParts(f.parts);
       const blob = joinBlobs(blobs, f.type);
       if (mergeGroup && i === 0) { heldVideo = blob; continue; }
       if (mergeGroup && i === 1) {
@@ -1446,6 +1722,24 @@ async function runStreamJob(tabId, it, title, variantIdx, variantLabel, audioOpt
         heldVideo = null;
         continue;
       }
+      if (f.makeGif) {
+        // video -> GIF in the background page (no sound)
+        job.phase = 'gif';
+        job.done = 0;
+        job.total = 100;
+        notifyUI(tabId);
+        let gif;
+        try {
+          gif = await videoToGif(blob, { maxWidth: f.makeGif, signal: job.abort.signal, onProgress: (x) => { job.done = Math.round(x * 100); notifyUI(tabId); } });
+        } catch (e) {
+          if (e?.code === 'aborted') throw new StreamError('aborted');
+          throw new StreamError(e?.code === 'gifTooLong' ? 'gifTooLong' : 'gifDecode', String(e?.message || e));
+        }
+        job.phase = '';
+        dlog('job', 'GIF made from the video', { width: f.makeGif, bytes: gif.size, from: blob.size });
+        await saveOne(gif, f, i, 'gif', '');
+        continue;
+      }
       if (f.mp3) {
         const out = await toMp3(blob, title, job, tabId, f.kbps);
         await saveOne(out, f, i, 'mp3', '');
@@ -1454,12 +1748,15 @@ async function runStreamJob(tabId, it, title, variantIdx, variantLabel, audioOpt
       let outBlob = blob;
       let outExt = f.ext;
       if (it.kind === 'hls' && f.ext === 'ts' && toMp4 && !mergeGroup) {
-        // MPEG-TS -> MP4 without re-encoding; when the stream is not convertible the TS file is saved as it is
-        job.phase = 'convert';
+        // MPEG-TS -> MP4 / MKV without re-encoding; when the stream is not convertible the TS file is saved as it is
+        job.phase = tsOut === 'mkv' ? 'mkv' : 'convert';
         notifyUI(tabId);
-        const mp4 = await tsToMp4(blob);
+        const conv = tsOut === 'mkv' ? await tsToMkv(blob, globalThis.__vdlMux) : await tsToMp4(blob);
         job.phase = '';
-        if (mp4) { outBlob = mp4; outExt = 'mp4'; } else if (f.recorded) outBlob = joinBlobs(await rebaseTimestamps([blob], 'ts'), f.type);
+        if (conv) { outBlob = conv; outExt = tsOut; } else {
+          dlog('job', 'TS kept as it is', { wanted: tsOut });
+          if (f.recorded) outBlob = joinBlobs(await rebaseTimestamps([blob], 'ts'), f.type);
+        }
       } else if ((it.kind === 'hls' || it.kind === 'dash') && f.ext === 'mp4' && !mergeGroup) {
         // fragmented MP4 pieces as they came (no index, bad seeking) -> an ordinary MP4 with the index first
         job.phase = 'convert';
@@ -1491,7 +1788,7 @@ async function runStreamJob(tabId, it, title, variantIdx, variantLabel, audioOpt
       job.error = e instanceof StreamError ? (['http', 'empty'].includes(e.code) && e.message ? e.message : e.code) : String(e.message || e);
       const yl = tabs.get(tabId)?.yt?.dlog;
       if (yl && it.kind === 'yt') yl.result = job.error;
-      if (e instanceof StreamError && ['mp3Missing', 'mp3Decode', 'mp3TooLong'].includes(e.code)) job.errorKey = e.code;
+      if (e instanceof StreamError && ['mp3Missing', 'mp3Decode', 'mp3TooLong', 'gifTooLong', 'gifDecode'].includes(e.code)) job.errorKey = e.code;
       if (it.kind === 'yt' && e instanceof StreamError && e.code === 'http' && [403, 410].includes(e.status)) job.errorKey = e.limited ? 'ytLimited' : 'ytDirectBlocked';
       if (it.kind === 'yt' && e instanceof StreamError && e.code === 'http') { const yy = tabs.get(tabId)?.yt; if (yy) { if ([403, 410].includes(e.status)) yy.dlLimited = true; if (e.status === 429) yy.dl429 = true; } }
       dlog('job', `#${job.id} FAILED`, { error: job.error, key: job.errorKey || '', status: e?.status, code: e?.code, ms: Date.now() - job.startedAt });
@@ -1555,6 +1852,7 @@ async function handlePageInfo(msg, sender) {
   }
   for (const v of msg.videos || []) {
     if (!/^https?:/i.test(v.url)) continue;
+    if (msg.url && String(v.url).split('#')[0] === String(msg.url).split('#')[0]) continue; // the page itself (empty <source src="">)
     if (SKIP_HOSTS.test(hostOf(v.url))) continue;
     addItem(tabId, {
       kind: classifyPageUrl(v.url), url: v.url, thumbnail: v.poster || '', duration: v.duration || 0,
@@ -1566,6 +1864,7 @@ async function handlePageInfo(msg, sender) {
     const key = `${r.name}:${msg.url}`;
     if (t.resolved.has(key)) continue;
     t.resolved.add(key);
+    if (r.needsRef) ytHdr.setRef(refDomain(msg.url), msg.url); // the site's own API wants the page as Referer
     r.resolve(msg.url).then((items) => items.forEach((x) => addItem(tabId, { ...x }))).catch(() => {});
   }
   updateBadge(tabId);
