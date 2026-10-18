@@ -85,6 +85,17 @@ I did VDL because I was tired of paywalls in third-party solutions.
 ## Privacy policy
 Plain-text version in [privacy-policy.md](privacy-policy.md).
 
+## Version 1.6.1 — release notes (shown to users)
+```
+New in 1.6.1:
+- Firefox for Android: downloaded files are saved now — Firefox asks "Download file?" on the video page. Settings, History and Help open on top; the "?" buttons of the settings are round again.
+- Videos with separate video and sound streams (Low-Latency HLS and others): one card with the qualities, saved with sound as one MP4.
+- Live streams in Low-Latency HLS show one card instead of a new one every second.
+- Feeds of short videos: each card gets the video's cover and name; videos not on screen go under "More".
+- Videos that come in pieces (fragmented MP4) are saved as an ordinary MP4: seeking works at once.
+- Subtitles can be switched off in the settings; "+ with video" saves them only when ticked; the SRT button can be hidden.
+```
+
 ## Version 1.6.0 — release notes (shown to users)
 ```
 New in 1.6.0:

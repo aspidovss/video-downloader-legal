@@ -861,10 +861,10 @@
     "message": "Untertitel als .srt-Datei speichern"
   },
   "subsWithVideo": {
-    "message": "mit Video"
+    "message": "+ zum Video"
   },
   "subsWithVideoTitle": {
-    "message": "Gewählte Untertitel mit dem Video speichern: in der .webm-Datei (im Player umschaltbar), sonst als .srt-Datei daneben"
+    "message": "Beim Herunterladen des Videos auch diese Untertitel speichern: in der .webm- oder .mkv-Datei (im Player einschaltbar), sonst als .srt-Datei mit gleichem Namen neben dem Video"
   },
   "subsFailed": {
     "message": "Untertitel konnten nicht geladen werden. Schalte sie im Player einige Sekunden ein und versuche es erneut."
@@ -883,5 +883,29 @@
   },
   "helpLabelAmo": {
     "message": "Firefox-Add-ons"
+  },
+  "optSubsTitle": {
+    "message": "Untertitel"
+  },
+  "optSubs": {
+    "message": "YouTube-Untertitel"
+  },
+  "hintSubs": {
+    "message": "Zeigt die Zeile „Untertitel“ in der Karte eines YouTube-Videos. Aus: keine Zeile, es werden keine Untertitel gesucht oder gespeichert."
+  },
+  "optSubsWithVideo": {
+    "message": "Untertitel mit dem Video speichern"
+  },
+  "hintSubsWithVideo": {
+    "message": "Wie das Häkchen „+ zum Video“ in der Karte. An: beim Herunterladen eines Videos (auch per Tastenkürzel) werden die gewählten Untertitel mitgespeichert — in .webm oder .mkv, sonst als .srt neben dem Video. Aus: nur das Video."
+  },
+  "optSubsSrt": {
+    "message": "Schaltfläche „SRT“ — nur Untertitel"
+  },
+  "hintSubsSrt": {
+    "message": "Zeigt die Schaltfläche SRT in der Untertitel-Zeile: sie speichert nur die gewählten Untertitel als .srt-Datei, ohne Video."
+  },
+  "androidSaveOnPage": {
+    "message": "Die Datei ist fertig: Gehen Sie zurück zur Videoseite — Firefox bietet dort das Speichern an."
   }
 }

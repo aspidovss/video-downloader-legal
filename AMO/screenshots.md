@@ -1,6 +1,6 @@
 # Store screenshots
 
-1280×800 PNG, plus the wide cover banner `*-0-anywhere.png` (2280×915). English set: `screenshots/en/`, Russian set: `screenshots/ru/`. Upload in this order (AMO shows the first one largest); the banner is the first picture. The same banner is the cover image of the README on GitHub (`docs/screenshots/`).
+All 1280×800 PNG (the size AMO asks for). English set: `screenshots/en/`, Russian set: `screenshots/ru/`. Upload in this order (AMO shows the first one largest); the cover `*-0-anywhere.png` is the first picture: the VDL name, "Download anywhere" and the VDL window on YouTube, Twitch, Vimeo and TikTok. The README on GitHub keeps its own wide cover (2280×915) in `docs/screenshots/`.
 
 | # | File | Caption (EN) |
 |---|---|---|

@@ -6,6 +6,7 @@ import { buildRules } from '../service/headers.js';
 import { chromeManifest, build as buildChrome, packageName, packFolder } from '../scripts/build-chrome.mjs';
 import { browserName, isAndroid } from '../utils/dom.js';
 import os from 'node:os';
+import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { MiniDOMParser } from '../lib/xmlmini.js';
 import { parseMPD } from '../lib/dash.js';
@@ -129,14 +130,23 @@ test('Microsoft Edge: detected by its user agent; same package as Chrome with it
   assert.ok(m.permissions.includes('offscreen') && m.permissions.includes('declarativeNetRequest'), 'APIs that Edge implements since Edge 109');
 });
 
-test('packFolder: returns false (no crash) when the zip tool is missing', () => {
+test('packFolder: a real zip (also named .xpi) without any zip / tar tool; files at the root, "/" separators', () => {
   const dir = fs.mkdtempSync(`${os.tmpdir()}/vdl-pack-`);
+  const src = `${dir}/src`;
   try {
+    fs.mkdirSync(`${src}/lib/sub`, { recursive: true });
+    fs.writeFileSync(`${src}/manifest.json`, '{"a":1}');
+    fs.writeFileSync(`${src}/lib/sub/x.js`, 'x'.repeat(5000));
+    fs.writeFileSync(`${src}/icon.png`, Buffer.from([1, 2, 3]));
     const old = process.env.PATH;
     process.env.PATH = '';
     let ok;
-    try { ok = packFolder(dir, `${dir}/x.zip`, 'linux'); } finally { process.env.PATH = old; }
-    assert.equal(ok, false);
+    try { ok = packFolder(src, `${dir}/x.xpi`); } finally { process.env.PATH = old; }
+    assert.equal(ok, true);
+    const b = fs.readFileSync(`${dir}/x.xpi`);
+    assert.equal(b.readUInt32LE(0), 0x04034b50, 'zip, not tar');
+    const r = spawnSync('python3', ['-c', 'import zipfile,sys;z=zipfile.ZipFile(sys.argv[1]);assert z.testzip() is None;print("|".join(z.namelist()));print(z.read("lib/sub/x.js").decode()[:3])', `${dir}/x.xpi`], { encoding: 'utf8' });
+    if (r.status === 0) assert.equal(r.stdout.trim(), 'icon.png|lib/sub/x.js|manifest.json\nxxx');
   } finally { fs.rmSync(dir, { recursive: true, force: true }); }
 });
 

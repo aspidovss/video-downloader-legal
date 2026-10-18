@@ -861,10 +861,10 @@
     "message": "Enregistrer les sous-titres en fichier .srt"
   },
   "subsWithVideo": {
-    "message": "avec la vidéo"
+    "message": "+ avec la vidéo"
   },
   "subsWithVideoTitle": {
-    "message": "Enregistrer les sous-titres choisis avec la vidéo : dans le fichier .webm (activables dans le lecteur), sinon en fichier .srt à côté"
+    "message": "En téléchargeant la vidéo, enregistrer aussi ces sous-titres : dans le fichier .webm ou .mkv (activables dans le lecteur), sinon en fichier .srt du même nom à côté de la vidéo"
   },
   "subsFailed": {
     "message": "Impossible d’obtenir les sous-titres. Activez-les quelques secondes dans le lecteur puis réessayez."
@@ -883,5 +883,29 @@
   },
   "helpLabelAmo": {
     "message": "Modules Firefox"
+  },
+  "optSubsTitle": {
+    "message": "Sous-titres"
+  },
+  "optSubs": {
+    "message": "Sous-titres YouTube"
+  },
+  "hintSubs": {
+    "message": "Affiche la ligne « Sous-titres » dans la carte d'une vidéo YouTube. Désactivé : pas de ligne, aucun sous-titre n'est recherché ni enregistré."
+  },
+  "optSubsWithVideo": {
+    "message": "Enregistrer les sous-titres avec la vidéo"
+  },
+  "hintSubsWithVideo": {
+    "message": "Comme la case « + avec la vidéo » de la carte. Activé : le téléchargement d'une vidéo (aussi par raccourci) enregistre les sous-titres choisis — dans .webm ou .mkv, sinon en .srt à côté de la vidéo. Désactivé : la vidéo seule."
+  },
+  "optSubsSrt": {
+    "message": "Bouton « SRT » — sous-titres seuls"
+  },
+  "hintSubsSrt": {
+    "message": "Affiche le bouton SRT dans la ligne des sous-titres : il enregistre seulement les sous-titres choisis en fichier .srt, sans la vidéo."
+  },
+  "androidSaveOnPage": {
+    "message": "Le fichier est prêt : revenez à la page de la vidéo, Firefox proposera de l’enregistrer."
   }
 }

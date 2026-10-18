@@ -37,6 +37,12 @@ function updateDirty() {
     fs.classList.toggle('dirty', [...fs.querySelectorAll('[name]')].some((el) => changed.has(el.name)));
   }
 }
+// Subtitles off: "+ with the video" and the SRT button have nothing to do (their ticks are kept).
+function subsDeps() {
+  const on = !!form.elements.subs?.checked;
+  for (const n of ['subsWithVideo', 'subsSrt']) if (form.elements[n]) form.elements[n].disabled = !on;
+}
+form.elements.subs?.addEventListener('change', subsDeps);
 form.addEventListener('input', updateDirty);
 form.addEventListener('change', updateDirty);
 $barSave.addEventListener('click', () => form.requestSubmit());
@@ -52,6 +58,7 @@ async function load() {
     else el.value = el.name === 'template' && !String(s.template || '').includes('{title}') ? DEFAULTS.template : s[el.name];
   }
   await showActualShortcuts(s);
+  subsDeps();
   snapshot = formValues();
   updateDirty();
 }

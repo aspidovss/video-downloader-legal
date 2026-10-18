@@ -27,7 +27,9 @@ export const DEFAULTS = {
   ytCpn: true,         // 1.4.3: add cpn to googlevideo URLs
   ytHeaders: true,     // 1.4.3: Origin/Referer/DNT on googlevideo requests
   ytRecordUi: false,   // 1.5.5dev2: show "record from the player" for YouTube videos (live streams always offer it)
+  subs: true,          // 1.6.1: YouTube subtitles on/off (off: no row in the card, nothing is looked up or saved)
   subsWithVideo: false, // 1.6.0dev5: YouTube subtitles saved with the video (embedded into .webm, else a .srt next to it)
+  subsSrt: true,       // 1.6.1: the "SRT" button (subtitles only) in the card
   hotkeys: true,       // 1.6.0dev2: keyboard shortcuts on/off (the shortcuts themselves are set below)
   hkExecute: 'Alt+Up',    // open the popup
   hkVideo: 'Alt+Down',    // download the first video

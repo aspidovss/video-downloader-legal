@@ -1,4 +1,4 @@
-# Notes for the AMO reviewer — Video Downloader Legal 1.6.0
+# Notes for the AMO reviewer — Video Downloader Legal 1.6.1
 
 **What it does.** Detects media on web pages (direct files, HLS, DASH) and saves it through the browser's downloads API.
 It never decrypts or bypasses DRM: DRM-protected streams are detected and refused.
@@ -23,7 +23,8 @@ Chrome-only code (the offscreen document client, `platform/`) is not in this pac
 | host `<all_urls>` | video sites are not known in advance; content script lists `<video>`/`<source>` elements and sees media requests |
 
 ## Content scripts
-* `injected/page.js` (all http/https frames): reads `<video>`/`<audio>`/`<source>` URLs and reports them to the background. It does not change the page.
+* `injected/page.js` (all http/https frames): reads `<video>`/`<audio>`/`<source>` URLs and reports them to the background; in the top frame it also reports each `<video>`'s poster address and whether it is on screen (used to match the detected HLS playlists of a feed of short videos to their cover and name, `lib/feed.js`). It does not change the page.
+  *Firefox for Android only (new in 1.6.1):* `downloads.download()` never answers there (the downloads API is not connected to the browser's download manager, Mozilla bug 1793214). The background then sends the finished file (a Blob, via `tabs.sendMessage`) to this script in the tab of the video, which saves it with a temporary `<a download>` link to a `blob:` address (not inserted into the page) once the tab is on screen — Firefox shows its normal "Download file?" dialog. No other use; desktop Firefox keeps using the downloads API.
 * YouTube only: `injected/youtube_main.js`, `injected/youtube_rec.js` (MAIN world) read the page's player data and, **only when the user presses "Record"**, copy the media segments the player itself appends to its MediaSource so they can be saved. DRM (`encrypted` event) aborts recording.
 
 * TikTok (`injected/tiktok.js` isolated, `injected/tiktok_main.js` MAIN world, tiktok.com only): read-only. The MAIN-world script reads the player's own props (video id, caption, author, cover, play address) to tell which detected file is the video on screen, and posts them to the isolated script via `window.postMessage`, which forwards them to the background. It makes no requests and changes nothing on the page. If the background request is refused by the CDN, the isolated script may fetch the file with the page's own session (`tt_fetch`), as the player does.
@@ -34,6 +35,7 @@ Chrome-only code (the offscreen document client, `platform/`) is not in this pac
 * Vimeo/Dailymotion: public player config endpoints for the page's video.
 * Live recording (Twitch and other HLS live streams): the user presses "Record"; new segments of the public playlist are fetched until "Stop". `lib/rebase.js` shifts timestamps so the file starts at 0:00.
 * `lib/ts2mp4.js` (new in 1.5.2): own converter MPEG-TS (H.264 + AAC) → MP4 without re-encoding, runs locally on the downloaded bytes; any other codec/stream type is left as TS. No WASM, no remote code.
+* HLS media playlists with video and sound as separate playlists and an unreadable master (one-time token): `lib/hlsgroup.js` reads the init segment of each playlist (track type, size, codec) and offers them as one entry; video and sound are recorded side by side and joined into one MP4. Fragmented MP4 results are rewritten as an ordinary MP4 with the index first (`defragMp4` in `lib/mux.js`); only bytes are copied.
 * Segments of ordinary (non-DRM) streams are fetched and joined locally (own MP4 / WebM / Matroska muxer in `lib/mux.js`, no remote code, no WASM). Video and audio of different formats (e.g. AV1 + Opus) are written as an ordinary MP4 without re-encoding.
 * Firefox for Android 142+: the same package; APIs the phone does not have (commands, notifications, sidebarAction) are guarded and their controls hidden.
 

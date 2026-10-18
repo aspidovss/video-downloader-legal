@@ -1,12 +1,12 @@
 // Builds the Chrome (Manifest V3, service worker) package from the same sources as Firefox.
 //   node scripts/build-chrome.mjs        -> build/chrome/            (load unpacked in chrome://extensions)
-//   node scripts/build-chrome.mjs --zip  -> build/video-downloader-legal-chrome-<version>.zip   (`zip` tool; on Windows the built-in `tar` is the fallback)
+//   node scripts/build-chrome.mjs --zip  -> build/video-downloader-legal-chrome-<version>.zip   (written by scripts/zip.mjs, no tools needed)
 //   node scripts/build-chrome.mjs --zip --edge -> build/video-downloader-legal-edge-<version>.zip  (the same package: Microsoft Edge runs the Chrome build unchanged;
 //                                                the name only tells the two store uploads apart)
 import fs from 'node:fs';
 import path from 'node:path';
-import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
+import { writeZip } from './zip.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const out = path.join(root, 'build', 'chrome');
@@ -56,15 +56,11 @@ export function build() {
 export const packageName = (version, edge = false) => `video-downloader-legal-${edge ? 'edge' : 'chrome'}-${version}.zip`;
 
 // zip tool first; on Windows (no `zip` by default) the built-in bsdtar writes a normal zip with `tar -a`.
-export function packFolder(dir, zip, platform = process.platform) {
+// A real .zip on every system, written by scripts/zip.mjs (no zip / tar tool needed; Windows' tar made a tar
+// archive for an .xpi name, which AMO refused as corrupt)
+export function packFolder(dir, zip) {
   fs.rmSync(zip, { force: true });
-  const tools = [['zip', ['-qr', zip, '.']]];
-  if (platform === 'win32') tools.push(['tar', ['-a', '-c', '-f', zip, '-C', dir, '.']]);
-  for (const [cmd, args] of tools) {
-    const r = spawnSync(cmd, args, { cwd: dir, stdio: 'inherit' });
-    if (r.status === 0) return true;
-  }
-  return false;
+  try { return writeZip(dir, zip) > 0; } catch (e) { console.error(String(e?.message || e)); return false; }
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
@@ -72,6 +68,6 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
   console.log(`Chrome build: ${dir}`);
   if (process.argv.includes('--zip')) {
     const zip = path.join(root, 'build', packageName(version, process.argv.includes('--edge')));
-    console.log(packFolder(dir, zip) ? `Zip: ${zip}` : 'No zip or tar tool found: pack the folder build/chrome yourself (the files must be at the archive root)');
+    console.log(packFolder(dir, zip) ? `Zip: ${zip}` : 'The zip was not written: pack the folder build/chrome yourself (the files must be at the archive root)');
   }
 }

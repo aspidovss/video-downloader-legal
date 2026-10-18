@@ -6,7 +6,7 @@ import os from 'node:os';
 import path from 'node:path';
 import vm from 'node:vm';
 import { spawnSync } from 'node:child_process';
-import { captionTracks, validateTracks, subsUrl, json3ToCues, cuesToSrt, subsChoices, iso639b } from '../lib/subs.js';
+import { captionTracks, validateTracks, subsUrl, json3ToCues, cuesToSrt, subsChoices, defaultSubs, iso639b } from '../lib/subs.js';
 
 const TT = 'https://www.youtube.com/api/timedtext?v=abc&ei=x&caps=asr&lang=';
 const pr = {
@@ -91,4 +91,17 @@ test('VP9 + Opus joined into .webm with a switchable subtitle track (off by defa
   const pk = String(spawnSync('ffprobe', ['-v', 'error', '-select_streams', 's', '-show_entries', 'packet=pts,duration', '-of', 'csv=p=0', f]).stdout).trim().split(/\s+/);
   assert.deepEqual(pk, ['500,2000', '6000,2000']);
   ff('-i', f, '-map', '0:v', '-map', '0:a', '-f', 'null', '-'); // video and sound still decode
+});
+
+test('defaultSubs: the interface language (manual before automatic), then its translation, then the first track', () => {
+  const c = [
+    { id: 't0', lang: 'de', label: 'Deutsch', tlang: '' },
+    { id: 't1', lang: 'en', label: 'English (auto-generated)', tlang: '' },
+    { id: 't2', lang: 'en', label: 'English', tlang: '' },
+  ];
+  assert.equal(defaultSubs(c, 'en-US').id, 't2');
+  assert.equal(defaultSubs(c.slice(0, 2), 'en').id, 't1');
+  assert.equal(defaultSubs([...c, { id: 'x0:ru', lang: 'ru', label: 'Deutsch → Russian', tlang: 'ru' }], 'ru').id, 'x0:ru');
+  assert.equal(defaultSubs(c, 'ja').id, 't0');
+  assert.equal(defaultSubs([], 'en'), null);
 });

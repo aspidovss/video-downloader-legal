@@ -2,6 +2,25 @@
 
 Added features per version (fixes and internal changes are not listed). Version history before 1.5 is condensed from the development log; the short development log is in [docs/DEVLOG-en.md](docs/DEVLOG-en.md) (English) and [docs/DEVLOG-ru.md](docs/DEVLOG-ru.md) (Russian).
 
+## 1.6.1
+
+### Added
+* **Subtitles in the settings** (YouTube → Subtitles): *YouTube subtitles* on/off (off: no Subtitles row in the card, nothing is looked up or saved), *Save subtitles with the video*, *"SRT" button — subtitles only*.
+* **Firefox for Android saves files:** the downloads API of Firefox for Android does not reach the browser's download manager (Mozilla bug 1793214), so the finished file is handed to the page of the video and saved like a page download ("Download file?" when the tab is on screen again).
+* **HLS with separate video and sound playlists** (Low-Latency HLS and others) when the master playlist cannot be read: one card with the qualities; the recording has sound and is saved as one MP4.
+* **Feeds of short HLS videos:** a card gets the video's cover picture and name; videos that are not on screen go under *More*.
+
+### Changed
+* HLS / DASH files that came as fragmented MP4 (video and sound in one playlist) are saved as an ordinary MP4 with the index first: players seek in them at once.
+* Low-Latency HLS: the playlist the player asks for again and again (`_HLS_msn`, `_HLS_part`) is one card instead of a new one every second.
+* Firefox for Android: Settings, History and Help open in a new tab on top (the settings used to stay behind the popup); no "Open folder" button; the "?" buttons of the settings are round again (36 px) and stay at the right of their line.
+* The tick in the Subtitles row reads *+ with video*. Subtitles are saved with a video only when it is ticked — then also for a download by keyboard shortcut (with the default track).
+
+### Fixed
+* AMO upload packages built on Windows: `.xpi` / `.zip` are written by `scripts/zip.mjs` (Windows `tar` made a tar archive for an `.xpi` name, refused by AMO as corrupt).
+
+The steps (1.6.1dev1 … dev7) are described in the development log.
+
 ## 1.6.0
 
 ### Added
