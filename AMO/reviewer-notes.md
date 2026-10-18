@@ -1,6 +1,12 @@
-# Notes for the AMO reviewer — Video Downloader Legal 1.6.2
+# Notes for the AMO reviewer — Video Downloader Legal 1.6.4
 
-**1.6.2 = 1.6.1 re-numbered.** Version 1.6.1 on AMO was uploaded by mistake from an earlier test build; 1.6.2 is the intended 1.6.1 code (the "1.6.1" notes below apply).
+**New in 1.6.4 (all local, no new permissions, no remote code):**
+* `lib/rate.js` — download speed / time left shown in the popup.
+* `lib/ts2mp4.js` `convertTsMkv` + `writeMkvAvcAac` in `lib/mux.js` — MPEG-TS (H.264 + AAC) written as Matroska without re-encoding (the user picks MP4 / MKV / TS).
+* `lib/gif.js` (own GIF encoder: median-cut palette, LZW) and `lib/gifvideo.js` — on request, a short video (≤ 60 s) already downloaded by the extension is decoded by a `<video>` element from a `blob:` URL in the background page, frames are drawn to a canvas and encoded as an animated GIF. Off / JoyReactor only (default) / all sites in the options.
+* `lib/joyreactor.js` — JoyReactor post files (`img*.joyreactor.*/pics/post/{webm,mp4}/…`) grouped into one entry; the extension's own requests to that image server carry the site's page as `Referer` (the server answers 404 without it), using the same mechanism as below.
+* `lib/updatecheck.js` holds only pure helpers (version compare) that the popup and options import; the GitHub release check itself exists only in a separate Chrome / Edge package (`platform/updater.js`, not in this .xpi). The Firefox add-on makes no update-check requests.
+* Tests use FFmpeg as an external tool only (see THIRD-PARTY.md); it is not part of the add-on.
 
 **What it does.** Detects media on web pages (direct files, HLS, DASH) and saves it through the browser's downloads API.
 It never decrypts or bypasses DRM: DRM-protected streams are detected and refused.
@@ -39,6 +45,8 @@ Chrome-only code (the offscreen document client, `platform/`) is not in this pac
 * `lib/ts2mp4.js` (new in 1.5.2): own converter MPEG-TS (H.264 + AAC) → MP4 without re-encoding, runs locally on the downloaded bytes; any other codec/stream type is left as TS. No WASM, no remote code.
 * HLS media playlists with video and sound as separate playlists and an unreadable master (one-time token): `lib/hlsgroup.js` reads the init segment of each playlist (track type, size, codec) and offers them as one entry; video and sound are recorded side by side and joined into one MP4. Fragmented MP4 results are rewritten as an ordinary MP4 with the index first (`defragMp4` in `lib/mux.js`); only bytes are copied.
 * Segments of ordinary (non-DRM) streams are fetched and joined locally (own MP4 / WebM / Matroska muxer in `lib/mux.js`, no remote code, no WASM). Video and audio of different formats (e.g. AV1 + Opus) are written as an ordinary MP4 without re-encoding.
+* Servers that refuse the extension's own request (HTTP 403 / 412) but serve the page's player (new in 1.6.4): the extension repeats its own request with the page's address as Referer / Origin (blocking `webRequest`, only requests with `tabId -1` made by this extension, only for that server's domain), and if still refused, asks its content script in that tab to fetch the playlist / piece with the page's own context (`vdl_fetch` in `injected/page.js`); the bytes are returned to the background. Page requests are never modified.
+* PornHub watch pages (`lib/sites.js`, `resolvePornhub`, new in 1.6.4): the background reads the page's HTML (the player settings object `flashvars_*`) and the site's own `/video/get_media` list to offer the MP4 file of each quality.
 * Firefox for Android 142+: the same package; APIs the phone does not have (commands, notifications, sidebarAction) are guarded and their controls hidden.
 
 ## Network

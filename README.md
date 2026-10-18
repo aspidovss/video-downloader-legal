@@ -77,6 +77,8 @@ The same sources build a Manifest V3 package for Chromium. It is installed from 
 1. Get the `video-downloader-legal-chrome-<version>.zip` from the [Releases](https://github.com/aspidovss/video-downloader-legal/releases) page and unpack it, or build the folder yourself: `node scripts/build-chrome.mjs` (add `--zip` to also pack it). No npm install is needed.
 2. Open `chrome://extensions` (in **Microsoft Edge:** `edge://extensions`), turn on *Developer mode*, press *Load unpacked* and pick the unpacked folder (`build/chrome`).
 
+**Updater package (1.6.4+).** A package installed this way gets no updates from a store. `video-downloader-legal-chrome-updater-<version>.zip` (for Edge: `…-edge-updater-…`; the same files) is the same extension plus an update check: once a day it looks at the latest release here on GitHub and shows *Version X is available — Download / What's new* in the popup. To update, unpack the new archive over the old folder and press *Reload* on the extensions page. The check can be switched off in the settings (*Notify about new versions*); it sends nothing about you (see [PRIVACY.md](PRIVACY.md)). Build it with `npm run build:chrome-updater` (or `node scripts/build-chrome.mjs --zip --updater`, add `--edge` for the Edge name).
+
 Needs **Chrome or Edge 116 or newer**. Edge runs the Chrome package unchanged (Edge-specific notes, the `video-downloader-legal-edge-<version>.zip` name and the store checklist are in [EDGE/](EDGE/README.md)). Differences from Firefox: the toolbar popup only (no sidebar), and the background runs as a service worker. Request headers are set with `declarativeNetRequest`, and the MP3 conversion and the download links are made in an offscreen document. Tested on Chromium with local servers (header rules, HLS download, MP3 conversion) and checked by hand on live sites in Chrome.
 
 ## How to use
@@ -110,6 +112,8 @@ No telemetry, no accounts, no servers of ours. Settings and history live in your
 ## Development
 
 Plain, unminified JavaScript (ES modules); no build step.
+
+**Tests:** `npm test` (Node.js 18+, `node:test`). The tests of the converters and muxers use **[FFmpeg](https://ffmpeg.org/)** (`ffmpeg` and `ffprobe` in `PATH`) to make sample videos and to check the results (frames, sound, duration, seeking); without it those tests are skipped. FFmpeg is a development tool only — it is not shipped with the extension and the extension never runs it (see [THIRD-PARTY.md](THIRD-PARTY.md#tools-used-only-for-development-not-shipped)).
 
 Contributions are welcome — see [CONTRIBUTING.md](CONTRIBUTING.md). Want to support the project? See [DONATE.md](DONATE.md). Found a vulnerability? See [SECURITY.md](SECURITY.md).
 
@@ -245,3 +249,8 @@ The only third-party file is `vendor/lame.js` — [lamejs](https://github.com/zh
 ## License
 
 [MIT](LICENSE) © 2026 AspidovSS
+
+The MIT license covers the project's own code. Exceptions:
+
+* `vendor/lame.js` — lamejs 1.2.1, LGPL-3.0 ([LICENSES/LGPL-3.0.txt](LICENSES/LGPL-3.0.txt)); see [Third-party code](#third-party-code).
+* Development tools are not part of the extension and are not distributed with it: [FFmpeg](https://ffmpeg.org/) (LGPL-2.1-or-later / GPL, depending on the build) is used only by the tests to make sample videos and check the results; [web-ext](https://github.com/mozilla/web-ext) (MPL-2.0) builds the Firefox package. The extension never runs FFmpeg and contains none of its code. Details: [THIRD-PARTY.md](THIRD-PARTY.md).

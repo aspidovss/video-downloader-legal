@@ -551,12 +551,6 @@
   "helpC5": {
     "message": "このプロジェクトには、AI が生成したコード（またはその一部）が含まれています。文章、コメント、ローカライズも AI が生成したものです。"
   },
-  "optTsToMp4": {
-    "message": "ダウンロードや録画の後に TS を MP4 に変換"
-  },
-  "hintTsToMp4": {
-    "message": "TS 形式のストリームは再エンコードせずに通常の MP4（H.264 + AAC）として保存されるため、どのプレーヤーでも再生できます。別のコーデックの場合や約 700 MB を超える場合は、TS ファイルのまま保存されます。"
-  },
   "consentTitle": {
     "message": "利用規約"
   },
@@ -907,5 +901,98 @@
   },
   "androidSaveOnPage": {
     "message": "ファイルの準備ができました。動画のページに戻ると Firefox が保存を提案します。"
+  },
+  "etaCalc": {
+    "message": "計算中…"
+  },
+  "etaLeft": {
+    "message": "残り {t}"
+  },
+  "unitSec": {
+    "message": "秒"
+  },
+  "unitMin": {
+    "message": "分"
+  },
+  "unitHour": {
+    "message": "時間"
+  },
+  "optTsFormat": {
+    "message": "TS ストリームの保存形式"
+  },
+  "tsFmtMp4": {
+    "message": "MP4（推奨）"
+  },
+  "tsFmtMkv": {
+    "message": "MKV (Matroska)"
+  },
+  "tsFmtTs": {
+    "message": "TS（そのまま）"
+  },
+  "hintTsFormat": {
+    "message": "TS ストリーム（H.264 + AAC）は再エンコードせずに保存されます。MP4 はどのプレーヤーやスマートフォンでも開けます。MKV は録画の途切れに強く、VLC・mpv・PC のプレーヤーで再生できます。TS は届いたまま保存されます。形式は動画カードでも選べます。他のコーデックや約 700 MB を超える場合は TS ファイルが保存されます。TS を WEBM にするには再エンコードが必要なため対応していません。"
+  },
+  "optGifMake": {
+    "message": "動画から GIF"
+  },
+  "gifMakeJr": {
+    "message": "JoyReactor のみ"
+  },
+  "gifMakeAll": {
+    "message": "すべてのサイト"
+  },
+  "gifMakeOff": {
+    "message": "オフ"
+  },
+  "hintGifMake": {
+    "message": "短い動画（60 秒まで）のカードに GIF 形式が表示されます：サイトの元の GIF（ある場合）と、ブラウザ内で動画から作る GIF（幅 480 または 320 ピクセル、毎秒 10 フレーム、音声なし）。GIF は動画より何倍も大きく、作成に時間がかかります。"
+  },
+  "gifOriginal": {
+    "message": "{w} · オリジナル"
+  },
+  "gifMade": {
+    "message": "{w} · 動画から"
+  },
+  "gifTooLong": {
+    "message": "動画が 60 秒を超えているため GIF は作成されません。"
+  },
+  "gifDecode": {
+    "message": "GIF を作るための動画を読み込めませんでした。"
+  },
+  "gifFromWebm": {
+    "message": "{w} · WEBM から"
+  },
+  "gifFromMp4": {
+    "message": "{w} · MP4 から"
+  },
+  "updateAvailable": {
+    "message": "バージョン {v} が利用可能"
+  },
+  "updateDownload": {
+    "message": "ダウンロード"
+  },
+  "updateWhatsNew": {
+    "message": "新機能"
+  },
+  "updateHow": {
+    "message": "アーカイブを拡張機能のフォルダーに古いファイルの上から展開し、拡張機能ページで「更新」を押してください。"
+  },
+  "optUpdateCheck": {
+    "message": "新しいバージョンを通知（1 日 1 回 GitHub を確認）"
+  },
+  "hintUpdateCheck": {
+    "message": "1 日 1 回、GitHub の最新リリースを確認し（api.github.com への通常のリクエスト。あなたに関する情報は送信されません）、新しいバージョンがあればウィンドウに表示します。自動ではインストールしません。Chrome と Edge の「updater」パッケージのみ。"
+  },
+  "updateCheckNow": {
+    "message": "今すぐ確認"
+  },
+  "updateLatest": {
+    "message": "最新です"
+  },
+  "updateCheckFailed": {
+    "message": "確認できませんでした"
+  },
+  "updateBuildNote": {
+    "message": "これは Chrome と Edge 用の「updater」パッケージです。1 日 1 回、GitHub で新しいバージョンが出たかを自動で確認し、拡張機能のウィンドウに通知を表示します。上のチェックで確認と通知をオフにできます。通常のパッケージと Firefox 版は更新を確認しません。"
   }
 }

@@ -19,8 +19,19 @@
 
 **Replacing it (LGPL).** `vendor/lame.js` is a separate, replaceable file: to use another or a modified build, replace it with a file that exposes `lamejs.Mp3Encoder`; nothing else in the extension needs to change. It is not merged with any other code of this project. **Rebuilding it:** `node scripts/build-lamejs.mjs` (add `--write` to overwrite the file, `--compare` to check the MP3 output against upstream's own `lame.min.js`).
 
-Everything else — HLS/DASH parsers, the MP4 / WebM muxer (`lib/mux.js`), the MPEG-TS → MP4 converter (`lib/ts2mp4.js`) and the timestamp tool (`lib/rebase.js`) — is the project's own code under the MIT license. There is no WebAssembly and no remote code.
+Everything else — HLS/DASH parsers, the MP4 / WebM muxer (`lib/mux.js`), the MPEG-TS → MP4 / MKV converter (`lib/ts2mp4.js`), the GIF encoder (`lib/gif.js`) and the timestamp tool (`lib/rebase.js`) — is the project's own code under the MIT license. There is no WebAssembly and no remote code.
 
+
+## Tools used only for development (not shipped)
+
+These programs are **not part of the extension**: they are not in the repository, not in the `.xpi` / `.zip` packages, not linked with the extension's code, and the extension never runs them. No code of theirs is copied into this project.
+
+| Tool | License | What it is used for |
+|---|---|---|
+| **[FFmpeg](https://ffmpeg.org/)** (`ffmpeg`, `ffprobe`), installed by the developer | LGPL-2.1-or-later; builds with GPL parts (for example with libx264) are under the GPL — see [ffmpeg.org/legal.html](https://ffmpeg.org/legal.html) | **Tests only** (`tests/*.test.js`, run by `npm test`). It is started as a separate program (`child_process.spawnSync`) to make short sample videos (test picture and tone, H.264 / VP9 / AV1 with AAC / Opus / MP3, TS / MP4 / WebM / HLS segments) and to check the files written by the extension's own code: identical frames (`framemd5`), decodable sound, duration, start time, codecs, seeking. Without FFmpeg these tests are skipped; the others still run. |
+| **[web-ext](https://github.com/mozilla/web-ext)** (npm dev dependency) | MPL-2.0 | Building and linting the Firefox package (`npm run build`, `npm run lint`). |
+
+The extension itself does all converting and joining with its own code in the browser (`lib/ts2mp4.js`, `lib/mux.js`, `lib/rebase.js`); FFmpeg is only the independent reference that the tests compare the results with. Thanks to the FFmpeg project.
 
 ## Data, not code
 

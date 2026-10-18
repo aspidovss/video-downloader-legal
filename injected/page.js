@@ -14,8 +14,10 @@
 
   function collect() {
     const out = [];
+    const here = location.href.split('#')[0];
     const add = (url, el) => {
       if (!url || !/^https?:/i.test(url)) return; // blob:/data: cannot be downloaded directly
+      if (url.split('#')[0] === here) return; // an empty <source src=""> reads as the page's own address
       out.push({
         url,
         poster: el.poster || '',
@@ -104,6 +106,16 @@
     };
     document.addEventListener('visibilitychange', () => setTimeout(saveNext, 400));
     window.addEventListener('focus', () => setTimeout(saveNext, 400));
+    // A media server that refuses the extension (403 / 412) but serves the page: the page fetches the playlist or piece
+    // itself, with its own address and cookies (Firefox: content.fetch is the page's fetch), and returns the bytes.
+    browser.runtime.onMessage.addListener((msg) => {
+      if (!msg || msg.type !== 'vdl_fetch' || typeof msg.url !== 'string' || !/^https?:\/\//.test(msg.url)) return undefined;
+      const pageFetch = (globalThis.content && typeof globalThis.content.fetch === 'function') ? globalThis.content.fetch.bind(globalThis.content) : fetch;
+      const headers = msg.range ? { Range: String(msg.range) } : {};
+      return pageFetch(msg.url, { credentials: 'include', headers })
+        .then(async (r) => (r.ok ? { ok: true, status: r.status, ct: r.headers.get('content-type') || '', buf: await r.arrayBuffer() } : { ok: false, status: r.status }))
+        .catch((err) => ({ ok: false, status: 0, error: String((err && err.message) || err) }));
+    });
     browser.runtime.onMessage.addListener((msg) => {
       if (!msg || msg.type !== 'vdl_save' || !(msg.blob instanceof Blob)) return undefined;
       queue.push({ blob: msg.blob, name: String(msg.name || 'video').slice(0, 200) });

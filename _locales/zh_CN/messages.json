@@ -551,12 +551,6 @@
   "helpC5": {
     "message": "本项目包含由 AI 生成的代码或其部分内容。文本、注释和本地化内容均由 AI 生成。"
   },
-  "optTsToMp4": {
-    "message": "下载或录制后将 TS 转换为 MP4"
-  },
-  "hintTsToMp4": {
-    "message": "TS 格式的流会无需重新编码直接保存为普通 MP4（H.264 + AAC），可在任何播放器中播放。如果流使用其他编解码器，或大小超过约 700 MB，则按原样保存 TS 文件。"
-  },
   "consentTitle": {
     "message": "使用条款"
   },
@@ -907,5 +901,98 @@
   },
   "androidSaveOnPage": {
     "message": "文件已就绪：返回视频页面，Firefox 会在那里提示保存。"
+  },
+  "etaCalc": {
+    "message": "计算中…"
+  },
+  "etaLeft": {
+    "message": "剩余 {t}"
+  },
+  "unitSec": {
+    "message": "秒"
+  },
+  "unitMin": {
+    "message": "分钟"
+  },
+  "unitHour": {
+    "message": "小时"
+  },
+  "optTsFormat": {
+    "message": "TS 流保存为"
+  },
+  "tsFmtMp4": {
+    "message": "MP4（推荐）"
+  },
+  "tsFmtMkv": {
+    "message": "MKV (Matroska)"
+  },
+  "tsFmtTs": {
+    "message": "TS（原样）"
+  },
+  "hintTsFormat": {
+    "message": "TS 流（H.264 + AAC）不重新编码即可保存：MP4 可在任何播放器和手机上打开；MKV 更能容忍录制中的中断，可在 VLC、mpv 和电脑播放器中播放；TS 按原样保存。也可在视频卡片中选择格式。若为其他编解码器或超过约 700 MB，则保存 TS 文件。TS 无法在不重新编码的情况下保存为 WEBM。"
+  },
+  "optGifMake": {
+    "message": "从视频生成 GIF"
+  },
+  "gifMakeJr": {
+    "message": "仅 JoyReactor"
+  },
+  "gifMakeAll": {
+    "message": "所有网站"
+  },
+  "gifMakeOff": {
+    "message": "关闭"
+  },
+  "hintGifMake": {
+    "message": "短视频（60 秒以内）的卡片中会出现 GIF 格式：网站的原始 GIF（如果有），以及在浏览器中直接由视频生成的 GIF（宽 480 或 320 像素，每秒 10 帧，无声音）。GIF 比视频大很多倍，生成也需要时间。"
+  },
+  "gifOriginal": {
+    "message": "{w} · 原始"
+  },
+  "gifMade": {
+    "message": "{w} · 来自视频"
+  },
+  "gifTooLong": {
+    "message": "视频超过 60 秒：不会从中生成 GIF。"
+  },
+  "gifDecode": {
+    "message": "无法读取视频来生成 GIF。"
+  },
+  "gifFromWebm": {
+    "message": "{w} · 来自 WEBM"
+  },
+  "gifFromMp4": {
+    "message": "{w} · 来自 MP4"
+  },
+  "updateAvailable": {
+    "message": "有新版本 {v}"
+  },
+  "updateDownload": {
+    "message": "下载"
+  },
+  "updateWhatsNew": {
+    "message": "新功能"
+  },
+  "updateHow": {
+    "message": "将压缩包解压到扩展所在文件夹覆盖旧文件，然后在扩展页面点击“重新加载”。"
+  },
+  "optUpdateCheck": {
+    "message": "新版本提醒（每天在 GitHub 检查一次）"
+  },
+  "hintUpdateCheck": {
+    "message": "扩展每天查看一次 GitHub 上的最新版本（对 api.github.com 的普通请求，不发送任何关于你的信息），有新版本时在窗口中显示一行提示。不会自动安装。仅限 Chrome 和 Edge 的“updater”安装包。"
+  },
+  "updateCheckNow": {
+    "message": "立即检查"
+  },
+  "updateLatest": {
+    "message": "已是最新"
+  },
+  "updateCheckFailed": {
+    "message": "无法检查"
+  },
+  "updateBuildNote": {
+    "message": "这是 Chrome 和 Edge 的“updater”安装包：它每天自动在 GitHub 上检查一次是否有新版本，并在扩展窗口中显示提醒。上方的复选框可关闭检查和提醒。普通安装包和 Firefox 版本不检查更新。"
   }
 }

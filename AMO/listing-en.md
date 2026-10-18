@@ -85,6 +85,19 @@ I did VDL because I was tired of paywalls in third-party solutions.
 ## Privacy policy
 Plain-text version in [privacy-policy.md](privacy-policy.md).
 
+## Version 1.6.4 — release notes (shown to users)
+```
+New in 1.6.4:
+- Download speed and time left next to the percentage.
+- TS streams can be saved as MKV (no re-encoding): pick MP4 / MKV / TS in the card; the default is in the settings.
+- GIF from video: short videos (up to 60 s) can be saved as an animated GIF (480 or 320 px). Settings: JoyReactor only (default) / all sites / off.
+- JoyReactor: one card per post with MP4 / WEBM / GIF, named after the post's tags; only files the server really has.
+- PornHub: one card with every quality.
+- Servers that refuse the extension but serve the page's player are asked again the way the page asks.
+- A format with one choice shows its size instead of a second list.
+- Fixed: files served by a script (remote_control.php) are saved as .mp4.
+```
+
 ## Version 1.6.2 — release notes (shown to users)
 ```
 New in 1.6.2 (replaces 1.6.1):

@@ -6,3 +6,4 @@ const chromeOnly = () => Promise.reject(new Error('chrome_only'));
 export const chromeBlobUrl = chromeOnly;
 export const chromeRevoke = chromeOnly;
 export const chromeMp3 = chromeOnly;
+export const chromeGif = chromeOnly;

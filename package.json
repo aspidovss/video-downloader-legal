@@ -1,6 +1,6 @@
 {
   "name": "video-downloader-legal",
-  "version": "1.6.2",
+  "version": "1.6.4",
   "private": true,
   "type": "module",
   "description": "Firefox and Chrome extension: detect and download videos (direct files, HLS, DASH). No DRM circumvention.",
@@ -11,6 +11,7 @@
     "lint": "web-ext lint --source-dir . --ignore-files tests package.json package-lock.json node_modules README.md",
     "build:chrome": "node scripts/build-chrome.mjs --zip",
     "build:edge": "node scripts/build-chrome.mjs --zip --edge",
+    "build:chrome-updater": "node scripts/build-chrome.mjs --zip --updater",
     "build-lamejs": "node scripts/build-lamejs.mjs",
     "verify-lamejs": "node scripts/build-lamejs.mjs --compare",
     "run": "web-ext run --source-dir . --ignore-files tests package.json",

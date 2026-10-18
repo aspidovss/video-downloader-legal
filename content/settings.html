@@ -71,6 +71,13 @@
           <span class="field-label" data-i18n="optSidebar"></span>
           <button type="button" id="sidebar-toggle" data-i18n="sidebarOpen"></button>
         </div>
+        <div class="check-row" id="update-row" hidden>
+          <label class="check"><input type="checkbox" name="updateCheck"> <span data-i18n="optUpdateCheck"></span></label>
+          <button type="button" class="info" aria-expanded="false" data-i18n-title="hintToggle" data-i18n-aria="hintToggle">?</button>
+          <div class="hint" hidden data-i18n="hintUpdateCheck"></div>
+          <p class="update-note" data-i18n="updateBuildNote"></p>
+          <div class="update-now"><button type="button" id="update-now" data-i18n="updateCheckNow"></button> <span id="update-status" class="faint"></span></div>
+        </div>
         <div class="check-row" data-desktop-only>
           <label class="check"><input type="checkbox" name="notifications"> <span data-i18n="optNotifications"></span></label>
           <button type="button" class="info" aria-expanded="false" data-i18n-title="hintToggle" data-i18n-aria="hintToggle">?</button>
@@ -136,10 +143,27 @@
         <button type="button" class="info" aria-expanded="false" data-i18n-title="hintToggle" data-i18n-aria="hintToggle">?</button>
         <div class="hint" hidden data-i18n="hintJoinFormat"></div>
       </div>
-      <div class="check-row">
-        <label class="check"><input type="checkbox" name="tsToMp4"> <span data-i18n="optTsToMp4"></span></label>
+      <div class="check-row has-field">
+        <label class="field"><span data-i18n="optTsFormat"></span>
+          <select name="tsFormat">
+            <option value="mp4" data-i18n="tsFmtMp4"></option>
+            <option value="mkv" data-i18n="tsFmtMkv"></option>
+            <option value="ts" data-i18n="tsFmtTs"></option>
+          </select>
+        </label>
         <button type="button" class="info" aria-expanded="false" data-i18n-title="hintToggle" data-i18n-aria="hintToggle">?</button>
-        <div class="hint" hidden data-i18n="hintTsToMp4"></div>
+        <div class="hint" hidden data-i18n="hintTsFormat"></div>
+      </div>
+      <div class="check-row has-field">
+        <label class="field"><span data-i18n="optGifMake"></span>
+          <select name="gifMake">
+            <option value="joyreactor" data-i18n="gifMakeJr"></option>
+            <option value="all" data-i18n="gifMakeAll"></option>
+            <option value="off" data-i18n="gifMakeOff"></option>
+          </select>
+        </label>
+        <button type="button" class="info" aria-expanded="false" data-i18n-title="hintToggle" data-i18n-aria="hintToggle">?</button>
+        <div class="hint" hidden data-i18n="hintGifMake"></div>
       </div>
       <div class="check-row has-field">
         <label class="field"><span data-i18n="optMaxStream"></span><input type="number" name="maxStreamMB" min="64" step="64"></label>

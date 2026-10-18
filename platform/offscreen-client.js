@@ -9,7 +9,7 @@ async function ensure() {
   creating ||= chrome.offscreen.createDocument({
     url: 'platform/offscreen.html',
     reasons: ['BLOBS'],
-    justification: 'Create blob: URLs for saving downloaded media and convert audio to MP3 (needs the DOM audio decoder).',
+    justification: 'Create blob: URLs for saving downloaded media, convert audio to MP3 and short videos to GIF (need the DOM audio / video decoders and a canvas).',
   }).finally(() => { creating = null; });
   await creating;
 }
@@ -33,7 +33,7 @@ export function chromeRevoke(url) { return call({ type: 'revoke', url }).catch((
 
 const listeners = new Map(); // jobId -> onProgress
 globalThis.chrome?.runtime?.onMessage?.addListener((msg) => {
-  if (msg && msg.target === 'vdl-sw' && msg.type === 'mp3_progress') listeners.get(msg.jobId)?.(msg.p);
+  if (msg && msg.target === 'vdl-sw' && (msg.type === 'mp3_progress' || msg.type === 'gif_progress')) listeners.get(msg.jobId)?.(msg.p);
   return false;
 });
 
@@ -52,6 +52,31 @@ export async function chromeMp3(blob, { kbps, title, onProgress, signal }) {
     return out;
   } catch (e) {
     if (signal?.aborted) throw new Error('aborted');
+    throw e;
+  } finally {
+    listeners.delete(jobId);
+    signal?.removeEventListener('abort', abort);
+    await delBlob(key).catch(() => {});
+    await delBlob(resultKey).catch(() => {});
+  }
+}
+
+// video -> GIF in the offscreen document (1.6.4); errors carry code 'gifTooLong' / 'gifDecode' / 'aborted'
+export async function chromeGif(blob, { maxWidth, onProgress, signal }) {
+  const jobId = `g-${uid()}`;
+  const key = `s-${jobId}`;
+  const resultKey = `r-${jobId}`;
+  await putBlob(key, blob);
+  listeners.set(jobId, onProgress);
+  const abort = () => { call({ type: 'gif_abort', jobId }).catch(() => {}); };
+  signal?.addEventListener('abort', abort, { once: true });
+  try {
+    await call({ type: 'gif', key, resultKey, maxWidth, jobId });
+    const out = await getBlob(resultKey);
+    if (!out) throw Object.assign(new Error('gif_result_missing'), { code: 'gifDecode' });
+    return out;
+  } catch (e) {
+    if (signal?.aborted) throw Object.assign(new Error('aborted'), { code: 'aborted' });
     throw e;
   } finally {
     listeners.delete(jobId);

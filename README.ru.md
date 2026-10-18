@@ -84,6 +84,8 @@ Video Downloader Legal — расширение для **Firefox, Chrome и Micr
 
 Обычный JavaScript (ES-модули), без бандлера. Из исходников собираются два пакета: `.xpi` для Firefox и `.zip` для Chrome. Для команд npm нужен **Node.js 18+**. Структура проекта — в [английском README](README.md#project-structure). Журнал разработки: [на русском](docs/DEVLOG-ru.md), [in English](docs/DEVLOG-en.md). Текст справки: [docs/HELP-ru.md](docs/HELP-ru.md). Поддержать проект: [DONATE.md](DONATE.md).
 
+**Тесты:** `npm test` (Node.js 18+, `node:test`). Тесты конвертеров и склейки используют **[FFmpeg](https://ffmpeg.org/)** (`ffmpeg` и `ffprobe` в `PATH`): он делает тестовые видео и проверяет результат (кадры, звук, длительность, перемотку). Без FFmpeg эти тесты пропускаются. FFmpeg — только инструмент разработки: он не входит в расширение, и расширение его никогда не запускает (см. [THIRD-PARTY.md](THIRD-PARTY.md#tools-used-only-for-development-not-shipped)).
+
 ### Сборка для Firefox (`.xpi`)
 
 ```bash

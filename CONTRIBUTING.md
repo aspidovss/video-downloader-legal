@@ -19,7 +19,7 @@ Please do **not** post cookies, tokens or full links to private content.
 ## Development
 
 * Plain ES modules, no build step, no minification.
-* Add a test for a bug fix or a new parser (`tests/*.test.js`, `node:test`).
+* Add a test for a bug fix or a new parser (`tests/*.test.js`, `node:test`). Run them with `npm test`. Tests of the converters and muxers need **FFmpeg** (`ffmpeg`, `ffprobe` in `PATH`) and are skipped without it; FFmpeg is used only to make sample files and check results, never inside the extension.
 * User-visible text goes to `_locales/<lang>/messages.json` in **all** ten languages; `tests/locales.test.js` requires identical keys. If you are not sure about a translation, provide English and mention it in the pull request.
 * Keep changes focused; describe how you tested.
 
