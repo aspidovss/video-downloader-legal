@@ -1,6 +1,12 @@
-# Notes for the AMO reviewer — Video Downloader Legal 1.6.2
+# Notes for the AMO reviewer — Video Downloader Legal 1.6.4
 
-**1.6.2 = 1.6.1 re-numbered.** Version 1.6.1 on AMO was uploaded by mistake from an earlier test build; 1.6.2 is the intended 1.6.1 code (the "1.6.1" notes below apply).
+**New in 1.6.4 (all local, no new permissions, no remote code):**
+* `lib/rate.js` — download speed / time left shown in the popup.
+* `lib/ts2mp4.js` `convertTsMkv` + `writeMkvAvcAac` in `lib/mux.js` — MPEG-TS (H.264 + AAC) written as Matroska without re-encoding (the user picks MP4 / MKV / TS).
+* `lib/gif.js` (own GIF encoder: median-cut palette, LZW) and `lib/gifvideo.js` — on request, a short video (≤ 60 s) already downloaded by the extension is decoded by a `<video>` element from a `blob:` URL in the background page, frames are drawn to a canvas and encoded as an animated GIF. Off / JoyReactor only (default) / all sites in the options.
+* `lib/joyreactor.js` — JoyReactor post files (`img*.joyreactor.*/pics/post/{webm,mp4}/…`) grouped into one entry; the extension's own requests to that image server carry the site's page as `Referer` (the server answers 404 without it), using the same mechanism as below.
+* `lib/updatecheck.js` holds only pure helpers (version compare) that the popup and options import; the GitHub release check itself exists only in a separate Chrome / Edge package (`platform/updater.js`, not in this .xpi). The Firefox add-on makes no update-check requests.
+* Tests use FFmpeg as an external tool only (see THIRD-PARTY.md); it is not part of the add-on.
 
 **What it does.** Detects media on web pages (direct files, HLS, DASH) and saves it through the browser's downloads API.
 It never decrypts or bypasses DRM: DRM-protected streams are detected and refused.

@@ -945,7 +945,7 @@
     "message": "Desactivado"
   },
   "hintGifMake": {
-    "message": "Los vídeos cortos (hasta 60 s) ofrecen el formato GIF en la tarjeta: el GIF original del sitio si existe, y un GIF hecho del vídeo en el propio navegador (480 o 320 píxeles de ancho, 10 fotogramas por segundo, sin sonido). Un GIF pesa mucho más que el vídeo y tarda en crearse. Solo Firefox."
+    "message": "Los vídeos cortos (hasta 60 s) ofrecen el formato GIF en la tarjeta: el GIF original del sitio si existe, y un GIF hecho del vídeo en el propio navegador (480 o 320 píxeles de ancho, 10 fotogramas por segundo, sin sonido). Un GIF pesa mucho más que el vídeo y tarda en crearse."
   },
   "gifOriginal": {
     "message": "{w} · original"

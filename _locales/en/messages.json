@@ -945,7 +945,7 @@
     "message": "Off"
   },
   "hintGifMake": {
-    "message": "Short videos (up to 60 s) get a GIF format in the card: the site's original GIF when there is one, and a GIF made from the video right in the browser (480 or 320 pixels wide, 10 frames per second, no sound). A GIF is many times larger than the video and takes time to make. Firefox only."
+    "message": "Short videos (up to 60 s) get a GIF format in the card: the site's original GIF when there is one, and a GIF made from the video right in the browser (480 or 320 pixels wide, 10 frames per second, no sound). A GIF is many times larger than the video and takes time to make."
   },
   "gifOriginal": {
     "message": "{w} · original"

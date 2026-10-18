@@ -21,7 +21,7 @@ import { isAccepted } from '../lib/consent.js';
 import { loadUiLang, tr, uiLangCode } from '../utils/i18n.js';
 import { isAndroid } from '../utils/dom.js';
 import { subsChoices, defaultSubs, subsUrl, json3ToCues, cuesToSrt, iso639b } from '../lib/subs.js';
-import { chromeBlobUrl, chromeRevoke, chromeMp3 } from './offscreen-client.js';
+import { chromeBlobUrl, chromeRevoke, chromeMp3, chromeGif } from './offscreen-client.js';
 import { recordLive } from '../lib/liverec.js';
 import { rebaseTimestamps } from '../lib/rebase.js';
 import { tsToMp4, tsToMkv } from '../lib/ts2mp4.js';
@@ -167,7 +167,11 @@ function updateBadge(tabId) {
 
 // ------------------------------------------------------------ detection ----
 
+// JoyReactor's own interface clips (…/images/videowithsound.mp4 — the "video with sound" badge) are not media of a post
+const JR_UI = /^https?:\/\/(?:[^/]+\.)?(?:joyreactor\.(?:com|cc)|reactor\.cc)(?::\d+)?\/images\//i;
+
 function addItem(tabId, data) {
+  if (JR_UI.test(data.url || '')) return null;
   if (!data.jr) {
     const jp = jrParse(data.url);
     if (jp) return addJoyreactor(tabId, data, jp);
@@ -283,7 +287,8 @@ function gifSources(it) {
 }
 const gifSource = (it) => gifSources(it)[0] || null;
 function gifAllowed(tabId, it) {
-  if (IS_CHROME || it.kind !== 'file' || typeof document === 'undefined') return false;
+  // Firefox: the background page has a document; Chrome / Edge: the offscreen document (1.6.4)
+  if (it.kind !== 'file' || (!IS_CHROME && typeof document === 'undefined')) return false;
   const mode = gifMode();
   if (mode === 'off') return false;
   if (mode === 'joyreactor' && !it.jr && !isJoyreactorPage(tabs.get(tabId)?.pageUrl || '')) return false;
@@ -1747,7 +1752,8 @@ async function runStreamJob(tabId, it, title, variantIdx, variantLabel, audioOpt
         notifyUI(tabId);
         let gif;
         try {
-          gif = await videoToGif(blob, { maxWidth: f.makeGif, signal: job.abort.signal, onProgress: (x) => { job.done = Math.round(x * 100); notifyUI(tabId); } });
+          const gifOpts = { maxWidth: f.makeGif, signal: job.abort.signal, onProgress: (x) => { job.done = Math.round(x * 100); notifyUI(tabId); } };
+          gif = IS_CHROME ? await chromeGif(blob, gifOpts) : await videoToGif(blob, gifOpts);
         } catch (e) {
           if (e?.code === 'aborted') throw new StreamError('aborted');
           throw new StreamError(e?.code === 'gifTooLong' ? 'gifTooLong' : 'gifDecode', String(e?.message || e));

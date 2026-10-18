@@ -945,7 +945,7 @@
     "message": "Desativado"
   },
   "hintGifMake": {
-    "message": "Vídeos curtos (até 60 s) ganham o formato GIF no cartão: o GIF original do site, se houver, e um GIF feito do vídeo no próprio navegador (480 ou 320 pixels de largura, 10 quadros por segundo, sem som). Um GIF é muitas vezes maior que o vídeo e demora para ser feito. Só Firefox."
+    "message": "Vídeos curtos (até 60 s) ganham o formato GIF no cartão: o GIF original do site, se houver, e um GIF feito do vídeo no próprio navegador (480 ou 320 pixels de largura, 10 quadros por segundo, sem som). Um GIF é muitas vezes maior que o vídeo e demora para ser feito."
   },
   "gifOriginal": {
     "message": "{w} · original"

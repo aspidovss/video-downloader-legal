@@ -945,7 +945,7 @@
     "message": "Désactivé"
   },
   "hintGifMake": {
-    "message": "Les vidéos courtes (jusqu'à 60 s) proposent le format GIF dans la carte : le GIF original du site s'il existe, et un GIF créé à partir de la vidéo directement dans le navigateur (480 ou 320 pixels de large, 10 images par seconde, sans son). Un GIF est bien plus lourd que la vidéo et prend du temps à créer. Firefox uniquement."
+    "message": "Les vidéos courtes (jusqu'à 60 s) proposent le format GIF dans la carte : le GIF original du site s'il existe, et un GIF créé à partir de la vidéo directement dans le navigateur (480 ou 320 pixels de large, 10 images par seconde, sans son). Un GIF est bien plus lourd que la vidéo et prend du temps à créer."
   },
   "gifOriginal": {
     "message": "{w} · original"

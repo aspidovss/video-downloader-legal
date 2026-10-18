@@ -2,21 +2,23 @@
 
 Added features per version (fixes and internal changes are not listed). Version history before 1.5 is condensed from the development log; the short development log is in [docs/DEVLOG-en.md](docs/DEVLOG-en.md) (English) and [docs/DEVLOG-ru.md](docs/DEVLOG-ru.md) (Russian).
 
-## 1.6.4 (in development)
+## 1.6.4
 
 ### Added
 * **Servers that refuse the extension (HTTP 403 / 412)** but serve the page's player: the playlist and the pieces are asked again with the page as Referer / Origin (only the extension's own requests), and if that is not enough, through the page itself (its address and cookies).
 * **PornHub watch pages:** one card with HLS of every quality (the default, fast) from the page's own data (title, cover, length; sizes estimated from the MP4 files), the MP4 files of every quality under *More*; saved with the page as Referer. MP4 files with a known size are fetched in parallel pieces with progress.
 * **Updater package for Chrome / Edge** (`…-chrome-updater-<version>.zip`, `…-edge-updater-…`): checks GitHub for a new release once a day and shows a notice in the popup; can be switched off in the settings.
 * **JoyReactor:** one card per post with MP4 / WEBM / the original GIF, named after the post's tags.
-* JoyReactor: files the server does not have (404) are not offered; a format with one choice shows its size instead of a second list.
-* **GIF from video** (Firefox): short videos (up to 60 s) can be saved as an animated GIF made in the browser (480 or 320 px, 10 fps, no sound); setting *GIF from video*: JoyReactor only (default) / all sites / off.
+* A format with only one choice in the card shows its size instead of a second list.
+* **GIF from video** (Firefox, Chrome, Edge): short videos (up to 60 s) can be saved as an animated GIF made in the browser (480 or 320 px, 10 fps, no sound); setting *GIF from video*: JoyReactor only (default) / all sites / off.
 * **TS streams as MKV** (Matroska) without re-encoding: the card offers MP4 / MKV / TS; the default is set in the settings (*Save TS streams as*, replaces *Convert TS to MP4*).
 * **Speed and time left** next to the percentage while a stream or a file in pieces downloads: `21% · 3.4 MB/s · ~2 min left`.
 
 ### Fixed
 * A video served by a script (`…/remote_control.php?file=….mp4`) is saved as `.mp4` (not `.php`), named after the page's site instead of the storage server.
 * An empty `<source src="">` on a page is no longer offered as a "file" (it was the page's own address).
+* JoyReactor: a file the page names but the server does not have (404, e.g. the MP4 of some posts) is not offered; the site's "video with sound" badge is not listed as a video.
+* Chrome / Edge: servers that want the page as Referer (JoyReactor) — files are fetched by the extension, as the browser's own download gets no header rules; the page Referers survive the service worker going to sleep; one bad entry no longer breaks all header rules.
 
 ## 1.6.2
 

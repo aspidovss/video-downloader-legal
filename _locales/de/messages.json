@@ -945,7 +945,7 @@
     "message": "Aus"
   },
   "hintGifMake": {
-    "message": "Kurze Videos (bis 60 s) erhalten in der Karte das Format GIF: das Original-GIF der Website, falls vorhanden, und ein direkt im Browser aus dem Video erstelltes GIF (480 oder 320 Pixel breit, 10 Bilder pro Sekunde, ohne Ton). Ein GIF ist um ein Vielfaches größer als das Video und braucht Zeit. Nur Firefox."
+    "message": "Kurze Videos (bis 60 s) erhalten in der Karte das Format GIF: das Original-GIF der Website, falls vorhanden, und ein direkt im Browser aus dem Video erstelltes GIF (480 oder 320 Pixel breit, 10 Bilder pro Sekunde, ohne Ton). Ein GIF ist um ein Vielfaches größer als das Video und braucht Zeit."
   },
   "gifOriginal": {
     "message": "{w} · Original"

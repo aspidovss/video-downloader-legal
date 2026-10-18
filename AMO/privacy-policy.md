@@ -1,6 +1,6 @@
 # Privacy policy — Video Downloader Legal
 
-*Last updated: 1.6.0*
+*Last updated: 1.6.4*
 
 Video Downloader Legal does **not** collect, store on any server, sell or share personal data. It has no accounts, no analytics and no servers of its own.
 

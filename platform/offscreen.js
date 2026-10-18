@@ -2,6 +2,7 @@
 // the "audio -> MP3" conversion (browser decoder + lamejs) live here. Blobs arrive through IndexedDB.
 import { getBlob, putBlob, delBlob } from '../lib/blobstore.js';
 import { encodeMp3, decodeToPcm, mp3Bitrate, MP3_MAX_SECONDS } from '../lib/mp3.js';
+import { videoToGif } from '../lib/gifvideo.js';
 
 const urls = new Map(); // blob: URL -> store key
 const jobs = new Map(); // jobId -> AbortController
@@ -44,7 +45,31 @@ async function mp3({ key, resultKey, kbps, title, jobId }) {
   }
 }
 
+// video -> GIF (1.6.4): the <video> decoder and a canvas exist only in a document
+async function gif({ key, resultKey, maxWidth, jobId }) {
+  const ctl = new AbortController();
+  jobs.set(jobId, ctl);
+  try {
+    const src = await getBlob(key);
+    if (!src) throw Object.assign(new Error('blob_missing'), { code: 'gifDecode' });
+    let last = 0;
+    const out = await videoToGif(src, {
+      maxWidth, signal: ctl.signal, doc: document,
+      onProgress: (p) => { if (p - last >= 0.02 || p === 1) { last = p; chrome.runtime.sendMessage({ target: 'vdl-sw', type: 'gif_progress', jobId, p }).catch(() => {}); } },
+    });
+    await putBlob(resultKey, out);
+    return { ok: true };
+  } catch (e) {
+    throw Object.assign(new Error(String(e?.message || e)), { code: e?.code || 'gifDecode' });
+  } finally {
+    jobs.delete(jobId);
+    await delBlob(key).catch(() => {});
+  }
+}
+
 const handlers = {
+  gif,
+  gif_abort: async ({ jobId }) => { jobs.get(jobId)?.abort(); return { ok: true }; },
   blobUrl,
   revoke,
   mp3,
