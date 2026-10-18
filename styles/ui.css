@@ -261,6 +261,16 @@ html.android main { padding: 12px 14px 18px; }
   button.icon, footer.toolbar button.icon { min-width: 44px; }
   footer.toolbar { justify-content: space-around; }
 }
+/* phone / touch only: the round "?" of the options stays a circle (the finger-sized min-height above made it a tall oval),
+   centred on its row; next to a 44 px field it sits on the field's middle. Desktop keeps the 20 px circle. */
+@media (pointer: coarse) {
+  button.info { width: 36px; height: 36px; min-width: 36px; min-height: 36px; max-height: 36px; font-size: 16px; align-self: center; }
+  .check-row.has-field > button.info { align-self: end; margin-bottom: 4px; }
+  .check-row .check { flex: 1 1 0; min-width: 0; } /* a long label wraps, the "?" stays at the right of the line */
+}
+html.android button.info { width: 36px; height: 36px; min-width: 36px; min-height: 36px; max-height: 36px; font-size: 16px; align-self: center; }
+html.android .check-row.has-field > button.info { align-self: end; margin-bottom: 4px; }
+html.android .check-row .check { flex: 1 1 0; min-width: 0; }
 
 /* keyboard shortcut rows of the settings page */
 .hk-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }

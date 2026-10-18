@@ -861,10 +861,10 @@
     "message": "Salvar as legendas como arquivo .srt"
   },
   "subsWithVideo": {
-    "message": "com vídeo"
+    "message": "+ com o vídeo"
   },
   "subsWithVideoTitle": {
-    "message": "Salvar as legendas escolhidas com o vídeo: dentro do arquivo .webm (ativáveis no player) ou, senão, como arquivo .srt ao lado"
+    "message": "Ao baixar o vídeo, salvar também estas legendas: dentro do arquivo .webm ou .mkv (ativadas no player); caso contrário, como arquivo .srt com o mesmo nome ao lado do vídeo"
   },
   "subsFailed": {
     "message": "Não foi possível obter as legendas. Ative-as no player por alguns segundos e tente de novo."
@@ -883,5 +883,29 @@
   },
   "helpLabelAmo": {
     "message": "Extensões do Firefox"
+  },
+  "optSubsTitle": {
+    "message": "Legendas"
+  },
+  "optSubs": {
+    "message": "Legendas do YouTube"
+  },
+  "hintSubs": {
+    "message": "Mostra a linha \"Legendas\" no cartão de um vídeo do YouTube. Desligado: sem a linha, nenhuma legenda é procurada ou salva."
+  },
+  "optSubsWithVideo": {
+    "message": "Salvar legendas com o vídeo"
+  },
+  "hintSubsWithVideo": {
+    "message": "O mesmo que a caixa \"+ com o vídeo\" no cartão. Ligado: ao baixar um vídeo (também por atalho) as legendas escolhidas são salvas — dentro de .webm ou .mkv, senão como .srt ao lado do vídeo. Desligado: só o vídeo."
+  },
+  "optSubsSrt": {
+    "message": "Botão \"SRT\" — só legendas"
+  },
+  "hintSubsSrt": {
+    "message": "Mostra o botão SRT na linha de legendas: ele salva apenas as legendas escolhidas como arquivo .srt, sem o vídeo."
+  },
+  "androidSaveOnPage": {
+    "message": "O arquivo está pronto: volte à página do vídeo e o Firefox oferecerá salvá-lo lá."
   }
 }

@@ -861,10 +861,10 @@
     "message": "Guardar los subtítulos como archivo .srt"
   },
   "subsWithVideo": {
-    "message": "con vídeo"
+    "message": "+ con el vídeo"
   },
   "subsWithVideoTitle": {
-    "message": "Guardar los subtítulos elegidos con el vídeo: dentro del archivo .webm (se activan en el reproductor) o, si no, como archivo .srt al lado"
+    "message": "Al descargar el vídeo, guardar también estos subtítulos: dentro del archivo .webm o .mkv (se activan en el reproductor); si no, como archivo .srt con el mismo nombre junto al vídeo"
   },
   "subsFailed": {
     "message": "No se pudieron obtener los subtítulos. Actívalos en el reproductor unos segundos y vuelve a intentarlo."
@@ -883,5 +883,29 @@
   },
   "helpLabelAmo": {
     "message": "Complementos de Firefox"
+  },
+  "optSubsTitle": {
+    "message": "Subtítulos"
+  },
+  "optSubs": {
+    "message": "Subtítulos de YouTube"
+  },
+  "hintSubs": {
+    "message": "Muestra la fila «Subtítulos» en la tarjeta de un vídeo de YouTube. Desactivado: no hay fila y no se buscan ni se guardan subtítulos."
+  },
+  "optSubsWithVideo": {
+    "message": "Guardar subtítulos con el vídeo"
+  },
+  "hintSubsWithVideo": {
+    "message": "Lo mismo que la casilla «+ con el vídeo» de la tarjeta. Activado: al descargar un vídeo (también con un atajo) se guardan los subtítulos elegidos — dentro de .webm o .mkv, si no, como .srt junto al vídeo. Desactivado: solo el vídeo."
+  },
+  "optSubsSrt": {
+    "message": "Botón «SRT»: solo subtítulos"
+  },
+  "hintSubsSrt": {
+    "message": "Muestra el botón SRT en la fila de subtítulos: guarda solo los subtítulos elegidos como archivo .srt, sin el vídeo."
+  },
+  "androidSaveOnPage": {
+    "message": "El archivo está listo: vuelve a la página del vídeo y Firefox te ofrecerá guardarlo allí."
   }
 }

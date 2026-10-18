@@ -1,4 +1,4 @@
-import { h, t, translatePage, browserName } from '../utils/dom.js';
+import { h, t, translatePage, browserName, isAndroid } from '../utils/dom.js';
 import { loadUiLang } from '../utils/i18n.js';
 
 await loadUiLang();
@@ -6,6 +6,7 @@ import { formatBytes, formatDuration } from '../lib/util.js';
 import { hasConsent, acceptConsent } from '../utils/consent.js';
 import { saveSettings } from '../utils/settings.js';
 import { groupByType, pickQuality, pickType, groupAudio, pickAudioQuality } from '../lib/youtube.js';
+import { defaultSubs } from '../lib/subs.js';
 
 let tabId = null;
 
@@ -42,7 +43,7 @@ const recStat = (sec, size) => h('div', { class: 'recstat' }, h('span', { class:
 
 let showSmall = false;
 let liveJobs = new Map(); // item id -> running live recording job (shown inside the item's card)
-let prefs = { defaultQuality: 'best', defaultType: 'auto', defaultAudioFormat: 'mp3', defaultAudioQuality: 'best', ytRecordUi: false };
+let prefs = { subs: true, subsSrt: true, subsWithVideo: false, defaultQuality: 'best', defaultType: 'auto', defaultAudioFormat: 'mp3', defaultAudioQuality: 'best', ytRecordUi: false };
 
 // Per card: chosen type + quality for YouTube videos (indexes refer to it.variants).
 function ytPick(it, groups) {
@@ -71,7 +72,7 @@ function card(it) {
     e.target.disabled = true;
     const res = await browser.runtime.sendMessage({
       type: 'download', tabId, itemId: it.id, variant, variantLabel: it.variants?.[variant]?.label,
-      subs: it.kind === 'yt' && prefs.subsWithVideo ? subsPick(it)?.id || '' : '',
+      subs: it.kind === 'yt' && prefs.subs && prefs.subsWithVideo ? subsPick(it)?.id || '' : '',
     });
     if (!res.ok) e.target.disabled = false;
     setTimeout(refresh, 300);
@@ -131,7 +132,7 @@ function card(it) {
     note,
     videoRow,
     !it.noteKey && audioVariants.length ? audioControls(it, audioVariants, sizeText) : null,
-    it.kind === 'yt' && !it.noteKey && !it.live && (it.subs || []).length ? subsControls(it) : null,
+    it.kind === 'yt' && prefs.subs && !it.noteKey && !it.live && (it.subs || []).length ? subsControls(it) : null,
     it.kind === 'yt' && it.why === 'cut' ? h('div', { class: 'note warn' }, whyText(it)) : null,
     it.kind === 'yt' && (it.why ? it.whyBusy : (it.apiState === 'failed' || it.dlFailed)) ? h('div', { class: 'note' }, t('busyHint')) : null,
     it.kind === 'yt' && it.whyRecord !== 'no' && showFallback(it) ? recControls(it) : null,
@@ -139,14 +140,12 @@ function card(it) {
     it.kind === 'yt' && it.apiState === 'loading' && !it.variants.length ? h('div', { class: 'note' }, t('ytApiLoading')) : null);
 }
 
-// Subtitles: [language] [SRT] [with the video]. Default: the interface language, then its translation, then the first.
+// Subtitles: [language] [SRT] [+ with the video]. Settings: subtitles on/off, the SRT button on/off. Default: the interface language, then its translation, then the first.
 function subsPick(it) {
   const list = it.subs || [];
   const chosen = selectedVariant.get(`${it.id}:subs`);
   if (chosen && list.some((s) => s.id === chosen)) return list.find((s) => s.id === chosen);
-  const ui = (document.documentElement.lang || navigator.language || 'en').toLowerCase().split('-')[0];
-  const base = (l) => String(l || '').toLowerCase().split(/[-_]/)[0];
-  return list.find((s) => base(s.lang) === ui && !s.tlang && !/\(.*\)/.test(s.label)) || list.find((s) => base(s.lang) === ui) || list[0];
+  return defaultSubs(list, document.documentElement.lang || navigator.language || 'en');
 }
 function subsControls(it) {
   const pick = subsPick(it);
@@ -160,7 +159,7 @@ function subsControls(it) {
   } }, 'SRT');
   const box = h('input', { type: 'checkbox', checked: !!prefs.subsWithVideo, onchange: async (e) => { prefs.subsWithVideo = e.target.checked; try { await saveSettings({ subsWithVideo: e.target.checked }); } catch { /* ignore */ } } });
   return h('div', { class: 'actions subsrow' },
-    h('span', { class: 'meta' }, t('subsTitle')), sel, save,
+    h('span', { class: 'meta' }, t('subsTitle')), sel, prefs.subsSrt ? save : null,
     h('label', { class: 'subswith', title: t('subsWithVideoTitle') }, box, t('subsWithVideo')));
 }
 
@@ -460,16 +459,22 @@ async function init() {
   tabId = tab?.id ?? null;
 
   await setupSidebarButton();
-  document.getElementById('btn-settings').onclick = () => browser.runtime.openOptionsPage();
-  document.getElementById('btn-history').onclick = () => browser.tabs.create({ url: browser.runtime.getURL('content/history.html') });
+  // Firefox for Android: the popup is a full-screen page; a page opened from it stays behind it until "Back".
+  // There the page is opened as a new tab and the popup is closed, so it comes to the front at once.
+  const openPage = async (page) => {
+    await browser.tabs.create({ url: browser.runtime.getURL(`content/${page}`) });
+    if (isAndroid()) window.close();
+  };
+  document.getElementById('btn-settings').onclick = () => (isAndroid() ? openPage('settings.html') : browser.runtime.openOptionsPage());
+  document.getElementById('btn-history').onclick = () => openPage('history.html');
   document.getElementById('btn-reload').onclick = async () => {
     if (tabId !== null) await browser.tabs.reload(tabId);
     window.close();
   };
 
-  if (typeof browser.downloads.showDefaultFolder !== 'function') document.getElementById('btn-folder').hidden = true; // Android
+  if (isAndroid() || typeof browser.downloads.showDefaultFolder !== 'function') document.getElementById('btn-folder').hidden = true; // Android: no "open folder"
   document.getElementById('btn-folder').onclick = () => { try { browser.downloads.showDefaultFolder(); } catch { /* ignore */ } };
-  document.getElementById('btn-help').onclick = () => browser.tabs.create({ url: browser.runtime.getURL('content/help.html') });
+  document.getElementById('btn-help').onclick = () => openPage('help.html');
   document.getElementById('btn-bug').onclick = async () => {
     document.getElementById('btn-bug').disabled = true;
     try { await browser.runtime.sendMessage({ type: 'yt_bug', tabId }); } catch { /* shown through state */ }

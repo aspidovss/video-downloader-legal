@@ -861,10 +861,10 @@
     "message": "字幕を .srt ファイルとして保存"
   },
   "subsWithVideo": {
-    "message": "動画と一緒に"
+    "message": "＋動画と一緒に"
   },
   "subsWithVideoTitle": {
-    "message": "選んだ字幕を動画と一緒に保存：.webm ファイルの中（プレーヤーで切り替え可能）、それ以外は横に .srt ファイル"
+    "message": "動画のダウンロード時にこの字幕も保存します：.webm または .mkv ファイルの中（プレーヤーで切り替え）、それ以外は動画の横に同じ名前の .srt ファイルとして"
   },
   "subsFailed": {
     "message": "字幕を取得できませんでした。プレーヤーで数秒間字幕をオンにしてから、もう一度お試しください。"
@@ -883,5 +883,29 @@
   },
   "helpLabelAmo": {
     "message": "Firefox アドオン"
+  },
+  "optSubsTitle": {
+    "message": "字幕"
+  },
+  "optSubs": {
+    "message": "YouTube の字幕"
+  },
+  "hintSubs": {
+    "message": "YouTube 動画のカードに「字幕」行を表示します。オフ：行は表示されず、字幕の検索も保存もしません。"
+  },
+  "optSubsWithVideo": {
+    "message": "動画と一緒に字幕を保存"
+  },
+  "hintSubsWithVideo": {
+    "message": "カードの「＋動画と一緒に」と同じです。オン：動画のダウンロード（ショートカットでも）で選んだ字幕も保存します — .webm / .mkv の中、それ以外は動画の横に .srt。オフ：動画のみ。"
+  },
+  "optSubsSrt": {
+    "message": "「SRT」ボタン — 字幕のみ"
+  },
+  "hintSubsSrt": {
+    "message": "字幕行に SRT ボタンを表示します：動画なしで、選んだ字幕だけを .srt ファイルとして保存します。"
+  },
+  "androidSaveOnPage": {
+    "message": "ファイルの準備ができました。動画のページに戻ると Firefox が保存を提案します。"
   }
 }

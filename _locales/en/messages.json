@@ -861,10 +861,10 @@
     "message": "Save the subtitles as an .srt file"
   },
   "subsWithVideo": {
-    "message": "with video"
+    "message": "+ with video"
   },
   "subsWithVideoTitle": {
-    "message": "Save the chosen subtitles with the video: inside a .webm file (switchable in the player), otherwise as an .srt file next to it"
+    "message": "When you download the video, save these subtitles too: inside a .webm or .mkv file (switch them on in the player), otherwise as an .srt file with the same name next to the video"
   },
   "subsFailed": {
     "message": "Could not get the subtitles. Turn them on in the player for a few seconds and try again."
@@ -883,5 +883,29 @@
   },
   "helpLabelAmo": {
     "message": "Firefox Add-ons"
+  },
+  "optSubsTitle": {
+    "message": "Subtitles"
+  },
+  "optSubs": {
+    "message": "YouTube subtitles"
+  },
+  "hintSubs": {
+    "message": "Shows the Subtitles row in the card of a YouTube video. Off: the row is hidden and no subtitles are looked up or saved."
+  },
+  "optSubsWithVideo": {
+    "message": "Save subtitles with the video"
+  },
+  "hintSubsWithVideo": {
+    "message": "The same as the \"+ with video\" tick in the card. On: downloading a video (also with a keyboard shortcut) saves the chosen subtitles too — inside a .webm or .mkv file, otherwise as an .srt file next to the video. Off: only the video."
+  },
+  "optSubsSrt": {
+    "message": "\"SRT\" button — subtitles only"
+  },
+  "hintSubsSrt": {
+    "message": "Shows the SRT button in the Subtitles row: it saves only the chosen subtitles as an .srt file, without the video."
+  },
+  "androidSaveOnPage": {
+    "message": "The file is ready: go back to the video page — Firefox will offer to save it there."
   }
 }

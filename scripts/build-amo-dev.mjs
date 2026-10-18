@@ -10,7 +10,7 @@
 //   AMO-upload.txt                                    what to paste into the AMO form
 // AMO never accepts the same version twice, so the build number only grows: it is the number after "dev" in
 // version_name, or the last one used + 1 (kept in last.json of the output folder), whichever is larger.
-// Needs only Node.js 18+ and the `zip` tool (Windows: the built-in `tar`). No npm packages, no web-ext.
+// Needs only Node.js 18+ (the archives are written by scripts/zip.mjs). No npm packages, no web-ext, no zip tool.
 import fs from 'node:fs';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
@@ -75,13 +75,13 @@ if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.me
   for (const f of PACKAGE_FILES) if (fs.existsSync(path.join(root, f))) copyInto(pkg, f);
   fs.writeFileSync(path.join(pkg, 'manifest.json'), JSON.stringify(dm, null, 2) + '\n');
   const xpi = path.join(outDir, `video-downloader-legal-${release ? 'ff' : 'dev'}-${ver}.xpi`);
-  if (!packFolder(pkg, xpi)) { console.error('No zip or tar tool found'); process.exit(1); }
+  if (!packFolder(pkg, xpi)) { console.error('The archive was not written'); process.exit(1); }
 
   // the source code (the files of the repository, uncommitted changes included; nothing built)
   const src = path.join(stage, 'src');
   for (const f of sourceFiles()) copyInto(src, f);
   const srcZip = path.join(outDir, `video-downloader-legal-source-${ver}.zip`);
-  if (!packFolder(src, srcZip)) { console.error('No zip or tar tool found'); process.exit(1); }
+  if (!packFolder(src, srcZip)) { console.error('The archive was not written'); process.exit(1); }
 
   fs.writeFileSync(path.join(outDir, 'AMO-upload.txt'), [
     release ? `Video Downloader Legal ${ver} (release)` : `VDL DEV ${ver} (${m.version_name || m.version})`,

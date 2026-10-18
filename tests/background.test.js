@@ -1363,7 +1363,7 @@ test('debug log: off by default; when on it records detections and downloads wit
   assert.equal(store.local.debugLog.length, n, 'nothing is written after switching off');
 });
 
-test('YouTube subtitles: the card lists the tracks; SRT saves <title>.<lang>.srt; "with video" adds the .srt next to an mp4', async () => {
+test('YouTube subtitles: the card lists the tracks; SRT saves <title>.<lang>.srt; "+ with video" (when ticked) adds the .srt; the settings switch them off', async () => {
   const tabId = 97;
   const TT = 'https://www.youtube.com/api/timedtext?v=subVid123456&lang=en';
   const audio = new Uint8Array(40000).fill(7);
@@ -1401,11 +1401,251 @@ test('YouTube subtitles: the card lists the tracks; SRT saves <title>.<lang>.srt
     assert.ok(asked.includes('json3'));
     // with the video (here an audio-only m4a track stands in for a single-file download): .srt next to it
     const idx = it.variants.findIndex((v) => v.atype === 'm4a');
-    const b2 = downloadsStarted.length;
-    await send({ type: 'download', tabId, itemId: it.id, variant: idx, variantLabel: it.variants[idx].label, subs: 't0' }, sender);
-    await tick(300);
-    assert.deepEqual(downloadsStarted.slice(b2).map((d) => d.filename), ['Clip_ Test.m4a', 'Clip_ Test.en.srt']);
+    const prev = store.local.settings;
+    const setS = (o) => { store.local.settings = { ...prev, ...o }; listeners['storage.onChanged'][0].fn({ settings: { newValue: store.local.settings } }, 'local'); };
+    const dl = async (extra) => {
+      const b = downloadsStarted.length;
+      await send({ type: 'download', tabId, itemId: it.id, variant: idx, variantLabel: it.variants[idx].label, ...extra }, sender);
+      await tick(300);
+      return downloadsStarted.slice(b).map((d) => d.filename);
+    };
+    try {
+      assert.deepEqual(await dl({ subs: 't0' }), ['Clip_ Test.m4a'], '"+ with video" not ticked: only the video');
+      setS({ subsWithVideo: true });
+      assert.equal((await send({ type: 'get_state', tabId }, sender)).prefs.subsWithVideo, true);
+      assert.deepEqual(await dl({ subs: 't0' }), ['Clip_ Test.m4a', 'Clip_ Test.en.srt']);
+      assert.deepEqual(await dl({}), ['Clip_ Test.m4a', 'Clip_ Test.en.srt'], 'a hotkey (no choice sent) takes the default track');
+      // subtitles off in the settings: no row, no SRT, nothing with the video even when ticked
+      setS({ subsWithVideo: true, subs: false });
+      const off = await send({ type: 'get_state', tabId }, sender);
+      assert.equal(off.prefs.subs, false);
+      assert.deepEqual(off.items.find((i) => i.kind === 'yt').subs, []);
+      assert.deepEqual(await send({ type: 'yt_subs', tabId, itemId: it.id, choice: 't0' }, sender), { ok: false, error: 'subsOff' });
+      assert.deepEqual(await dl({ subs: 't0' }), ['Clip_ Test.m4a']);
+      setS({ subsSrt: false });
+      const p2 = (await send({ type: 'get_state', tabId }, sender)).prefs;
+      assert.deepEqual([p2.subs, p2.subsSrt], [true, false]);
+    } finally { store.local.settings = prev; listeners['storage.onChanged'][0].fn({ settings: { newValue: prev } }, 'local'); }
   } finally { globalThis.fetch = prevFetch; }
+});
+
+test('LL-HLS: the same playlist asked with new _HLS_msn / _HLS_part is one entry', async () => {
+  const P = 'https://ll.example.com/live/chunklist_0.m3u8';
+  fixtures[`${P}?session=s1`] = '#EXTM3U\n#EXT-X-TARGETDURATION:2\n#EXT-X-MEDIA-SEQUENCE:5\n#EXTINF:2,\na.ts\n';
+  for (let n = 0; n < 6; n++) hit(`${P}?session=s1&_HLS_msn=${100 + n}&_HLS_part=${n % 3}`, { 'content-type': 'application/vnd.apple.mpegurl' }, { tabId: 41 });
+  await tick(120);
+  const hls = (await send({ type: 'get_state', tabId: 41 })).items.filter((i) => i.kind === 'hls');
+  assert.equal(hls.length, 1);
+  assert.equal(hls[0].url, `${P}?session=s1`, 'kept without the LL-HLS parameters');
+});
+
+test('HLS: separate video and audio playlists without a readable master become one entry with qualities and sound', { skip: spawnSync('ffmpeg', ['-version']).status !== 0 }, async () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'vdl-synth-'));
+  const mk = (name, args) => {
+    const r = spawnSync('ffmpeg', ['-v', 'error', '-y', ...args, '-t', '4', '-f', 'hls', '-hls_time', '2', '-hls_playlist_type', 'vod', '-hls_segment_type', 'fmp4',
+      '-hls_fmp4_init_filename', `${name}_init.mp4`, '-hls_segment_filename', `${name}_%d.m4s`, `chunklist_${name}.m3u8`], { cwd: dir }); // run inside dir: on Windows the init file otherwise lands in the current folder
+    assert.equal(r.status, 0, String(r.stderr));
+  };
+  mk('0_video', ['-f', 'lavfi', '-i', 'testsrc=size=320x180:rate=25', '-c:v', 'libx264', '-pix_fmt', 'yuv420p', '-g', '50', '-an']);
+  mk('1_video', ['-f', 'lavfi', '-i', 'testsrc=size=640x360:rate=25', '-c:v', 'libx264', '-pix_fmt', 'yuv420p', '-g', '50', '-an']);
+  mk('5_audio', ['-f', 'lavfi', '-i', 'sine=frequency=440:sample_rate=48000', '-c:a', 'aac', '-vn']);
+  const B = 'https://edge.example.net/v1/streams/origin.abc/';
+  for (const f of fs.readdirSync(dir)) { const b = fs.readFileSync(path.join(dir, f)); fixtures[B + f] = f.endsWith('.m3u8') ? b.toString() : b.buffer.slice(b.byteOffset, b.byteOffset + b.length); }
+  const tabId = 42;
+  const pl = { 'content-type': 'application/vnd.apple.mpegurl' };
+  hit(`${B}llhls.m3u8?token=one-time`, pl, { tabId }); // the master: refused on a second request (no fixture -> 404)
+  for (const name of ['0_video', '5_audio', '1_video']) {
+    for (let n = 0; n < 3; n++) hit(`${B}chunklist_${name}.m3u8?_HLS_msn=${10 + n}&_HLS_part=${n}`, pl, { tabId });
+  }
+  await tick(400);
+  const st = await send({ type: 'get_state', tabId });
+  const hls = st.items.filter((i) => i.kind === 'hls');
+  const main = hls.filter((i) => !i.secondary);
+  assert.equal(main.length, 1, 'one entry for the stream');
+  assert.deepEqual(main[0].variants.map((v) => v.label), ['360p', '180p']);
+  assert.equal(hls.filter((i) => i.secondary).length, 4, 'three playlists and the refused master under "More"');
+  // download the best quality: video and sound in ONE mp4
+  const blobs = [];
+  const origCreate = URL.createObjectURL;
+  URL.createObjectURL = (b) => { blobs.push(b); return origCreate(b); };
+  try {
+    const before = downloadsStarted.length;
+    await send({ type: 'download', tabId, itemId: main[0].id, variant: 0, variantLabel: '360p' });
+    for (let i = 0; i < 100 && downloadsStarted.length === before; i++) await tick(50);
+    assert.equal(downloadsStarted.length - before, 1, 'one file');
+    assert.match(downloadsStarted.at(-1).filename, /\.mp4$/);
+    const out = path.join(dir, 'out.mp4');
+    fs.writeFileSync(out, Buffer.from(await blobs.at(-1).arrayBuffer()));
+    const pr = spawnSync('ffprobe', ['-v', 'error', '-show_entries', 'stream=codec_type,width,height', '-of', 'csv=p=0', out]);
+    const lines = String(pr.stdout).trim().split(/\r?\n/).map((l) => l.trim()).sort(); // Windows ffprobe ends lines with CRLF
+    assert.deepEqual(lines, ['audio', 'video,640,360']);
+  } finally { URL.createObjectURL = origCreate; }
+});
+
+test('LIVE HLS: separate video and audio playlists are recorded together and saved as ONE mp4', { skip: spawnSync('ffmpeg', ['-version']).status !== 0 }, async () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'vdl-synthlive-'));
+  const mk = (name, args) => {
+    const r = spawnSync('ffmpeg', ['-v', 'error', '-y', ...args, '-t', '12', '-f', 'hls', '-hls_time', '1', '-hls_list_size', '0', '-hls_segment_type', 'fmp4',
+      '-hls_fmp4_init_filename', `${name}_init.mp4`, '-hls_segment_filename', `${name}_%d.m4s`, `${name}.m3u8`], { cwd: dir }); // run inside dir (Windows: see above)
+    assert.equal(r.status, 0, String(r.stderr));
+  };
+  mk('v', ['-f', 'lavfi', '-i', 'testsrc=size=320x240:rate=25', '-c:v', 'libx264', '-pix_fmt', 'yuv420p', '-g', '25', '-an']);
+  mk('a', ['-f', 'lavfi', '-i', 'sine=frequency=440:sample_rate=48000', '-c:a', 'aac', '-vn']);
+  const B = 'https://edge.live.example.org/streams/xyz/';
+  let polls = 0;
+  const origFetch = globalThis.fetch;
+  const file = (f) => { const b = fs.readFileSync(path.join(dir, f)); return { ok: true, status: 200, headers: { get: () => String(b.length) }, arrayBuffer: async () => b.buffer.slice(b.byteOffset, b.byteOffset + b.length), body: null }; };
+  globalThis.fetch = async (url) => {
+    const m = /\/(v|a)\.m3u8/.exec(url);
+    if (m) {
+      polls++;
+      const first = Math.min(6, Math.floor(polls / 2));
+      const segs = [0, 1, 2].map((i) => first + i);
+      return { ok: true, status: 200, text: async () => `#EXTM3U\n#EXT-X-VERSION:7\n#EXT-X-TARGETDURATION:1\n#EXT-X-MEDIA-SEQUENCE:${first}\n#EXT-X-MAP:URI="${m[1]}_init.mp4"\n${segs.map((n) => `#EXTINF:1.000,\n${m[1]}_${n}.m4s`).join('\n')}\n` };
+    }
+    if (url.startsWith(B)) return file(url.slice(B.length));
+    return origFetch(url);
+  };
+  const tabId = 43;
+  try {
+    for (const n of ['v', 'a']) hit(`${B}${n}.m3u8?_HLS_msn=3&_HLS_part=0`, { 'content-type': 'application/vnd.apple.mpegurl' }, { tabId });
+    await tick(300);
+    let st = await send({ type: 'get_state', tabId });
+    const main = st.items.filter((i) => i.kind === 'hls' && !i.secondary);
+    assert.equal(main.length, 1);
+    assert.equal(main[0].live, true);
+    assert.deepEqual(main[0].variants.map((v) => v.label), ['240p']);
+    let captured;
+    const origCreate = URL.createObjectURL;
+    URL.createObjectURL = (b) => { captured = b; return origCreate(b); };
+    try {
+      const before = downloadsStarted.length;
+      assert.equal((await send({ type: 'download', tabId, itemId: main[0].id, variant: 0 })).ok, true);
+      await tick(2500);
+      st = await send({ type: 'get_state', tabId });
+      const job = st.jobs.at(-1);
+      assert.equal(job.recording, true);
+      await send({ type: 'stop_job', jobId: job.id });
+      for (let i = 0; i < 100 && downloadsStarted.length === before; i++) await tick(50);
+      assert.equal(downloadsStarted.length - before, 1, 'one file');
+      assert.match(downloadsStarted.at(-1).filename, /\.mp4$/);
+    } finally { URL.createObjectURL = origCreate; }
+    const out = path.join(dir, 'out.mp4');
+    fs.writeFileSync(out, Buffer.from(await captured.arrayBuffer()));
+    const pr = spawnSync('ffprobe', ['-v', 'error', '-show_entries', 'stream=codec_type,start_time,duration', '-of', 'json', out]);
+    const streams = JSON.parse(String(pr.stdout)).streams;
+    assert.deepEqual(streams.map((x) => x.codec_type).sort(), ['audio', 'video']);
+    const d = streams.map((x) => Number(x.duration));
+    assert.ok(Math.min(...d) >= 2, `durations ${d}`);
+    assert.ok(Math.abs(d[0] - d[1]) < 1.2, `video and audio of about the same length: ${d}`);
+  } finally { globalThis.fetch = origFetch; }
+});
+
+test('Feed of short HLS videos: cover pictures and names from the page, videos off screen go under "More"', async () => {
+  const tabId = 44;
+  const pl = (name) => `#EXTM3U\n#EXT-X-VERSION:7\n#EXT-X-TARGETDURATION:2\n#EXT-X-MAP:URI="https://media.feed.example/${name}.m4s",BYTERANGE="800@0"\n#EXT-X-BYTERANGE:5000@800\n#EXTINF:2,\nhttps://media.feed.example/${name}.m4s\n#EXT-X-ENDLIST\n`;
+  fixtures['https://api.feed.example/v2/gifs/weeklyskybluechick/hd.m3u8'] = pl('WeeklySkyblueChick');
+  fixtures['https://api.feed.example/v2/gifs/genuinewigglygiraffe/hd.m3u8'] = pl('GenuineWigglyGiraffe');
+  for (const id of ['weeklyskybluechick', 'genuinewigglygiraffe']) hit(`https://api.feed.example/v2/gifs/${id}/hd.m3u8`, { 'content-type': 'text/plain' }, { tabId });
+  await tick(150);
+  const sender = { tab: { id: tabId } };
+  const feed = (vis) => send({ type: 'page_info', top: true, url: 'https://www.feed.example/', title: 'Feed | Example', thumbnail: '', videos: [], feed: [
+    { poster: 'https://media.feed.example/WeeklySkyblueChick-poster.jpg', src: '', visible: vis === 0, playing: vis === 0 },
+    { poster: 'https://media.feed.example/GenuineWigglyGiraffe-poster.jpg', src: '', visible: vis === 1, playing: vis === 1 },
+  ] }, sender);
+  await feed(1);
+  let hls = (await send({ type: 'get_state', tabId }, sender)).items.filter((i) => i.kind === 'hls');
+  const by = (n) => hls.find((i) => i.url.includes(n));
+  assert.equal(by('genuine').thumbnail, 'https://media.feed.example/GenuineWigglyGiraffe-poster.jpg');
+  assert.equal(by('genuine').title, 'Genuine Wiggly Giraffe');
+  assert.ok(!by('genuine').secondary, 'the video on screen is a main card');
+  assert.equal(by('weekly').secondary, true, 'the other one is under "More"');
+  await feed(0); // scrolled to the other video
+  hls = (await send({ type: 'get_state', tabId }, sender)).items.filter((i) => i.kind === 'hls');
+  assert.ok(!by('weekly').secondary);
+  assert.equal(by('genuine').secondary, true);
+});
+
+test('Firefox for Android: the finished file is handed to the page of the video (the downloads API never answers there)', async () => {
+  const tabId = 45;
+  const base = 'https://and.example.com/live.m3u8';
+  let polls = 0;
+  const origFetch = globalThis.fetch;
+  globalThis.fetch = async (url) => {
+    if (url === base) {
+      polls++;
+      const segs = [0, 1, 2].map((i) => i + Math.max(0, polls - 1));
+      return { ok: true, status: 200, text: async () => `#EXTM3U\n#EXT-X-MEDIA-SEQUENCE:${segs[0]}\n${segs.map((n) => `#EXTINF:0.2,\ns${n}.ts`).join('\n')}\n` };
+    }
+    const m = /and\.example\.com\/s(\d+)\.ts$/.exec(url);
+    if (m) return { ok: true, status: 200, arrayBuffer: async () => new TextEncoder().encode(`<${m[1]}>`).buffer };
+    return origFetch(url);
+  };
+  const nav = Object.getOwnPropertyDescriptor(globalThis, 'navigator');
+  Object.defineProperty(globalThis, 'navigator', { value: { userAgent: 'Mozilla/5.0 (Android 15; Mobile; rv:160.0) Gecko/160.0 Firefox/160.0' }, configurable: true, writable: true });
+  try {
+    hit(base, { 'content-type': 'application/vnd.apple.mpegurl' }, { tabId });
+    await tick(80);
+    let st = await send({ type: 'get_state', tabId });
+    const item = st.items.find((i) => i.url === base);
+    const store0 = { ...store.local.settings };
+    store.local.settings = { ...store0, tsToMp4: false };
+    listeners['storage.onChanged'][0].fn({ settings: { newValue: store.local.settings } }, 'local');
+    const before = downloadsStarted.length;
+    const msgs = tabMessages.length;
+    await send({ type: 'download', tabId, itemId: item.id });
+    await tick(900);
+    st = await send({ type: 'get_state', tabId });
+    await send({ type: 'stop_job', jobId: st.jobs.at(-1).id });
+    for (let i = 0; i < 40 && !tabMessages.slice(msgs).some((x) => x.msg.type === 'vdl_save'); i++) await tick(50);
+    const saved = tabMessages.slice(msgs).find((x) => x.msg.type === 'vdl_save');
+    assert.ok(saved, 'the page got the file');
+    assert.equal(saved.id, tabId);
+    assert.deepEqual(saved.opts, { frameId: 0 });
+    assert.match(saved.msg.name, /\.ts$/);
+    assert.match(await saved.msg.blob.text(), /^<\d+>/);
+    assert.equal(downloadsStarted.length, before, 'downloads.download is not used on the phone');
+    await tick(100);
+    assert.equal((await send({ type: 'get_state', tabId })).jobs.at(-1).state, 'done');
+    store.local.settings = store0;
+    listeners['storage.onChanged'][0].fn({ settings: { newValue: store0 } }, 'local');
+  } finally {
+    globalThis.fetch = origFetch;
+    if (nav) Object.defineProperty(globalThis, 'navigator', nav); else delete globalThis.navigator;
+  }
+});
+
+test('HLS fMP4 with video and sound in one playlist is saved as an ordinary MP4 (index first, seekable)', { skip: spawnSync('ffmpeg', ['-version']).status !== 0 }, async () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'vdl-defrag-'));
+  const r = spawnSync('ffmpeg', ['-v', 'error', '-y', '-f', 'lavfi', '-i', 'testsrc=size=320x240:rate=25', '-f', 'lavfi', '-i', 'sine=frequency=440:sample_rate=48000', '-t', '6',
+    '-c:v', 'libx264', '-pix_fmt', 'yuv420p', '-g', '25', '-c:a', 'aac', '-f', 'hls', '-hls_time', '2', '-hls_playlist_type', 'vod', '-hls_segment_type', 'fmp4',
+    '-hls_fmp4_init_filename', 'init.mp4', '-hls_segment_filename', 's%d.m4s', 'p.m3u8'], { cwd: dir }); // run inside dir (Windows: see above)
+  assert.equal(r.status, 0, String(r.stderr));
+  const B = 'https://frag.example.com/v/';
+  for (const f of fs.readdirSync(dir)) { const b = fs.readFileSync(path.join(dir, f)); fixtures[B + f] = f.endsWith('.m3u8') ? b.toString() : b.buffer.slice(b.byteOffset, b.byteOffset + b.length); }
+  const tabId = 46;
+  hit(`${B}p.m3u8`, { 'content-type': 'application/vnd.apple.mpegurl' }, { tabId });
+  await tick(150);
+  const item = (await send({ type: 'get_state', tabId })).items.find((i) => i.url === `${B}p.m3u8`);
+  const blobs = [];
+  const origCreate = URL.createObjectURL;
+  URL.createObjectURL = (b) => { blobs.push(b); return origCreate(b); };
+  try {
+    const before = downloadsStarted.length;
+    await send({ type: 'download', tabId, itemId: item.id, variant: 0 });
+    for (let i = 0; i < 100 && downloadsStarted.length === before; i++) await tick(50);
+    assert.equal(downloadsStarted.length - before, 1);
+  } finally { URL.createObjectURL = origCreate; }
+  const out = Buffer.from(await blobs.at(-1).arrayBuffer());
+  const top = [];
+  for (let p = 0; p + 8 <= out.length;) { const size = out.readUInt32BE(p); top.push(out.toString('latin1', p + 4, p + 8)); if (!size) break; p += size; }
+  assert.deepEqual(top, ['ftyp', 'moov', 'mdat'], 'no moof pieces, the index comes first');
+  const file = path.join(dir, 'out.mp4');
+  fs.writeFileSync(file, out);
+  const same = (f) => String(spawnSync('ffmpeg', ['-v', 'error', '-i', f, '-map', '0', '-c', 'copy', '-f', 'framemd5', '-']).stdout).split('\n').filter((l) => l && !l.startsWith('#')).map((l) => l.split(',').map((x) => x.trim())).map((x) => `${x[0]},${x[5]}`).sort((a, b) => a[0].localeCompare(b[0])).join('\n'); // per track, in order (the interleaving may differ)
+  const src = path.join(dir, 'src.mp4');
+  fs.writeFileSync(src, Buffer.concat(['init.mp4', 's0.m4s', 's1.m4s', 's2.m4s'].map((f) => fs.readFileSync(path.join(dir, f)))));
+  assert.equal(same(file), same(src), 'the same packets in the same tracks');
 });
 
 test('Kick / Amazon IVS: quality playlists without a quality list go under "More" when the master is there', async () => {
