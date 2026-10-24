@@ -29,10 +29,11 @@ Author: **AspidovSS** · License: **MIT** · Contact: <vdl@aspidov.ru>
 | **Direct files, HLS (`m3u8`), DASH (`mpd`)** | Quality choice, separate audio track, AES-128, fMP4, byte ranges. Video and audio are joined into one file without re-encoding. |
 | **YouTube** | Choose type (MP4 / WEBM / AV1) and resolution; audio as MP3, M4A or WEBM; video + audio joined into one file. If a direct link is unavailable, a fallback records from the player. |
 | **Live streams** | **Twitch** and other HLS live streams: *Record* until you press *Stop* (or a time limit). **YouTube live (beta)**: recorded from the player in real time, saved as `.mp4`. Recordings start at 0:00. |
-| **TS → MP4** | HLS streams in MPEG-TS are saved as ordinary **MP4 by default** (H.264 + AAC, no re-encoding); **TS** stays available as the second choice. |
+| **TS → MP4 / MKV** | HLS streams in MPEG-TS are saved as ordinary **MP4 by default** (H.264 + AAC, no re-encoding); **MKV** and **TS** are offered too, the default is set in the options. |
 | **TikTok** | The video on screen is always first, with its title and cover; other videos in the feed sit under **More**. |
 | **Other sites** | Vimeo, Dailymotion, RuTube, Dzen, Instagram, Facebook, X (Twitter), Bilibili, Canva, OK.ru, VK; any other site through general stream detection. Results on some sites are limited by what the page provides. |
 | **Audio only** | MP3 (converted in the browser, 128–320 kbps), M4A or WEBM. |
+| **Video as GIF** | Short videos (up to 3 min) can be saved as an animated GIF made right in the browser (Firefox, Chrome, Edge): width 640 / 480 / 320 / 240 px and 5–15 FPS chosen in the card, with the rough size shown beforehand; no sound. The *GIF* block of the options sets the length limit, the default width and frame rate, and on which sites GIF is offered (your own regular expressions, or all sites). |
 | **YouTube subtitles** | Any track of the video (also automatic ones, or a YouTube translation) as `.srt`, or with the video: a switchable track inside `.webm`, else an `.srt` next to it. |
 | **Convenience** | Light and dark theme (follows your system), 10 interface languages, history, file name template, notifications, configurable hotkeys, built-in help. |
 | **Diagnostics** | One button creates a local diagnostics file (links masked) that you can attach to a bug report. An optional **debug log** (options, off by default) records what the extension does; you can view, copy, save or send it, and the auto-diagnostics result is added to it. Nothing is ever sent automatically. |
