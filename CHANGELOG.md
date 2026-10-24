@@ -2,6 +2,12 @@
 
 Added features per version (fixes and internal changes are not listed). Version history before 1.5 is condensed from the development log; the short development log is in [docs/DEVLOG-en.md](docs/DEVLOG-en.md) (English) and [docs/DEVLOG-ru.md](docs/DEVLOG-ru.md) (Russian).
 
+## 1.6.5
+
+### Added
+* **GIF settings block** (Settings → Downloads → GIF): *GIF from video* is on for all sites by default; the longest video that gets a GIF (1–180 s, default 60); sites for GIF and sites without GIF as regular expressions (one per line, matched against the page's host, then the video's); the default GIF width (640 / 480 / 320 / 240 px) and frame rate (5–15 FPS). 1.6.4's choice "off" stays off.
+* **GIF in the card:** every width (640 / 480 / 320 / 240 px) and a frame-rate list (FPS) next to it; the rough GIF size under the row; the time left while the GIF is made.
+
 ## 1.6.4
 
 ### Added

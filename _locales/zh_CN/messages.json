@@ -932,38 +932,14 @@
   "hintTsFormat": {
     "message": "TS 流（H.264 + AAC）不重新编码即可保存：MP4 可在任何播放器和手机上打开；MKV 更能容忍录制中的中断，可在 VLC、mpv 和电脑播放器中播放；TS 按原样保存。也可在视频卡片中选择格式。若为其他编解码器或超过约 700 MB，则保存 TS 文件。TS 无法在不重新编码的情况下保存为 WEBM。"
   },
-  "optGifMake": {
-    "message": "从视频生成 GIF"
-  },
-  "gifMakeJr": {
-    "message": "仅 JoyReactor"
-  },
-  "gifMakeAll": {
-    "message": "所有网站"
-  },
-  "gifMakeOff": {
-    "message": "关闭"
-  },
-  "hintGifMake": {
-    "message": "短视频（60 秒以内）的卡片中会出现 GIF 格式：网站的原始 GIF（如果有），以及在浏览器中直接由视频生成的 GIF（宽 480 或 320 像素，每秒 10 帧，无声音）。GIF 比视频大很多倍，生成也需要时间。"
-  },
   "gifOriginal": {
     "message": "{w} · 原始"
   },
-  "gifMade": {
-    "message": "{w} · 来自视频"
-  },
   "gifTooLong": {
-    "message": "视频超过 60 秒：不会从中生成 GIF。"
+    "message": "视频超过 GIF 时长上限（设置 → GIF）。"
   },
   "gifDecode": {
     "message": "无法读取视频来生成 GIF。"
-  },
-  "gifFromWebm": {
-    "message": "{w} · 来自 WEBM"
-  },
-  "gifFromMp4": {
-    "message": "{w} · 来自 MP4"
   },
   "updateAvailable": {
     "message": "有新版本 {v}"
@@ -994,5 +970,50 @@
   },
   "updateBuildNote": {
     "message": "这是 Chrome 和 Edge 的“updater”安装包：它每天自动在 GitHub 上检查一次是否有新版本，并在扩展窗口中显示提醒。上方的复选框可关闭检查和提醒。普通安装包和 Firefox 版本不检查更新。"
+  },
+  "gifTitle": {
+    "message": "GIF"
+  },
+  "optGifEnabled": {
+    "message": "从视频生成 GIF"
+  },
+  "hintGifEnabled": {
+    "message": "短视频的卡片中会出现 GIF 格式：动画在浏览器中直接由视频生成，无声音。GIF 比视频大很多倍，生成也需要时间。网站自带的 GIF（如果有）始终显示。"
+  },
+  "optGifMaxSec": {
+    "message": "最长秒数"
+  },
+  "hintGifMaxSec": {
+    "message": "仅为不超过此时长的视频提供 GIF（1 至 180 秒）。若时长事先未知，则在生成前检查。"
+  },
+  "optGifSites": {
+    "message": "GIF 适用网站（正则表达式，每行一个）"
+  },
+  "hintGifSites": {
+    "message": "留空——所有网站都有 GIF。否则仅在网站名称匹配至少一个表达式时提供。先比较页面的网站名（例如 joyreactor.cc），再比较视频服务器；不区分大小写；以 # 开头的行为注释。示例：joyreactor\\.(cc|com)$ —— 仅 JoyReactor；(^|\\.)reddit\\.com$ —— Reddit 及其子域。"
+  },
+  "optGifExclude": {
+    "message": "排除网站"
+  },
+  "hintGifExclude": {
+    "message": "不提供 GIF 的网站，写法相同。排除优先于上面的列表。"
+  },
+  "optGifSizes": {
+    "message": "默认 GIF 宽度"
+  },
+  "hintGifSizes": {
+    "message": "卡片提供所有尺寸（640 / 480 / 320 / 240 px），默认选中此项。较窄的视频不会放大。"
+  },
+  "optGifFps": {
+    "message": "每秒帧数"
+  },
+  "hintGifFps": {
+    "message": "帧数越多越流畅，但文件更大、生成更慢。默认 10。"
+  },
+  "gifRegexError": {
+    "message": "表达式错误，第 {n} 行：{e}"
+  },
+  "gifEstHint": {
+    "message": "GIF 的大致大小：取决于视频的运动量（可能相差 2 倍）。"
   }
 }

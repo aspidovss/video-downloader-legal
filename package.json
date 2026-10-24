@@ -1,6 +1,6 @@
 {
   "name": "video-downloader-legal",
-  "version": "1.6.4",
+  "version": "1.6.5",
   "private": true,
   "type": "module",
   "description": "Firefox and Chrome extension: detect and download videos (direct files, HLS, DASH). No DRM circumvention.",

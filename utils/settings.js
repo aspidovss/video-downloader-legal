@@ -11,7 +11,13 @@ export const DEFAULTS = {
   saveAs: false,
   joinFormat: 'mp4',   // 1.6.0dev6: video + audio of different containers are joined into 'mp4' (Telegram sends it as a video) or 'mkv'
   tsToMp4: true,       // 1.5.2: TS streams are saved as MP4 (no re-encoding); kept for older settings
-  gifMake: 'joyreactor', // 1.6.4: GIF made from a video file in the browser: 'joyreactor' (only there) | 'all' | 'off'
+  // 1.6.5: GIF made from a video in the browser (replaces 1.6.4's gifMake): on for all sites by default
+  gifEnabled: true,
+  gifMaxSec: 60,       // the longest video that gets a GIF (1 … 180 s)
+  gifSites: '',        // regular expressions, one per line, matched against the host of the page (then of the video); empty = all sites
+  gifExclude: '',      // the same, sites without GIF
+  gifWidth: 480,       // the GIF width chosen at first in the card (all of 640 / 480 / 320 / 240 are offered)
+  gifFps: 10,
   updateCheck: true,   // 1.6.4: updater package (Chrome / Edge) only: look at the latest GitHub release once a day
   tsFormat: '',        // 1.6.4: TS streams are saved as 'mp4' | 'mkv' | 'ts'; '' = from tsToMp4 (MP4 unless it was switched off)
   ytCcOnly: true,

@@ -85,6 +85,14 @@ I did VDL because I was tired of paywalls in third-party solutions.
 ## Privacy policy
 Plain-text version in [privacy-policy.md](privacy-policy.md).
 
+## Version 1.6.5 — release notes (shown to users)
+```
+New in 1.6.5:
+- GIF from video is on for all sites. New "GIF" block in the settings: the longest video for a GIF (up to 180 s), sites for GIF and sites without GIF (regular expressions), default GIF width and frame rate.
+- In the card: every GIF width (640 / 480 / 320 / 240 px) and an FPS list; the rough GIF size is shown under the row.
+- While a GIF is being made, the time left is shown.
+```
+
 ## Version 1.6.4 — release notes (shown to users)
 ```
 New in 1.6.4:

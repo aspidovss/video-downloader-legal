@@ -155,21 +155,49 @@
         <div class="hint" hidden data-i18n="hintTsFormat"></div>
       </div>
       <div class="check-row has-field">
-        <label class="field"><span data-i18n="optGifMake"></span>
-          <select name="gifMake">
-            <option value="joyreactor" data-i18n="gifMakeJr"></option>
-            <option value="all" data-i18n="gifMakeAll"></option>
-            <option value="off" data-i18n="gifMakeOff"></option>
-          </select>
-        </label>
-        <button type="button" class="info" aria-expanded="false" data-i18n-title="hintToggle" data-i18n-aria="hintToggle">?</button>
-        <div class="hint" hidden data-i18n="hintGifMake"></div>
-      </div>
-      <div class="check-row has-field">
         <label class="field"><span data-i18n="optMaxStream"></span><input type="number" name="maxStreamMB" min="64" step="64"></label>
         <button type="button" class="info" aria-expanded="false" data-i18n-title="hintToggle" data-i18n-aria="hintToggle">?</button>
         <div class="hint" hidden data-i18n="hintMaxStream"></div>
       </div>
+      <fieldset class="prefs sub" id="gif-block">
+        <legend data-i18n="gifTitle"></legend>
+        <div class="check-row">
+          <label class="check"><input type="checkbox" name="gifEnabled"> <span data-i18n="optGifEnabled"></span></label>
+          <button type="button" class="info" aria-expanded="false" data-i18n-title="hintToggle" data-i18n-aria="hintToggle">?</button>
+          <div class="hint" hidden data-i18n="hintGifEnabled"></div>
+        </div>
+        <div class="check-row has-field">
+          <label class="field"><span data-i18n="optGifMaxSec"></span><input type="number" name="gifMaxSec" min="1" max="180" step="1"></label>
+          <button type="button" class="info" aria-expanded="false" data-i18n-title="hintToggle" data-i18n-aria="hintToggle">?</button>
+          <div class="hint" hidden data-i18n="hintGifMaxSec"></div>
+        </div>
+        <div class="check-row has-field">
+          <label class="field"><span data-i18n="optGifSites"></span>
+            <textarea name="gifSites" rows="3" spellcheck="false" placeholder="joyreactor\.(cc|com)$"></textarea></label>
+          <button type="button" class="info" aria-expanded="false" data-i18n-title="hintToggle" data-i18n-aria="hintToggle">?</button>
+          <div class="hint" hidden data-i18n="hintGifSites"></div>
+          <div class="gif-err" id="gif-sites-err" hidden></div>
+        </div>
+        <div class="check-row has-field">
+          <label class="field"><span data-i18n="optGifExclude"></span>
+            <textarea name="gifExclude" rows="2" spellcheck="false" placeholder="(^|\.)example\.com$"></textarea></label>
+          <button type="button" class="info" aria-expanded="false" data-i18n-title="hintToggle" data-i18n-aria="hintToggle">?</button>
+          <div class="hint" hidden data-i18n="hintGifExclude"></div>
+          <div class="gif-err" id="gif-exclude-err" hidden></div>
+        </div>
+        <div class="check-row has-field">
+          <label class="field"><span data-i18n="optGifSizes"></span>
+            <select name="gifWidth"><option value="640">640 px</option><option value="480">480 px</option><option value="320">320 px</option><option value="240">240 px</option></select></label>
+          <button type="button" class="info" aria-expanded="false" data-i18n-title="hintToggle" data-i18n-aria="hintToggle">?</button>
+          <div class="hint" hidden data-i18n="hintGifSizes"></div>
+        </div>
+        <div class="check-row has-field">
+          <label class="field"><span data-i18n="optGifFps"></span>
+            <select name="gifFps"><option value="5">5</option><option value="8">8</option><option value="10">10</option><option value="12">12</option><option value="15">15</option></select></label>
+          <button type="button" class="info" aria-expanded="false" data-i18n-title="hintToggle" data-i18n-aria="hintToggle">?</button>
+          <div class="hint" hidden data-i18n="hintGifFps"></div>
+        </div>
+      </fieldset>
       </fieldset>
 
       <fieldset class="prefs">

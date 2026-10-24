@@ -1887,8 +1887,8 @@ test('JoyReactor: one card per post (MP4, WEBM, the original GIF), named after t
     globalThis.document = {};
     st = await send({ type: 'get_state', tabId });
     let v = st.items.find((i) => i.id === it.id).variants;
-    assert.deepEqual(v.map((x) => `${x.typeLabel}:${x.label}`), ['MP4:MP4', 'WEBM:WEBM', 'GIF:GIF', 'GIF:480px', 'GIF:320px', 'GIF:480px', 'GIF:320px'], 'a GIF from each video file');
-    assert.deepEqual(v.slice(3).map((x) => `${x.labelKey}:${x.url === W ? 'W' : 'M'}`), ['gifFromWebm:W', 'gifFromWebm:W', 'gifFromMp4:M', 'gifFromMp4:M']);
+    assert.deepEqual(v.map((x) => `${x.typeLabel}:${x.label}`), ['MP4:MP4', 'WEBM:WEBM', 'GIF:GIF', ...['640', '480', '320', '240'].map((w) => `GIF:${w} · WEBM`), ...['640', '480', '320', '240'].map((w) => `GIF:${w} · MP4`)], 'a GIF of every width from each video file');
+    assert.deepEqual(v.slice(3).map((x) => x.url === W ? 'W' : 'M').join(''), 'WWWWMMMM');
     // a post whose MP4 the server does not have (404): only the WEBM and GIFs from it
     const W2 = 'https://img10.joyreactor.com/pics/post/webm/s_nobody-breasts-erotic-9503574.webm';
     const M2 = 'https://img10.joyreactor.com/pics/post/mp4/s_nobody-breasts-erotic-9503574.mp4';
@@ -1897,19 +1897,33 @@ test('JoyReactor: one card per post (MP4, WEBM, the original GIF), named after t
     await tick(80);
     const it2 = (await send({ type: 'get_state', tabId })).items.find((i) => /9503574/.test(i.url));
     assert.equal(it2.title, 's_nobody breasts erotic');
-    assert.deepEqual(it2.variants.map((x) => `${x.typeLabel}:${x.label}:${x.labelKey || ''}`), ['WEBM:WEBM:', 'GIF:480px:gifMade', 'GIF:320px:gifMade']);
+    assert.deepEqual(it2.variants.map((x) => `${x.typeLabel}:${x.label}:${x.labelKey || ''}`), ['WEBM:WEBM:', 'GIF:640px:', 'GIF:480px:', 'GIF:320px:', 'GIF:240px:']);
     assert.equal((await send({ type: 'download', tabId, itemId: it2.id })).ok, true);
     assert.equal(downloadsStarted.at(-1).url, W2, 'the default is the file that is there');
-    // another site: only with "on all sites"; a long video gets none
+    // another site (1.6.5): GIF on all sites by default; the site list, the exceptions, the length, the widths, the switch
     hit('https://cdn.other.example/clip.mp4', { 'content-type': 'video/mp4', 'content-length': 3000000 }, { tabId: 141 });
     await tick(30);
     const other = async () => (await send({ type: 'get_state', tabId: 141 })).items.find((i) => i.url === 'https://cdn.other.example/clip.mp4');
-    assert.equal((await other()).variants, null, 'JoyReactor only (default)');
-    setSettings({ gifMake: 'all' });
-    const o = await other();
-    assert.deepEqual(o.variants.map((x) => `${x.typeLabel}:${x.label}`), ['MP4:MP4', 'GIF:480px', 'GIF:320px']);
+    let o = await other();
+    assert.deepEqual(o.variants.map((x) => `${x.typeLabel}:${x.label}`), ['MP4:MP4', 'GIF:640px', 'GIF:480px', 'GIF:320px', 'GIF:240px'], 'all sites, every width by default');
     assert.equal(o.multi, false, 'still a plain file for the "More" rule');
-    setSettings({ gifMake: 'off' });
+    setSettings({ gifSites: 'joyreactor\\.(cc|com)$' });
+    assert.equal((await other()).variants, null, 'only the listed sites');
+    v = (await send({ type: 'get_state', tabId })).items.find((i) => i.id === it.id).variants;
+    assert.equal(v.filter((x) => x.makeGif).length, 8, 'JoyReactor is listed (4 widths from each of 2 files)');
+    setSettings({ gifSites: '# notes are skipped\n(^|\\.)other\\.example$\n[broken', gifExclude: '' });
+    assert.equal((await other()).variants.length, 5, 'the video server matches; a broken line is left out');
+    setSettings({ gifExclude: 'joyreactor' });
+    v = (await send({ type: 'get_state', tabId })).items.find((i) => i.id === it.id).variants;
+    assert.equal(v.filter((x) => x.makeGif).length, 0, 'exceptions win');
+    setSettings({ gifWidth: 320, gifFps: 15 });
+    const st3 = await send({ type: 'get_state', tabId: 141 });
+    assert.equal(st3.prefs.gifWidth, 320, 'the default width goes to the card');
+    assert.equal(st3.prefs.gifFps, 15);
+    setSettings({ gifMaxSec: 5 });
+    v = (await send({ type: 'get_state', tabId })).items.find((i) => i.id === it.id).variants;
+    assert.equal(v.filter((x) => x.makeGif).length, 0, 'a 10 s video is longer than 5 s');
+    setSettings({ gifEnabled: false });
     v = (await send({ type: 'get_state', tabId })).items.find((i) => i.id === it.id).variants;
     assert.deepEqual(v.map((x) => x.typeLabel), ['MP4', 'WEBM', 'GIF'], 'off: only the files of the site');
     delete fixtures[M];

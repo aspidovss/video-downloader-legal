@@ -164,6 +164,9 @@ body.popup .card .title { white-space: normal; display: -webkit-box; -webkit-lin
 .row-dl select { min-width: 0; flex: 1 1 auto; }
 .row-dl select { padding: 5px 4px; }
 .row-dl select.type { flex: 0 0 auto; width: 92px; }
+.row-dl select.fps { flex: 0 0 auto; width: 74px; }
+.row-dl.has-fps select.type { width: 62px; }
+.row-dl.has-fps button { min-width: 0; padding: 5px 10px; }
 .row-dl .qinfo { flex: 1 1 auto; min-width: 0; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .row-dl button { flex: none; min-width: 92px; padding: 5px 8px; }
 .row-dl.audio { padding-top: 8px; border-top: 1px dashed var(--border); }
@@ -285,3 +288,8 @@ html.android .check-row .check { flex: 1 1 0; min-width: 0; }
 .panel.update .row { display: flex; justify-content: space-between; align-items: center; gap: 6px; }
 .update-now { flex-basis: 100%; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
 .update-note { flex-basis: 100%; margin: 4px 0 0; font-size: 12px; color: var(--muted); }
+.gif-err { flex-basis: 100%; white-space: pre-line; color: #d92d20; font-size: 12px; margin-top: 2px; }
+.gif-sizes { display: flex; gap: 10px; flex-wrap: wrap; flex: 1 1 auto; }
+.gif-sizes .check { flex: none !important; }
+.check-row.has-field .gif-err { grid-column: 1 / -1; }
+.gif-est { font-size: 11px; color: var(--muted); text-align: right; margin-top: 3px; }

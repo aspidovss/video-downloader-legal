@@ -932,38 +932,14 @@
   "hintTsFormat": {
     "message": "TS ストリーム（H.264 + AAC）は再エンコードせずに保存されます。MP4 はどのプレーヤーやスマートフォンでも開けます。MKV は録画の途切れに強く、VLC・mpv・PC のプレーヤーで再生できます。TS は届いたまま保存されます。形式は動画カードでも選べます。他のコーデックや約 700 MB を超える場合は TS ファイルが保存されます。TS を WEBM にするには再エンコードが必要なため対応していません。"
   },
-  "optGifMake": {
-    "message": "動画から GIF"
-  },
-  "gifMakeJr": {
-    "message": "JoyReactor のみ"
-  },
-  "gifMakeAll": {
-    "message": "すべてのサイト"
-  },
-  "gifMakeOff": {
-    "message": "オフ"
-  },
-  "hintGifMake": {
-    "message": "短い動画（60 秒まで）のカードに GIF 形式が表示されます：サイトの元の GIF（ある場合）と、ブラウザ内で動画から作る GIF（幅 480 または 320 ピクセル、毎秒 10 フレーム、音声なし）。GIF は動画より何倍も大きく、作成に時間がかかります。"
-  },
   "gifOriginal": {
     "message": "{w} · オリジナル"
   },
-  "gifMade": {
-    "message": "{w} · 動画から"
-  },
   "gifTooLong": {
-    "message": "動画が 60 秒を超えているため GIF は作成されません。"
+    "message": "動画が GIF の上限より長いです（設定 → GIF）。"
   },
   "gifDecode": {
     "message": "GIF を作るための動画を読み込めませんでした。"
-  },
-  "gifFromWebm": {
-    "message": "{w} · WEBM から"
-  },
-  "gifFromMp4": {
-    "message": "{w} · MP4 から"
   },
   "updateAvailable": {
     "message": "バージョン {v} が利用可能"
@@ -994,5 +970,50 @@
   },
   "updateBuildNote": {
     "message": "これは Chrome と Edge 用の「updater」パッケージです。1 日 1 回、GitHub で新しいバージョンが出たかを自動で確認し、拡張機能のウィンドウに通知を表示します。上のチェックで確認と通知をオフにできます。通常のパッケージと Firefox 版は更新を確認しません。"
+  },
+  "gifTitle": {
+    "message": "GIF"
+  },
+  "optGifEnabled": {
+    "message": "動画から GIF"
+  },
+  "hintGifEnabled": {
+    "message": "短い動画のカードに GIF 形式が表示されます：アニメーションはブラウザ内で動画から作られ、音声はありません。GIF は動画より何倍も大きく、作成に時間がかかります。サイト自身の GIF（ある場合）は常に表示されます。"
+  },
+  "optGifMaxSec": {
+    "message": "最大秒数"
+  },
+  "hintGifMaxSec": {
+    "message": "この長さ以下の動画にのみ GIF を表示します（1〜180 秒）。長さが事前に分からない場合は作成前に確認します。"
+  },
+  "optGifSites": {
+    "message": "GIF を使うサイト（正規表現、1 行に 1 つ）"
+  },
+  "hintGifSites": {
+    "message": "空欄 — すべてのサイトで GIF。それ以外は、サイト名がいずれかの式に一致する場合のみ。ページのサイト名（例：joyreactor.cc）、次に動画サーバー名と比較します。大文字小文字は区別しません。# で始まる行はメモです。例：joyreactor\\.(cc|com)$ — JoyReactor のみ、(^|\\.)reddit\\.com$ — サブドメインを含む Reddit。"
+  },
+  "optGifExclude": {
+    "message": "除外するサイト"
+  },
+  "hintGifExclude": {
+    "message": "GIF を出さないサイト（同じ書き方）。除外が優先されます。"
+  },
+  "optGifSizes": {
+    "message": "既定の GIF 幅"
+  },
+  "hintGifSizes": {
+    "message": "カードにはすべてのサイズ（640 / 480 / 320 / 240 px）が表示され、これが最初に選ばれます。幅の狭い動画は拡大しません。"
+  },
+  "optGifFps": {
+    "message": "フレーム数（毎秒）"
+  },
+  "hintGifFps": {
+    "message": "フレームが多いほど滑らかですが、ファイルが大きく時間もかかります。既定は 10。"
+  },
+  "gifRegexError": {
+    "message": "式のエラー、{n} 行目：{e}"
+  },
+  "gifEstHint": {
+    "message": "GIF のおおよそのサイズ：動画の動きの量によります（2 倍ほど違うことがあります）。"
   }
 }

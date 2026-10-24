@@ -1,4 +1,8 @@
-# Notes for the AMO reviewer — Video Downloader Legal 1.6.4
+# Notes for the AMO reviewer — Video Downloader Legal 1.6.5
+
+**New in 1.6.5 (all local, no new permissions, no remote code):** `lib/gifrules.js` — the options page's GIF block: on/off, the longest video, the sites for GIF and the sites without GIF as the user's own regular expressions (matched only against host names, invalid ones are rejected), the default width and frame rate. The GIF itself is made exactly as in 1.6.4 (`lib/gif.js`, `lib/gifvideo.js`), now on all sites by default.
+
+## 1.6.4
 
 **New in 1.6.4 (all local, no new permissions, no remote code):**
 * `lib/rate.js` — download speed / time left shown in the popup.

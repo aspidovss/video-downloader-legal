@@ -932,38 +932,14 @@
   "hintTsFormat": {
     "message": "Les flux TS (H.264 + AAC) sont enregistrés sans réencodage : le MP4 s'ouvre dans tout lecteur et sur mobile ; le MKV supporte mieux les coupures d'un enregistrement et se lit dans VLC, mpv et les lecteurs de bureau ; le TS est enregistré tel quel. Le format se choisit aussi dans la carte de la vidéo. Avec d'autres codecs ou au-delà d'environ 700 Mo, le fichier TS est enregistré. Le WEBM n'est pas possible pour le TS sans réencodage."
   },
-  "optGifMake": {
-    "message": "GIF à partir d'une vidéo"
-  },
-  "gifMakeJr": {
-    "message": "JoyReactor uniquement"
-  },
-  "gifMakeAll": {
-    "message": "Sur tous les sites"
-  },
-  "gifMakeOff": {
-    "message": "Désactivé"
-  },
-  "hintGifMake": {
-    "message": "Les vidéos courtes (jusqu'à 60 s) proposent le format GIF dans la carte : le GIF original du site s'il existe, et un GIF créé à partir de la vidéo directement dans le navigateur (480 ou 320 pixels de large, 10 images par seconde, sans son). Un GIF est bien plus lourd que la vidéo et prend du temps à créer."
-  },
   "gifOriginal": {
     "message": "{w} · original"
   },
-  "gifMade": {
-    "message": "{w} · depuis la vidéo"
-  },
   "gifTooLong": {
-    "message": "La vidéo dure plus de 60 secondes : aucun GIF n'est créé."
+    "message": "La vidéo dépasse la limite pour GIF (Paramètres → GIF)."
   },
   "gifDecode": {
     "message": "La vidéo n'a pas pu être lue pour créer le GIF."
-  },
-  "gifFromWebm": {
-    "message": "{w} · depuis WEBM"
-  },
-  "gifFromMp4": {
-    "message": "{w} · depuis MP4"
   },
   "updateAvailable": {
     "message": "La version {v} est disponible"
@@ -994,5 +970,50 @@
   },
   "updateBuildNote": {
     "message": "Ceci est le paquet « updater » pour Chrome et Edge : une fois par jour, il vérifie lui-même sur GitHub si une nouvelle version est sortie et affiche un avis dans la fenêtre de l'extension. La case ci-dessus désactive la vérification et les avis. Le paquet normal et la version Firefox ne recherchent pas de mises à jour."
+  },
+  "gifTitle": {
+    "message": "GIF"
+  },
+  "optGifEnabled": {
+    "message": "GIF à partir d'une vidéo"
+  },
+  "hintGifEnabled": {
+    "message": "Les vidéos courtes proposent le format GIF dans la carte : l'animation est créée à partir de la vidéo dans le navigateur, sans son. Un GIF est bien plus lourd que la vidéo et prend du temps. Le GIF propre au site (s'il existe) est toujours affiché."
+  },
+  "optGifMaxSec": {
+    "message": "Au plus, secondes"
+  },
+  "hintGifMaxSec": {
+    "message": "Le GIF n'est proposé que pour les vidéos qui ne dépassent pas cette durée (1 à 180 secondes). Si la durée est inconnue, elle est vérifiée avant la création."
+  },
+  "optGifSites": {
+    "message": "Sites pour GIF (expressions régulières, une par ligne)"
+  },
+  "hintGifSites": {
+    "message": "Vide : GIF sur tous les sites. Sinon seulement là où le nom du site correspond à au moins une expression. On compare le site de la page (ex. joyreactor.cc), puis celui du serveur de la vidéo ; la casse n'importe pas ; les lignes avec # sont des notes. Exemples : joyreactor\\.(cc|com)$ — JoyReactor seulement ; (^|\\.)reddit\\.com$ — Reddit et sous-domaines."
+  },
+  "optGifExclude": {
+    "message": "Sauf sites"
+  },
+  "hintGifExclude": {
+    "message": "Sites sans GIF, écrits de la même façon. Les exceptions priment."
+  },
+  "optGifSizes": {
+    "message": "Largeur du GIF par défaut"
+  },
+  "hintGifSizes": {
+    "message": "La carte propose toutes les tailles (640 / 480 / 320 / 240 px) ; celle-ci est choisie d'emblée. Une vidéo plus étroite n'est pas agrandie."
+  },
+  "optGifFps": {
+    "message": "Images par seconde"
+  },
+  "hintGifFps": {
+    "message": "Plus d'images, plus fluide, mais le fichier est plus lourd et plus long à créer. 10 par défaut."
+  },
+  "gifRegexError": {
+    "message": "Erreur dans l'expression, ligne {n} : {e}"
+  },
+  "gifEstHint": {
+    "message": "Taille approximative du GIF : dépend du mouvement dans la vidéo (peut varier du simple au double)."
   }
 }

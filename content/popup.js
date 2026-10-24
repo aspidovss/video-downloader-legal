@@ -44,8 +44,23 @@ const clock = (sec) => `${Math.floor(sec / 3600)}:${String(Math.floor(sec / 60) 
 const recStat = (sec, size) => h('div', { class: 'recstat' }, h('span', { class: 'rs-time' }, `● ${t('liveRecording')} ${clock(sec)}`), h('span', { class: 'rs-size' }, size || '0 MB'));
 
 let showSmall = false;
+const gifFpsPick = new Map(); // item id -> frame rate chosen in the card for a GIF made from the video (1.6.5)
 let liveJobs = new Map(); // item id -> running live recording job (shown inside the item's card)
 let prefs = { subs: true, subsSrt: true, subsWithVideo: false, defaultQuality: 'best', defaultType: 'auto', defaultAudioFormat: 'mp3', defaultAudioQuality: 'best', ytRecordUi: false };
+
+// Rough size of a GIF made from the video (1.6.5): width x height x length x frame rate x ~0.25 byte per pixel
+// (measured on the own encoder: calm pictures 0.02-0.1, ordinary video 0.1-0.3, much motion or noise up to 0.5).
+// The height comes from the picture's shape (the card's cover), else 16:9. Nothing when the length is unknown.
+const GIF_BYTES_PER_PIXEL = 0.25;
+const thumbAspect = new Map(); // item id -> width / height of the cover picture
+function gifEstimate(it, width, fps) {
+  if (!(it.duration > 0)) return '';
+  const aspect = thumbAspect.get(it.id) || 16 / 9;
+  const bytes = width * (width / aspect) * it.duration * fps * GIF_BYTES_PER_PIXEL;
+  // whole megabytes from 10 MB, one decimal below: a rough figure, short enough for the narrow list
+  const mb = bytes / 1048576;
+  return `~${mb >= 10 ? Math.round(mb) : mb >= 1 ? mb.toFixed(1).replace(/\.0$/, '') : Math.max(1, Math.round(bytes / 1024))} ${mb >= 1 ? 'MB' : 'KB'}`;
+}
 
 // Per card: chosen type + quality for YouTube videos (indexes refer to it.variants).
 function ytPick(it, groups) {
@@ -55,7 +70,9 @@ function ytPick(it, groups) {
   // a file offered in several forms (site list, GIF): the first one (the file itself) unless another is picked
   const fileGroup = it.kind === 'file' ? groups.find((g) => g.items.some((v) => v.index === 0)) : null;
   const group = groups.find((g) => g.type === sel.type) || tsGroup || fileGroup || pickType(groups, prefs.defaultType, prefs.defaultQuality);
-  const chosen = group.items.find((v) => v.index === sel.index) || (group.type === 'gif' ? group.items[0] : pickQuality(group.items, prefs.defaultQuality));
+  // GIF: the site's own GIF first, else the width chosen in the settings (1.6.5)
+  const gifFirst = () => group.items.find((v) => !v.makeGif) || group.items.find((v) => v.makeGif === prefs.gifWidth) || group.items[0];
+  const chosen = group.items.find((v) => v.index === sel.index) || (group.type === 'gif' ? gifFirst() : pickQuality(group.items, prefs.defaultQuality));
   return { group, chosen };
 }
 
@@ -78,6 +95,7 @@ function card(it) {
     e.target.disabled = true;
     const res = await browser.runtime.sendMessage({
       type: 'download', tabId, itemId: it.id, variant, variantLabel: it.variants?.[variant]?.label,
+      ...(it.variants?.[variant]?.makeGif ? { gifFps: gifFpsPick.get(it.id) || prefs.gifFps } : {}),
       subs: it.kind === 'yt' && prefs.subs && prefs.subsWithVideo ? subsPick(it)?.id || '' : '',
     });
     if (!res.ok) e.target.disabled = false;
@@ -94,16 +112,27 @@ function card(it) {
       class: 'type', 'aria-label': t('videoType'), title: group.codec,
       onchange: (e) => { selectedVariant.set(it.id, { type: e.target.value }); refresh(true); },
     }, groups.map((g) => h('option', { value: g.type, selected: g.type === group.type, title: g.codec }, g.label))) : null;
-    const optText = (v) => `${v.labelKey ? t(v.labelKey).replace('{w}', v.label) : (v.label || `#${v.index + 1}`).split(' · ')[0]}${v.fmt ? ` · ${v.fmt.toUpperCase()}` : ''}${sizeText(v)}`;
+    const gifFps = gifFpsPick.get(it.id) || prefs.gifFps || 10;
+    const optText = (v) => (v.makeGif
+      ? v.label
+      : `${v.labelKey ? t(v.labelKey).replace('{w}', v.label) : (v.label || `#${v.index + 1}`).split(' · ')[0]}${v.fmt ? ` · ${v.fmt.toUpperCase()}` : ''}${sizeText(v)}`);
     // one choice in the format (a single file): no list, just its size (1.6.4)
     const single = group.items.length === 1;
     const qSel = single ? null : h('select', {
       class: 'quality', 'aria-label': t('quality'),
-      onchange: (e) => selectedVariant.set(it.id, { type: group.type, index: Number(e.target.value) }),
+      onchange: (e) => { selectedVariant.set(it.id, { type: group.type, index: Number(e.target.value) }); if (group.type === 'gif') refresh(true); }, // GIF: the estimate follows
     }, group.items.map((v) => h('option', { value: v.index, selected: v.index === chosen.index }, optText(v))));
     const qInfo = single ? h('span', { class: 'qinfo' }, it.kind === 'file' && (chosen.type === chosen.label?.toLowerCase()) ? sizeText(chosen).replace(/^ · /, '') : optText(chosen)) : null;
-    videoRow = h('div', { class: 'row-dl' }, typeSel, qSel || qInfo,
+    // GIF made from the video: the frame rate next to the width (default from the settings)
+    const fpsSel = group.type === 'gif' && (qSel ? group.items.some((v) => v.makeGif) : chosen.makeGif) && (prefs.gifFpsList || []).length ? h('select', {
+      class: 'fps', 'aria-label': t('optGifFps'), title: t('optGifFps'),
+      onchange: (e) => { gifFpsPick.set(it.id, Number(e.target.value)); refresh(true); }, // the estimated sizes follow
+    }, prefs.gifFpsList.map((n) => h('option', { value: n, selected: n === gifFps }, `${n} FPS`))) : null; // "FPS" in every language
+    videoRow = h('div', { class: fpsSel ? 'row-dl has-fps' : 'row-dl' }, typeSel, qSel || qInfo, fpsSel,
       h('button', { class: 'primary', disabled, onclick: (e) => quick(e, single ? chosen.index : Number(qSel.value)) }, t(liveRec ? 'liveRecord' : 'download')));
+    // GIF made from the video: its rough size under the row (the lists stay short enough for the popup)
+    const est = chosen.makeGif ? gifEstimate(it, chosen.makeGif, gifFps) : '';
+    if (est) videoRow = h('div', {}, videoRow, h('div', { class: 'gif-est', title: t('gifEstHint') }, est));
   } else if (!it.noteKey && !(it.kind === 'yt' && it.live)) {
     videoRow = h('div', { class: 'row-dl' }, h('button', { class: 'primary wide', disabled, onclick: (e) => download(e, 0) }, t(liveRec ? 'liveRecord' : 'download')));
   }
@@ -130,7 +159,12 @@ function card(it) {
 
   const dur = it.duration && !liveRec ? h('span', { class: 'dur' }, formatDuration(it.duration)) : null;
   const thumb = it.thumbnail && /^https?:/i.test(it.thumbnail)
-    ? h('img', { class: 'thumb', src: it.thumbnail, alt: '', referrerpolicy: 'no-referrer', loading: 'lazy', onerror: (e) => e.target.replaceWith(h('div', { class: 'thumb empty' }, '▶')) })
+    ? h('img', {
+      class: 'thumb', src: it.thumbnail, alt: '', referrerpolicy: 'no-referrer', loading: 'lazy',
+      onerror: (e) => e.target.replaceWith(h('div', { class: 'thumb empty' }, '▶')),
+      // the cover's shape is the video's: the GIF size estimate uses it (once per card)
+      onload: (e) => { const { naturalWidth: w, naturalHeight: hh } = e.target; if (w && hh && !thumbAspect.has(it.id)) { thumbAspect.set(it.id, w / hh); if ((it.variants || []).some((v) => v.makeGif)) refresh(true); } },
+    })
     : h('div', { class: 'thumb empty' }, '▶');
 
   return h('article', { class: 'card' },
@@ -312,6 +346,10 @@ function renderItems(items, force = false) {
 
 // speed and remaining time next to the percentage while pieces are downloading (1.6.4)
 function pace(j) {
+  if (j.phase === 'gif' && j.total && j.done < j.total) { // making a GIF: time left from the pace of the frames (1.6.5)
+    const eta = etaText(j.eta, { s: t('unitSec'), min: t('unitMin'), h: t('unitHour') });
+    return ` · ${eta ? t('etaLeft').replace('{t}', eta) : t('etaCalc')}`;
+  }
   if (j.phase || j.recording || !j.total || j.done >= j.total) return '';
   if (!j.speed && !j.eta) return ` · ${t('etaCalc')}`;
   const eta = etaText(j.eta, { s: t('unitSec'), min: t('unitMin'), h: t('unitHour') });

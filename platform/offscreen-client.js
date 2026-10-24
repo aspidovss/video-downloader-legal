@@ -62,7 +62,7 @@ export async function chromeMp3(blob, { kbps, title, onProgress, signal }) {
 }
 
 // video -> GIF in the offscreen document (1.6.4); errors carry code 'gifTooLong' / 'gifDecode' / 'aborted'
-export async function chromeGif(blob, { maxWidth, onProgress, signal }) {
+export async function chromeGif(blob, { maxWidth, fps, maxSeconds, onProgress, signal }) {
   const jobId = `g-${uid()}`;
   const key = `s-${jobId}`;
   const resultKey = `r-${jobId}`;
@@ -71,7 +71,7 @@ export async function chromeGif(blob, { maxWidth, onProgress, signal }) {
   const abort = () => { call({ type: 'gif_abort', jobId }).catch(() => {}); };
   signal?.addEventListener('abort', abort, { once: true });
   try {
-    await call({ type: 'gif', key, resultKey, maxWidth, jobId });
+    await call({ type: 'gif', key, resultKey, maxWidth, fps, maxSeconds, jobId });
     const out = await getBlob(resultKey);
     if (!out) throw Object.assign(new Error('gif_result_missing'), { code: 'gifDecode' });
     return out;

@@ -46,7 +46,7 @@ async function mp3({ key, resultKey, kbps, title, jobId }) {
 }
 
 // video -> GIF (1.6.4): the <video> decoder and a canvas exist only in a document
-async function gif({ key, resultKey, maxWidth, jobId }) {
+async function gif({ key, resultKey, maxWidth, fps, maxSeconds, jobId }) {
   const ctl = new AbortController();
   jobs.set(jobId, ctl);
   try {
@@ -54,7 +54,7 @@ async function gif({ key, resultKey, maxWidth, jobId }) {
     if (!src) throw Object.assign(new Error('blob_missing'), { code: 'gifDecode' });
     let last = 0;
     const out = await videoToGif(src, {
-      maxWidth, signal: ctl.signal, doc: document,
+      maxWidth, ...(fps ? { fps } : {}), ...(maxSeconds ? { maxSeconds } : {}), signal: ctl.signal, doc: document,
       onProgress: (p) => { if (p - last >= 0.02 || p === 1) { last = p; chrome.runtime.sendMessage({ target: 'vdl-sw', type: 'gif_progress', jobId, p }).catch(() => {}); } },
     });
     await putBlob(resultKey, out);

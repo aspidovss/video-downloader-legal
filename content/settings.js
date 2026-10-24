@@ -6,6 +6,7 @@ import { getConsent, revokeConsent } from '../utils/consent.js';
 import { isAccepted } from '../lib/consent.js';
 import { readLog, clearLog } from '../utils/debuglog.js';
 import { isUpdaterBuild, isNewer } from '../lib/updatecheck.js';
+import { parsePatterns, gifPrefs, GIF_LIMIT_SECONDS } from '../lib/gifrules.js';
 import { LOG_KEY, formatLog } from '../lib/debuglog.js';
 
 await loadUiLang();
@@ -44,6 +45,23 @@ function subsDeps() {
   for (const n of ['subsWithVideo', 'subsSrt']) if (form.elements[n]) form.elements[n].disabled = !on;
 }
 form.elements.subs?.addEventListener('change', subsDeps);
+
+// GIF block (1.6.5): the switch greys out the rest; the expressions are
+// checked while typing and a list with an error is not saved.
+function gifDeps() {
+  const on = !!form.elements.gifEnabled?.checked;
+  for (const n of ['gifMaxSec', 'gifSites', 'gifExclude', 'gifWidth', 'gifFps']) if (form.elements[n]) form.elements[n].disabled = !on;
+}
+function gifCheck(name, boxId) {
+  const box = document.getElementById(boxId);
+  const { errors } = parsePatterns(form.elements[name]?.value || '');
+  box.hidden = !errors.length;
+  box.textContent = errors.map((e) => t('gifRegexError').replace('{n}', String(e.line)).replace('{e}', e.message)).join('\n');
+  return !errors.length;
+}
+form.elements.gifEnabled?.addEventListener('change', gifDeps);
+form.elements.gifSites?.addEventListener('input', () => gifCheck('gifSites', 'gif-sites-err'));
+form.elements.gifExclude?.addEventListener('input', () => gifCheck('gifExclude', 'gif-exclude-err'));
 form.addEventListener('input', updateDirty);
 form.addEventListener('change', updateDirty);
 $barSave.addEventListener('click', () => form.requestSubmit());
@@ -60,6 +78,13 @@ async function load() {
   }
   // before 1.6.4 TS had only the "convert to MP4" checkbox
   if (form.elements.tsFormat && !['mp4', 'mkv', 'ts'].includes(s.tsFormat)) form.elements.tsFormat.value = s.tsToMp4 === false ? 'ts' : 'mp4';
+  const g = gifPrefs(s);
+  if (form.elements.gifWidth) form.elements.gifWidth.value = String(g.width);
+  if (form.elements.gifFps) form.elements.gifFps.value = String(g.fps);
+  if (form.elements.gifMaxSec) form.elements.gifMaxSec.value = String(g.maxSec);
+  gifCheck('gifSites', 'gif-sites-err');
+  gifCheck('gifExclude', 'gif-exclude-err');
+  gifDeps();
   await showActualShortcuts(s);
   subsDeps();
   snapshot = formValues();
@@ -139,6 +164,11 @@ if (typeof browser.sidebarAction?.toggle === 'function') {
 
 form.addEventListener('submit', async (e) => {
   e.preventDefault();
+  // a GIF site list with an error is not saved: the message stays under the field
+  if (!gifCheck('gifSites', 'gif-sites-err') || !gifCheck('gifExclude', 'gif-exclude-err')) {
+    (document.getElementById('gif-sites-err').hidden ? form.elements.gifExclude : form.elements.gifSites).focus();
+    return;
+  }
   const patch = {};
   for (const el of form.elements) {
     if (!el.name) continue;
@@ -151,6 +181,10 @@ form.addEventListener('submit', async (e) => {
   patch.template = String(patch.template || '').trim();
   if (!patch.template.includes('{title}')) patch.template = DEFAULTS.template;
   patch.minSizeKB = Math.max(0, Math.floor(Number(patch.minSizeKB)) || 0);
+  const gp = gifPrefs(patch);
+  patch.gifMaxSec = Math.min(GIF_LIMIT_SECONDS, gp.maxSec);
+  patch.gifWidth = gp.width;
+  patch.gifFps = gp.fps;
   patch.concurrency = Math.min(12, Math.max(1, patch.concurrency || 4));
   if (!['auto', 'mp4', 'mp4-av1', 'webm'].includes(patch.defaultType)) patch.defaultType = 'auto';
   if (!['mp3', 'm4a', 'webm'].includes(patch.defaultAudioFormat)) patch.defaultAudioFormat = 'mp3';

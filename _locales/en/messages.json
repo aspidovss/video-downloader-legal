@@ -932,38 +932,14 @@
   "hintTsFormat": {
     "message": "TS streams (H.264 + AAC) are saved without re-encoding: MP4 opens in any player and on phones; MKV copes better with gaps in a recording and plays in VLC, mpv and desktop players; TS is saved as it came. The format can also be picked in the video card. With other codecs or above about 700 MB the TS file is saved. WEBM is not possible for TS without re-encoding."
   },
-  "optGifMake": {
-    "message": "GIF from video"
-  },
-  "gifMakeJr": {
-    "message": "JoyReactor only"
-  },
-  "gifMakeAll": {
-    "message": "On all sites"
-  },
-  "gifMakeOff": {
-    "message": "Off"
-  },
-  "hintGifMake": {
-    "message": "Short videos (up to 60 s) get a GIF format in the card: the site's original GIF when there is one, and a GIF made from the video right in the browser (480 or 320 pixels wide, 10 frames per second, no sound). A GIF is many times larger than the video and takes time to make."
-  },
   "gifOriginal": {
     "message": "{w} · original"
   },
-  "gifMade": {
-    "message": "{w} · from video"
-  },
   "gifTooLong": {
-    "message": "The video is longer than 60 seconds: no GIF is made from it."
+    "message": "The video is longer than the GIF limit (Settings → GIF)."
   },
   "gifDecode": {
     "message": "The video could not be read to make a GIF."
-  },
-  "gifFromWebm": {
-    "message": "{w} · from WEBM"
-  },
-  "gifFromMp4": {
-    "message": "{w} · from MP4"
   },
   "updateAvailable": {
     "message": "Version {v} is available"
@@ -994,5 +970,50 @@
   },
   "updateBuildNote": {
     "message": "This is the \"updater\" package for Chrome and Edge: once a day it checks GitHub for a new version by itself and shows a notice in the extension's popup. The tick above turns the check and the notices off. The regular package and the Firefox version do not check for updates."
+  },
+  "gifTitle": {
+    "message": "GIF"
+  },
+  "optGifEnabled": {
+    "message": "GIF from video"
+  },
+  "hintGifEnabled": {
+    "message": "Short videos get a GIF format in the card: the animation is made from the video right in the browser, without sound. A GIF is many times larger than the video and takes time to make. The site's own GIF (when the site serves one) is always shown."
+  },
+  "optGifMaxSec": {
+    "message": "At most, seconds"
+  },
+  "hintGifMaxSec": {
+    "message": "A GIF is offered only for videos no longer than this (1 to 180 seconds). When the length is not known in advance, it is checked before the GIF is made."
+  },
+  "optGifSites": {
+    "message": "Sites for GIF (regular expressions, one per line)"
+  },
+  "hintGifSites": {
+    "message": "Empty — GIF on all sites. Otherwise only where the site name matches at least one expression. The page's site name is compared (e.g. joyreactor.cc), then the video server's; case does not matter; lines starting with # are notes. Examples: joyreactor\\.(cc|com)$ — JoyReactor only; (^|\\.)reddit\\.com$ — Reddit with subdomains."
+  },
+  "optGifExclude": {
+    "message": "Except sites"
+  },
+  "hintGifExclude": {
+    "message": "Sites without GIF, written the same way. Exceptions win over the list above."
+  },
+  "optGifSizes": {
+    "message": "Default GIF width"
+  },
+  "hintGifSizes": {
+    "message": "The card offers every size (640 / 480 / 320 / 240 px); this one is chosen at first. A narrower video is not enlarged."
+  },
+  "optGifFps": {
+    "message": "Frames per second"
+  },
+  "hintGifFps": {
+    "message": "More frames are smoother, but the file is larger and takes longer to make. Default 10."
+  },
+  "gifRegexError": {
+    "message": "Error in the expression, line {n}: {e}"
+  },
+  "gifEstHint": {
+    "message": "Rough GIF size: depends on how much the video moves (may be off by 2×)."
   }
 }

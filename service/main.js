@@ -3,7 +3,8 @@
 
 import { makeRate } from '../lib/rate.js';
 import { jrParse, jrTitle, jrGifCandidates, isJoyreactorPage } from '../lib/joyreactor.js';
-import { videoToGif, GIF_MAX_SECONDS } from '../lib/gifvideo.js';
+import { videoToGif } from '../lib/gifvideo.js';
+import { gifPrefs, gifSiteAllowed, GIF_FPS } from '../lib/gifrules.js';
 import {
   FILE_EXTS, SKIP_EXTS, urlExt, mediaExt, normalizeUrl, hashId, mimeToExt, hostOf, buildFilename, stripLlHls, refDomain,
 } from '../lib/util.js';
@@ -90,6 +91,14 @@ const ready = (async () => {
       const cur = (await browser.storage.local.get('settings')).settings;
       if (cur && Number(cur.minSizeKB) === 10) await saveSettings({ minSizeKB: 150 });
       await browser.storage.local.set({ minSizeMigrated: true });
+    }
+  } catch { /* storage unavailable */ }
+  // 1.6.5: "GIF from video" is one switch (on by default, all sites); 1.6.4's choice "off" stays off, once
+  try {
+    if (!(await browser.storage.local.get('gifMigrated')).gifMigrated) {
+      const cur = (await browser.storage.local.get('settings')).settings;
+      if (cur && cur.gifMake === 'off') await saveSettings({ gifEnabled: false });
+      await browser.storage.local.set({ gifMigrated: true });
     }
   } catch { /* storage unavailable */ }
   settings = await getSettings();
@@ -270,9 +279,8 @@ async function jrFindGif(tabId, it, p) {
   dlog('detect', 'joyreactor: no original GIF', { tab: tabId, post: p.id });
 }
 
-// ---- GIF made from the video in the browser (1.6.4; Firefox: needs the background page's document) --------
-// settings.gifMake: 'joyreactor' (default) | 'all' | 'off'
-function gifMode() { return ['off', 'joyreactor', 'all'].includes(settings.gifMake) ? settings.gifMake : 'joyreactor'; }
+// ---- GIF made from the video in the browser (1.6.4; Firefox: the background page, Chrome / Edge: the offscreen document) --
+// The settings' GIF block (1.6.5): on / off, the longest video, sites (and exceptions) as regular expressions, widths, frame rate.
 // the files the server really has (a variant answered 404 is left out while another one is there)
 function availableVariants(it) {
   const vs = it.variants || [];
@@ -289,10 +297,10 @@ const gifSource = (it) => gifSources(it)[0] || null;
 function gifAllowed(tabId, it) {
   // Firefox: the background page has a document; Chrome / Edge: the offscreen document (1.6.4)
   if (it.kind !== 'file' || (!IS_CHROME && typeof document === 'undefined')) return false;
-  const mode = gifMode();
-  if (mode === 'off') return false;
-  if (mode === 'joyreactor' && !it.jr && !isJoyreactorPage(tabs.get(tabId)?.pageUrl || '')) return false;
-  if (/^audio\//.test(it.mime || '') || it.duration > GIF_MAX_SECONDS + 0.5) return false;
+  const g = gifPrefs(settings);
+  if (!g.enabled) return false;
+  if (/^audio\//.test(it.mime || '') || it.duration > g.maxSec + 0.5) return false; // unknown length: checked before converting
+  if (!gifSiteAllowed(tabs.get(tabId)?.pageUrl || it.docUrl || '', it.url, g.sites, g.exclude)) return false;
   return !!gifSource(it);
 }
 // What a file card offers: the site's variants (or the file itself) + GIFs made from the video. null: just the file.
@@ -304,8 +312,9 @@ function fileOffer(tabId, it) {
   // from every available video: "480px · from WEBM", "320px · from WEBM", "480px · from MP4" ...
   const sources = gifSources(it);
   for (const src of sources) {
-    for (const w of [480, 320]) {
-      list.push({ url: src.url, ext: 'gif', type: 'gif', typeLabel: 'GIF', label: `${w}px`, labelKey: sources.length > 1 ? `gifFrom${src.ext === 'webm' ? 'Webm' : 'Mp4'}` : 'gifMade', height: w - (src.ext === 'webm' ? 0 : 1), codec: '', size: 0, sizeEstimated: false, makeGif: w, srcExt: src.ext });
+    for (const w of gifPrefs(settings).sizes) {
+      // "480px", or "480 · WEBM" when the GIF can be made from more than one file (short: the popup row is narrow)
+      list.push({ url: src.url, ext: 'gif', type: 'gif', typeLabel: 'GIF', label: sources.length > 1 ? `${w} · ${src.ext.toUpperCase()}` : `${w}px`, height: w - (src.ext === 'webm' ? 0 : 1), codec: '', size: 0, sizeEstimated: false, makeGif: w, srcExt: src.ext });
     }
   }
   return list;
@@ -765,7 +774,7 @@ async function getState(tabId) {
   return {
     items: t ? shownItems(t).map((it) => serialize(tabId, it)).reverse() : [],
     jobs: [...jobs.values()].filter((j) => { if (j.finishedAt && Date.now() - j.finishedAt > 60000) { jobs.delete(j.id); return false; } return true; }).map(serializeJob),
-    prefs: { tsFormat: tsFormat(), subs: settings.subs !== false, subsSrt: settings.subsSrt !== false, subsWithVideo: !!settings.subsWithVideo, defaultQuality: settings.defaultQuality || 'best', defaultType: settings.defaultType || 'auto', defaultAudioFormat: settings.defaultAudioFormat || 'mp3', defaultAudioQuality: settings.defaultAudioQuality || 'best', ytRecordUi: !!settings.ytRecordUi },
+    prefs: { tsFormat: tsFormat(), gifFps: gifPrefs(settings).fps, gifWidth: gifPrefs(settings).width, gifFpsList: GIF_FPS, subs: settings.subs !== false, subsSrt: settings.subsSrt !== false, subsWithVideo: !!settings.subsWithVideo, defaultQuality: settings.defaultQuality || 'best', defaultType: settings.defaultType || 'auto', defaultAudioFormat: settings.defaultAudioFormat || 'mp3', defaultAudioQuality: settings.defaultAudioQuality || 'best', ytRecordUi: !!settings.ytRecordUi },
     yt: t?.yt ? { videoKnown: !!t.yt.summary } : null,
     bug: t?.bug && (t.bug.state === 'running' || bugPageKey(t.bug.page) === bugPageKey(t.pageUrl)) ? { ...t.bug, text: undefined } : null, // a result belongs to the page (video) it was made on
   };
@@ -1325,7 +1334,7 @@ function makeYtFetch(dlog) {
   };
 }
 
-async function startDownload({ tabId, itemId, variant, variantLabel, audio, subs }) {
+async function startDownload({ tabId, itemId, variant, variantLabel, audio, subs, gifFps }) {
   await ready;
   if (!isAccepted(consent)) { notifyAlways(tr('consentNeeded')); return { ok: false, error: 'consent' }; }
   const it = tabs.get(tabId)?.items.get(itemId);
@@ -1384,7 +1393,7 @@ async function startDownload({ tabId, itemId, variant, variantLabel, audio, subs
     if (typeof subs === 'string') subsChoice = subs;
     else subsChoice = defaultSubs(subsChoices(ytSubsList(tabs.get(tabId)?.yt), uiLangCode()), uiLangCode())?.id || '';
   }
-  runStreamJob(tabId, it, title, variant, variantLabel, audio, tsOut, subsChoice);
+  runStreamJob(tabId, it, title, variant, variantLabel, audio, tsOut, subsChoice, GIF_FPS.includes(Number(gifFps)) ? Number(gifFps) : 0);
   return { ok: true };
 }
 
@@ -1502,7 +1511,7 @@ async function toMp3Chrome(blob, title, job, tabId, kbps) {
   }
 }
 
-async function runStreamJob(tabId, it, title, variantIdx, variantLabel, audioOpt = null, tsOut = tsFormat(), subsChoice = '') {
+async function runStreamJob(tabId, it, title, variantIdx, variantLabel, audioOpt = null, tsOut = tsFormat(), subsChoice = '', gifFps = 0) {
   if (!TS_FORMATS.includes(tsOut)) tsOut = tsFormat();
   const toMp4 = tsOut !== 'ts'; // TS is rewritten (MP4 or MKV) without re-encoding
   const job = {
@@ -1752,7 +1761,15 @@ async function runStreamJob(tabId, it, title, variantIdx, variantLabel, audioOpt
         notifyUI(tabId);
         let gif;
         try {
-          const gifOpts = { maxWidth: f.makeGif, signal: job.abort.signal, onProgress: (x) => { job.done = Math.round(x * 100); notifyUI(tabId); } };
+          const gp = gifPrefs(settings);
+          // frame rate: the card's choice, else the settings'; time left from the pace of the frames (1.6.5)
+          job.rate.reset();
+          job.speed = 0;
+          job.eta = 0;
+          const gifOpts = {
+            maxWidth: f.makeGif, fps: gifFps || gp.fps, maxSeconds: gp.maxSec, signal: job.abort.signal,
+            onProgress: (x) => { job.done = Math.round(x * 100); job.rate.add(0, job.done); job.eta = job.rate.eta(100); notifyUI(tabId); },
+          };
           gif = IS_CHROME ? await chromeGif(blob, gifOpts) : await videoToGif(blob, gifOpts);
         } catch (e) {
           if (e?.code === 'aborted') throw new StreamError('aborted');
