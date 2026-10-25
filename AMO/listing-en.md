@@ -85,7 +85,15 @@ I did VDL because I was tired of paywalls in third-party solutions.
 ## Privacy policy
 Plain-text version in [privacy-policy.md](privacy-policy.md).
 
-## Version 1.6.6 — release notes (shown to users)
+## Version 1.6.7 — release notes (shown to users)
+```
+New in 1.6.7 (includes 1.6.6, which was released on GitHub only):
+- Converter: the new button next to Settings (or "Convert…" in History) opens a page where a video or audio file from your computer becomes a GIF (a "from–to" part, width, FPS), an MP3, a PNG frame, or — without re-encoding — a TS stream an MP4 / MKV and a fragmented MP4 a plain MP4. The file never leaves the browser.
+- Captions on a GIF: a white bar with black text on top, at the bottom or both; text on the video (white or black, top / center / bottom); or a demotivator — the video in a white frame on black with a title and a second line. The text is fitted by itself, with a live preview.
+- Fixed: Microsoft Edge applied no header rules (JoyReactor and other sites failed with HTTP 404).
+```
+
+## Version 1.6.6 — release notes (GitHub only)
 ```
 New in 1.6.6:
 - Converter: the new button next to Settings opens a page where a video or audio file from your computer becomes a GIF (with a "from–to" part, width and FPS), an MP3, a PNG frame, or — without re-encoding — a TS stream an MP4 / MKV and a fragmented MP4 a plain MP4. Also "Convert…" in History. The file never leaves the browser.

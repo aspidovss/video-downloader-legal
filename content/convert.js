@@ -1,4 +1,4 @@
-// The converter page (1.6.6): a file picked by the user (or dropped here) is converted in this page, on this computer.
+// The converter page (1.6.6; GIF captions 1.6.7): a file picked by the user (or dropped here) is converted in this page, on this computer.
 // GIF and the PNG frame are taken from a <video> element, MP3 from the browser's audio decoder + lamejs,
 // TS -> MP4 / MKV and fragmented MP4 -> MP4 are carried over without re-encoding (lib/ts2mp4.js, lib/mux.js).
 import { t, translatePage, renderFooter, isAndroid } from '../utils/dom.js';
@@ -12,6 +12,7 @@ import { tsToMp4, tsToMkv, TS_MP4_MAX_BYTES } from '../lib/ts2mp4.js';
 import { formatBytes, formatDuration } from '../lib/util.js';
 import { makeRate, etaText } from '../lib/rate.js';
 import { getSettings, addHistory } from '../utils/settings.js';
+import { captionLayout, captionPrefs, drawBackdrop, drawTexts, canvasMeasure } from '../lib/caption.js';
 
 await loadUiLang();
 
@@ -122,10 +123,62 @@ async function openFile(file) {
   showOptions();
 }
 
+// ---- GIF caption (1.6.7): white bar(s), text on the video, demotivator ---------------------
+let measure = null;
+function caption() {
+  return {
+    style: $('cap-style').value, barPos: $('cap-bar-pos').value, overlayPos: $('cap-ov-pos').value, overlayColor: $('cap-ov-color').value,
+    top: $('cap-top').value, bottom: $('cap-bottom').value, text: $('cap-text').value, title: $('cap-title').value, sub: $('cap-sub').value,
+  };
+}
+function layoutFor(srcW, srcH) {
+  measure ||= canvasMeasure(document);
+  return captionLayout(srcW, srcH, Number($('gif-width').value), caption(), measure);
+}
+const captionOn = () => $('cap-style').value !== 'none';
+
+function showCaption() {
+  const style = $('cap-style').value, bar = $('cap-bar-pos').value;
+  for (const el of document.querySelectorAll('[data-cap]')) {
+    el.hidden = !el.dataset.cap.split(' ').includes(style) || (el.dataset.bar ? !el.dataset.bar.split(' ').includes(bar) : false);
+  }
+  drawPreview();
+}
+
+// the current frame of the player with the caption, at the GIF's own size
+function drawPreview() {
+  const c = $('cap-canvas');
+  if (!captionOn() || $('target').value !== 'gif' || !state.width) return;
+  const L = layoutFor(state.width, state.height);
+  c.width = L.width;
+  c.height = L.height;
+  const ctx = c.getContext('2d');
+  ctx.clearRect(0, 0, c.width, c.height);
+  drawBackdrop(ctx, L);
+  try { if (video.readyState >= 2) ctx.drawImage(video, L.video.x, L.video.y, L.video.w, L.video.h); } catch { /* not decoded yet */ }
+  drawTexts(ctx, L);
+}
+
+async function saveCaptionPrefs() {
+  try { await browser.storage.local.set({ convCaption: captionPrefs({ style: $('cap-style').value, barPos: $('cap-bar-pos').value, overlayPos: $('cap-ov-pos').value, overlayColor: $('cap-ov-color').value }) }); } catch { /* ignore */ }
+}
+
+// rough GIF size with the caption: the moving picture as in the popup (text on it costs a little more),
+// the static bars / frame about once
+function gifBytes(seconds) {
+  const fps = Number($('gif-fps').value);
+  const aspect = state.width / state.height || 16 / 9;
+  if (!captionOn() || !state.width) return gifEstimateBytes(Number($('gif-width').value), aspect, seconds, fps);
+  const L = layoutFor(state.width, state.height);
+  const moving = gifEstimateBytes(L.video.w, L.video.w / L.video.h, seconds, fps) * (L.texts.length && $('cap-style').value === 'overlay' ? 1.08 : 1);
+  return Math.round(moving + (L.width * L.height - L.video.w * L.video.h) * 0.3);
+}
+
 // ---- options ---------------------------------------------------------------------------
 function showOptions() {
   const target = $('target').value;
   for (const el of document.querySelectorAll('[data-for]')) el.hidden = !el.dataset.for.split(' ').includes(target);
+  showCaption();
   checkRange();
 }
 
@@ -139,7 +192,7 @@ function checkRange() {
     else if (target === 'gif' && r.length > GIF_LIMIT_SECONDS + 0.5) msg = t('convTooLongGif').replace('{n}', String(GIF_LIMIT_SECONDS));
     else if (target === 'mp3' && state.duration > MP3_MAX_SECONDS) msg = t('convTooLongMp3').replace('{n}', String(MP3_MAX_SECONDS / 60));
     if (target === 'gif' && !r.error) {
-      const bytes = gifEstimateBytes(Number($('gif-width').value), state.width / state.height || 16 / 9, r.length, Number($('gif-fps').value));
+      const bytes = gifBytes(r.length);
       $('gif-est').textContent = bytes ? `≈ ${formatBytes(bytes)}` : '';
     }
   } else if (target === 'png') {
@@ -185,6 +238,7 @@ async function convert() {
       blob = await videoToGif(state.work, {
         maxWidth: Number($('gif-width').value), fps: Number($('gif-fps').value), maxSeconds: GIF_LIMIT_SECONDS,
         start: range.start, end: range.end, signal: ac.signal,
+        compose: captionOn() ? (w, h) => layoutFor(w, h) : undefined,
         onProgress: (p) => progress(t('convWorking').replace('{p}', String(Math.round(p * 100))), p),
       });
     } else if (target === 'mp3') {
@@ -315,6 +369,16 @@ async function init() {
 
   $('target').addEventListener('change', showOptions);
   for (const id of ['start', 'end', 'at', 'gif-width', 'gif-fps']) $(id).addEventListener('input', checkRange);
+  const cp = captionPrefs((await browser.storage.local.get('convCaption').catch(() => ({}))).convCaption);
+  $('cap-style').value = cp.style;
+  $('cap-bar-pos').value = cp.barPos;
+  $('cap-ov-pos').value = cp.overlayPos;
+  $('cap-ov-color').value = cp.overlayColor;
+  for (const id of ['cap-style', 'cap-bar-pos', 'cap-ov-pos', 'cap-ov-color']) $(id).addEventListener('change', () => { showCaption(); checkRange(); saveCaptionPrefs(); });
+  for (const id of ['cap-top', 'cap-bottom', 'cap-text', 'cap-title', 'cap-sub']) $(id).addEventListener('input', () => { drawPreview(); checkRange(); });
+  $('gif-width').addEventListener('change', drawPreview);
+  for (const ev of ['loadeddata', 'seeked', 'pause', 'timeupdate']) video.addEventListener(ev, drawPreview);
+  showCaption();
   for (const id of ['gif-width', 'gif-fps']) $(id).addEventListener('change', checkRange);
   const now = (id) => () => { $(id).value = formatTime(video.currentTime || 0); checkRange(); };
   $('start-now').onclick = now('start');

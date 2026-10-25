@@ -26,7 +26,7 @@
 
     <section id="work" hidden>
       <div class="conv-file"><b id="file-name"></b> <span id="file-info" class="muted"></span></div>
-      <video id="preview" controls preload="metadata" playsinline></video>
+      <video id="preview" controls preload="auto" playsinline></video>
       <p id="no-preview" class="muted" hidden data-i18n="convNoPreview"></p>
 
       <fieldset class="prefs conv-opts">
@@ -53,6 +53,62 @@
           <label for="gif-fps">FPS</label>
           <select id="gif-fps"></select>
           <span id="gif-est" class="muted" data-i18n-title="gifEstHint"></span>
+        </div>
+        <div id="cap-box" class="cap-box" data-for="gif">
+          <div class="conv-row">
+            <label for="cap-style" data-i18n="capCaption"></label>
+            <select id="cap-style">
+              <option value="none" data-i18n="capNone"></option>
+              <option value="bar" data-i18n="capBar"></option>
+              <option value="overlay" data-i18n="capOverlay"></option>
+              <option value="demotivator" data-i18n="capDemotivator"></option>
+            </select>
+          </div>
+          <div class="conv-row" data-cap="bar">
+            <label for="cap-bar-pos" data-i18n="capPos"></label>
+            <select id="cap-bar-pos">
+              <option value="top" data-i18n="capTop"></option>
+              <option value="bottom" data-i18n="capBottom"></option>
+              <option value="both" data-i18n="capBoth"></option>
+            </select>
+          </div>
+          <div class="conv-row" data-cap="bar" data-bar="top both">
+            <label for="cap-top" data-i18n="capTextTop"></label>
+            <textarea id="cap-top" rows="2" maxlength="200"></textarea>
+          </div>
+          <div class="conv-row" data-cap="bar" data-bar="bottom both">
+            <label for="cap-bottom" data-i18n="capTextBottom"></label>
+            <textarea id="cap-bottom" rows="2" maxlength="200"></textarea>
+          </div>
+          <div class="conv-row" data-cap="overlay">
+            <label for="cap-ov-pos" data-i18n="capPos"></label>
+            <select id="cap-ov-pos">
+              <option value="top" data-i18n="capTop"></option>
+              <option value="center" data-i18n="capCenter"></option>
+              <option value="bottom" data-i18n="capBottom"></option>
+            </select>
+            <label for="cap-ov-color" data-i18n="capColor"></label>
+            <select id="cap-ov-color">
+              <option value="white" data-i18n="capWhite"></option>
+              <option value="black" data-i18n="capBlack"></option>
+            </select>
+          </div>
+          <div class="conv-row" data-cap="overlay">
+            <label for="cap-text" data-i18n="capText"></label>
+            <textarea id="cap-text" rows="2" maxlength="200"></textarea>
+          </div>
+          <div class="conv-row" data-cap="demotivator">
+            <label for="cap-title" data-i18n="capTitle"></label>
+            <textarea id="cap-title" rows="2" maxlength="200"></textarea>
+          </div>
+          <div class="conv-row" data-cap="demotivator">
+            <label for="cap-sub" data-i18n="capSubtitle"></label>
+            <textarea id="cap-sub" rows="2" maxlength="300"></textarea>
+          </div>
+          <div class="cap-preview" data-cap="bar overlay demotivator">
+            <span class="hint" data-i18n="capPreview"></span>
+            <canvas id="cap-canvas"></canvas>
+          </div>
         </div>
         <div class="conv-row" data-for="mp3">
           <label for="kbps" data-i18n="convBitrate"></label>

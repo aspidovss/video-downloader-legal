@@ -1141,5 +1141,62 @@
   },
   "convTooLarge": {
     "message": "फ़ाइल बहुत बड़ी है (अधिकतम {n} MB)।"
+  },
+  "capCaption": {
+    "message": "कैप्शन"
+  },
+  "capNone": {
+    "message": "कोई नहीं"
+  },
+  "capBar": {
+    "message": "सफ़ेद पट्टी"
+  },
+  "capOverlay": {
+    "message": "वीडियो पर टेक्स्ट"
+  },
+  "capDemotivator": {
+    "message": "डिमोटिवेटर"
+  },
+  "capPos": {
+    "message": "स्थिति"
+  },
+  "capTop": {
+    "message": "ऊपर"
+  },
+  "capBottom": {
+    "message": "नीचे"
+  },
+  "capBoth": {
+    "message": "ऊपर और नीचे"
+  },
+  "capCenter": {
+    "message": "बीच में"
+  },
+  "capColor": {
+    "message": "रंग"
+  },
+  "capWhite": {
+    "message": "सफ़ेद"
+  },
+  "capBlack": {
+    "message": "काला"
+  },
+  "capTextTop": {
+    "message": "ऊपर का टेक्स्ट"
+  },
+  "capTextBottom": {
+    "message": "नीचे का टेक्स्ट"
+  },
+  "capText": {
+    "message": "टेक्स्ट"
+  },
+  "capTitle": {
+    "message": "शीर्षक"
+  },
+  "capSubtitle": {
+    "message": "दूसरी पंक्ति"
+  },
+  "capPreview": {
+    "message": "पूर्वावलोकन (प्लेयर का मौजूदा फ़्रेम):"
   }
 }

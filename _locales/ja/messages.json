@@ -1141,5 +1141,62 @@
   },
   "convTooLarge": {
     "message": "ファイルが大きすぎます(最大 {n} MB)。"
+  },
+  "capCaption": {
+    "message": "キャプション"
+  },
+  "capNone": {
+    "message": "なし"
+  },
+  "capBar": {
+    "message": "白い帯"
+  },
+  "capOverlay": {
+    "message": "動画の上に文字"
+  },
+  "capDemotivator": {
+    "message": "デモチベーター"
+  },
+  "capPos": {
+    "message": "位置"
+  },
+  "capTop": {
+    "message": "上"
+  },
+  "capBottom": {
+    "message": "下"
+  },
+  "capBoth": {
+    "message": "上と下"
+  },
+  "capCenter": {
+    "message": "中央"
+  },
+  "capColor": {
+    "message": "色"
+  },
+  "capWhite": {
+    "message": "白"
+  },
+  "capBlack": {
+    "message": "黒"
+  },
+  "capTextTop": {
+    "message": "上の文字"
+  },
+  "capTextBottom": {
+    "message": "下の文字"
+  },
+  "capText": {
+    "message": "文字"
+  },
+  "capTitle": {
+    "message": "タイトル"
+  },
+  "capSubtitle": {
+    "message": "2 行目"
+  },
+  "capPreview": {
+    "message": "プレビュー(プレーヤーの現在のフレーム):"
   }
 }

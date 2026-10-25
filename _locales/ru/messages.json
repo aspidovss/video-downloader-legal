@@ -1141,5 +1141,62 @@
   },
   "convTooLarge": {
     "message": "Файл слишком большой (не больше {n} МБ)."
+  },
+  "capCaption": {
+    "message": "Подпись"
+  },
+  "capNone": {
+    "message": "Нет"
+  },
+  "capBar": {
+    "message": "Белая полоса"
+  },
+  "capOverlay": {
+    "message": "Текст на видео"
+  },
+  "capDemotivator": {
+    "message": "Демотиватор"
+  },
+  "capPos": {
+    "message": "Положение"
+  },
+  "capTop": {
+    "message": "Сверху"
+  },
+  "capBottom": {
+    "message": "Снизу"
+  },
+  "capBoth": {
+    "message": "Сверху и снизу"
+  },
+  "capCenter": {
+    "message": "По центру"
+  },
+  "capColor": {
+    "message": "Цвет"
+  },
+  "capWhite": {
+    "message": "Белый"
+  },
+  "capBlack": {
+    "message": "Чёрный"
+  },
+  "capTextTop": {
+    "message": "Текст сверху"
+  },
+  "capTextBottom": {
+    "message": "Текст снизу"
+  },
+  "capText": {
+    "message": "Текст"
+  },
+  "capTitle": {
+    "message": "Заголовок"
+  },
+  "capSubtitle": {
+    "message": "Вторая строка"
+  },
+  "capPreview": {
+    "message": "Предпросмотр (текущий кадр плеера):"
   }
 }

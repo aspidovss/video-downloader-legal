@@ -313,3 +313,8 @@ body.convert main { display: flex; flex-direction: column; gap: 12px; }
 #from-history-text { word-break: break-all; }
 #preview.audio-only { max-height: 54px; background: transparent; }
 .conv-row > label:not(:first-child) { min-width: 0; margin-left: 8px; }
+/* converter: GIF captions (1.6.7) */
+.cap-box { display: flex; flex-direction: column; gap: 10px; border-top: 1px dashed var(--border); padding-top: 10px; }
+.cap-box textarea { flex: 1 1 260px; max-width: 480px; font: 13px/1.35 system-ui, -apple-system, "Segoe UI", sans-serif; resize: vertical; }
+.cap-preview { display: flex; flex-direction: column; gap: 4px; align-items: flex-start; }
+#cap-canvas { max-width: 100%; height: auto; border: 1px solid var(--border); border-radius: 4px; background: repeating-conic-gradient(#8882 0 25%, transparent 0 50%) 0 0 / 16px 16px; }

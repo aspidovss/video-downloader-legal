@@ -1141,5 +1141,62 @@
   },
   "convTooLarge": {
     "message": "Le fichier est trop volumineux ({n} Mo au maximum)."
+  },
+  "capCaption": {
+    "message": "Légende"
+  },
+  "capNone": {
+    "message": "Aucune"
+  },
+  "capBar": {
+    "message": "Bande blanche"
+  },
+  "capOverlay": {
+    "message": "Texte sur la vidéo"
+  },
+  "capDemotivator": {
+    "message": "Démotivateur"
+  },
+  "capPos": {
+    "message": "Position"
+  },
+  "capTop": {
+    "message": "En haut"
+  },
+  "capBottom": {
+    "message": "En bas"
+  },
+  "capBoth": {
+    "message": "En haut et en bas"
+  },
+  "capCenter": {
+    "message": "Au centre"
+  },
+  "capColor": {
+    "message": "Couleur"
+  },
+  "capWhite": {
+    "message": "Blanc"
+  },
+  "capBlack": {
+    "message": "Noir"
+  },
+  "capTextTop": {
+    "message": "Texte du haut"
+  },
+  "capTextBottom": {
+    "message": "Texte du bas"
+  },
+  "capText": {
+    "message": "Texte"
+  },
+  "capTitle": {
+    "message": "Titre"
+  },
+  "capSubtitle": {
+    "message": "Deuxième ligne"
+  },
+  "capPreview": {
+    "message": "Aperçu (image actuelle du lecteur) :"
   }
 }

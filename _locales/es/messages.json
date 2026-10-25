@@ -1141,5 +1141,62 @@
   },
   "convTooLarge": {
     "message": "El archivo es demasiado grande ({n} MB como máximo)."
+  },
+  "capCaption": {
+    "message": "Texto"
+  },
+  "capNone": {
+    "message": "Ninguno"
+  },
+  "capBar": {
+    "message": "Franja blanca"
+  },
+  "capOverlay": {
+    "message": "Texto sobre el vídeo"
+  },
+  "capDemotivator": {
+    "message": "Desmotivador"
+  },
+  "capPos": {
+    "message": "Posición"
+  },
+  "capTop": {
+    "message": "Arriba"
+  },
+  "capBottom": {
+    "message": "Abajo"
+  },
+  "capBoth": {
+    "message": "Arriba y abajo"
+  },
+  "capCenter": {
+    "message": "Centro"
+  },
+  "capColor": {
+    "message": "Color"
+  },
+  "capWhite": {
+    "message": "Blanco"
+  },
+  "capBlack": {
+    "message": "Negro"
+  },
+  "capTextTop": {
+    "message": "Texto de arriba"
+  },
+  "capTextBottom": {
+    "message": "Texto de abajo"
+  },
+  "capText": {
+    "message": "Texto"
+  },
+  "capTitle": {
+    "message": "Título"
+  },
+  "capSubtitle": {
+    "message": "Segunda línea"
+  },
+  "capPreview": {
+    "message": "Vista previa (fotograma actual del reproductor):"
   }
 }

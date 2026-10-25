@@ -1141,5 +1141,62 @@
   },
   "convTooLarge": {
     "message": "الملف كبير جدًا ({n} ميغابايت على الأكثر)."
+  },
+  "capCaption": {
+    "message": "تعليق"
+  },
+  "capNone": {
+    "message": "بلا"
+  },
+  "capBar": {
+    "message": "شريط أبيض"
+  },
+  "capOverlay": {
+    "message": "نص على الفيديو"
+  },
+  "capDemotivator": {
+    "message": "ديموتيفاتور"
+  },
+  "capPos": {
+    "message": "الموضع"
+  },
+  "capTop": {
+    "message": "أعلى"
+  },
+  "capBottom": {
+    "message": "أسفل"
+  },
+  "capBoth": {
+    "message": "أعلى وأسفل"
+  },
+  "capCenter": {
+    "message": "في الوسط"
+  },
+  "capColor": {
+    "message": "اللون"
+  },
+  "capWhite": {
+    "message": "أبيض"
+  },
+  "capBlack": {
+    "message": "أسود"
+  },
+  "capTextTop": {
+    "message": "النص العلوي"
+  },
+  "capTextBottom": {
+    "message": "النص السفلي"
+  },
+  "capText": {
+    "message": "النص"
+  },
+  "capTitle": {
+    "message": "العنوان"
+  },
+  "capSubtitle": {
+    "message": "السطر الثاني"
+  },
+  "capPreview": {
+    "message": "معاينة (الإطار الحالي في المشغّل):"
   }
 }

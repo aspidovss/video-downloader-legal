@@ -2,6 +2,11 @@
 
 Added features per version (fixes and internal changes are not listed). Version history before 1.5 is condensed from the development log; the short development log is in [docs/DEVLOG-en.md](docs/DEVLOG-en.md) (English) and [docs/DEVLOG-ru.md](docs/DEVLOG-ru.md) (Russian).
 
+## 1.6.7
+
+### Added
+* **Captions on a GIF** (converter): a white bar with black text on top, at the bottom or both; text on the video (white with a black outline or black with a white one) at the top, center or bottom; a *demotivator* — the video in a white frame on black with a big title and a second line. The text is fitted and wrapped by itself, with a live preview on the current frame; the style and position are remembered.
+
 ## 1.6.6
 
 ### Added

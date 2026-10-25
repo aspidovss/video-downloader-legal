@@ -1141,5 +1141,62 @@
   },
   "convTooLarge": {
     "message": "O arquivo é grande demais (no máximo {n} MB)."
+  },
+  "capCaption": {
+    "message": "Legenda"
+  },
+  "capNone": {
+    "message": "Nenhuma"
+  },
+  "capBar": {
+    "message": "Faixa branca"
+  },
+  "capOverlay": {
+    "message": "Texto sobre o vídeo"
+  },
+  "capDemotivator": {
+    "message": "Desmotivador"
+  },
+  "capPos": {
+    "message": "Posição"
+  },
+  "capTop": {
+    "message": "Em cima"
+  },
+  "capBottom": {
+    "message": "Embaixo"
+  },
+  "capBoth": {
+    "message": "Em cima e embaixo"
+  },
+  "capCenter": {
+    "message": "No centro"
+  },
+  "capColor": {
+    "message": "Cor"
+  },
+  "capWhite": {
+    "message": "Branco"
+  },
+  "capBlack": {
+    "message": "Preto"
+  },
+  "capTextTop": {
+    "message": "Texto de cima"
+  },
+  "capTextBottom": {
+    "message": "Texto de baixo"
+  },
+  "capText": {
+    "message": "Texto"
+  },
+  "capTitle": {
+    "message": "Título"
+  },
+  "capSubtitle": {
+    "message": "Segunda linha"
+  },
+  "capPreview": {
+    "message": "Prévia (quadro atual do player):"
   }
 }

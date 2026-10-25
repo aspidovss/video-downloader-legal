@@ -1141,5 +1141,62 @@
   },
   "convTooLarge": {
     "message": "The file is too large ({n} MB at most)."
+  },
+  "capCaption": {
+    "message": "Caption"
+  },
+  "capNone": {
+    "message": "None"
+  },
+  "capBar": {
+    "message": "White bar"
+  },
+  "capOverlay": {
+    "message": "Text on the video"
+  },
+  "capDemotivator": {
+    "message": "Demotivator"
+  },
+  "capPos": {
+    "message": "Position"
+  },
+  "capTop": {
+    "message": "Top"
+  },
+  "capBottom": {
+    "message": "Bottom"
+  },
+  "capBoth": {
+    "message": "Top and bottom"
+  },
+  "capCenter": {
+    "message": "Center"
+  },
+  "capColor": {
+    "message": "Color"
+  },
+  "capWhite": {
+    "message": "White"
+  },
+  "capBlack": {
+    "message": "Black"
+  },
+  "capTextTop": {
+    "message": "Top text"
+  },
+  "capTextBottom": {
+    "message": "Bottom text"
+  },
+  "capText": {
+    "message": "Text"
+  },
+  "capTitle": {
+    "message": "Title"
+  },
+  "capSubtitle": {
+    "message": "Second line"
+  },
+  "capPreview": {
+    "message": "Preview (current frame of the player):"
   }
 }

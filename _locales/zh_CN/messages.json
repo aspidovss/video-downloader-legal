@@ -1141,5 +1141,62 @@
   },
   "convTooLarge": {
     "message": "文件太大(最大 {n} MB)。"
+  },
+  "capCaption": {
+    "message": "字幕"
+  },
+  "capNone": {
+    "message": "无"
+  },
+  "capBar": {
+    "message": "白色横条"
+  },
+  "capOverlay": {
+    "message": "视频上的文字"
+  },
+  "capDemotivator": {
+    "message": "反励志海报"
+  },
+  "capPos": {
+    "message": "位置"
+  },
+  "capTop": {
+    "message": "顶部"
+  },
+  "capBottom": {
+    "message": "底部"
+  },
+  "capBoth": {
+    "message": "顶部和底部"
+  },
+  "capCenter": {
+    "message": "居中"
+  },
+  "capColor": {
+    "message": "颜色"
+  },
+  "capWhite": {
+    "message": "白色"
+  },
+  "capBlack": {
+    "message": "黑色"
+  },
+  "capTextTop": {
+    "message": "顶部文字"
+  },
+  "capTextBottom": {
+    "message": "底部文字"
+  },
+  "capText": {
+    "message": "文字"
+  },
+  "capTitle": {
+    "message": "标题"
+  },
+  "capSubtitle": {
+    "message": "第二行"
+  },
+  "capPreview": {
+    "message": "预览(播放器当前帧):"
   }
 }

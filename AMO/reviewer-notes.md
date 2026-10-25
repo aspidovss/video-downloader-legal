@@ -1,4 +1,10 @@
-# Notes for the AMO reviewer — Video Downloader Legal 1.6.6
+# Notes for the AMO reviewer — Video Downloader Legal 1.6.7
+
+1.6.6 was published on GitHub only, so this upload contains the changes of both versions (1.6.6 below).
+
+**New in 1.6.7 (all local, no new permissions, no remote code):** `lib/caption.js` — captions on a GIF made in the converter page: a white bar with text, text drawn on the video, or a "demotivator" (black background, white frame, two lines of text). Pure layout code (word wrap, font fitting) plus canvas 2D drawing (`fillRect`, `strokeRect`, `fillText`, `strokeText`) with the system's own fonts; no font files, no network. `lib/gifvideo.js` `videoToGif` got a `compose` option that draws this layout with every frame. The style and position chosen are kept in `storage.local` (`convCaption`), the text is not stored.
+
+## 1.6.6
 
 **New in 1.6.6 (all local, no new permissions, no remote code):** a converter page `content/convert.html` + `content/convert.js` (opened from the popup toolbar and from History). The user picks or drops a local file with a normal `<input type="file">`; the page converts it in place with code already in the add-on: `lib/gifvideo.js` (GIF, now with a start / end), `lib/mp3.js` + `vendor/lame.js` (MP3, browser `decodeAudioData`), a `<canvas>` (PNG frame), `lib/ts2mp4.js` and `lib/mux.js` (TS → MP4 / MKV, fragmented MP4 → MP4, no re-encoding). `lib/convert.js` holds pure helpers (file type by its first bytes, time parsing, output names). The result is saved with `downloads.download` from a `blob:` URL. Nothing is sent anywhere. History only shows the file name to pick and may call `downloads.search` / `downloads.show` to open its folder.
 
