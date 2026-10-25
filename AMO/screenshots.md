@@ -16,5 +16,6 @@ All 1280×800 PNG (the size AMO asks for). English set: `screenshots/en/`, Russi
 | 9 | `en-9-help.png` | Built-in help: what it can do and what it will never do |
 | 10 | `en-10-history.png` | Download history |
 | 11 | `en-11-gif.png` | Video to GIF right in the browser: width and FPS in the card, rough size, time left; the GIF block of the settings |
+| 12 | `en-12-converter.png` | Converter: GIF with captions (white bar, text on the video, demotivator) from any local file; also MP3, PNG frame, TS → MP4 / MKV, fragmented MP4 → MP4 (English only) |
 
 The pictures use generated cover art (no real videos or trademarks) and the real extension windows rendered with sample data.

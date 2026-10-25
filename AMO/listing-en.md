@@ -26,6 +26,8 @@ VDL - Video Downloader Legal lists what the open page plays and saves the one yo
 
 FEATURES
 - Video download — direct files, HLS (m3u8) and DASH (mpd) streams on any site: choose the quality, separate audio tracks are joined into one file.
+- Video to GIF — short videos (up to 3 min) become an animated GIF right in the browser: width 640 / 480 / 320 / 240 px, 5–15 FPS, the rough size shown up front.
+- Converter — pick a video or audio file on your computer and make a GIF (a "from–to" part, width, FPS) with an optional caption: a white bar, text on the video or a demotivator, with a live preview. Also MP3, a PNG frame, TS → MP4 / MKV and fragmented MP4 → MP4 without re-encoding. The file never leaves your browser.
 - YouTube and YouTube Shorts — choose type (MP4, WEBM, AV1) and resolution; audio as MP3, M4A or WEBM; video and audio in one file.
 - YouTube subtitles — as an .srt file or with the video.
 - Ready for Telegram — video and sound of different formats are joined into an ordinary MP4 (no re-encoding), so Telegram sends it as a video.
