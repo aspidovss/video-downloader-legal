@@ -18,7 +18,8 @@ test('header refs: never for YouTube / Google; a rule per refused site with the 
   const s = { ua: '', live: false, on: true, refs: new Map([['phncdn.com', 'https://www.example.com/view_video.php?viewkey=1']]) };
   const r = buildRules(s, 'abc').find((x) => x.condition.requestDomains?.[0] === 'phncdn.com');
   assert.ok(r, 'rule for the refused site');
-  assert.deepEqual(r.condition.tabIds, [-1], 'only the extension\'s own requests');
+  assert.deepEqual(r.condition.initiatorDomains, ['abc'], 'only the extension\'s own requests');
+  assert.equal(r.condition.tabIds, undefined, 'no tab condition: Edge gives the extension\'s requests no tab -1');
   assert.deepEqual(r.action.requestHeaders, [
     { header: 'referer', operation: 'set', value: 'https://www.example.com/view_video.php?viewkey=1' },
     { header: 'origin', operation: 'set', value: 'https://www.example.com' },

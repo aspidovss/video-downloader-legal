@@ -4,7 +4,7 @@ All 1280×800 PNG (the size AMO asks for). English set: `screenshots/en/`, Russi
 
 | # | File | Caption (EN) |
 |---|---|---|
-| 0 | `en-0-anywhere.png` | Download anywhere: windows of VDL on YouTube, Twitch, Vimeo and TikTok (cover banner) |
+| 0 | `en-0-anywhere.png` | Download anywhere: windows of VDL on YouTube, Twitch, Vimeo and TikTok, and what it saves (MP4 / WEBM / MKV, MP3 / M4A, HLS / DASH, live recording, subtitles, video → GIF) — cover banner |
 | 1 | `en-1-youtube.png` | YouTube: formats, resolutions and sizes, audio as MP3 / M4A / WEBM |
 | 2 | `en-2-twitch.png` | Twitch and other live streams: record in MP4 (default) or TS |
 | 3 | `en-3-recording.png` | Live recording: one card, elapsed time and size, Stop |
@@ -15,5 +15,6 @@ All 1280×800 PNG (the size AMO asks for). English set: `screenshots/en/`, Russi
 | 8 | `en-8-settings.png` | Settings: defaults, YouTube options with hints |
 | 9 | `en-9-help.png` | Built-in help: what it can do and what it will never do |
 | 10 | `en-10-history.png` | Download history |
+| 11 | `en-11-gif.png` | Video to GIF right in the browser: width and FPS in the card, rough size, time left; the GIF block of the settings |
 
 The pictures use generated cover art (no real videos or trademarks) and the real extension windows rendered with sample data.

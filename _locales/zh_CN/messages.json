@@ -1015,5 +1015,131 @@
   },
   "gifEstHint": {
     "message": "GIF 的大致大小：取决于视频的运动量（可能相差 2 倍）。"
+  },
+  "iconConvert": {
+    "message": "转换文件"
+  },
+  "convTitle": {
+    "message": "转换器"
+  },
+  "convPick": {
+    "message": "选择文件"
+  },
+  "convDrop": {
+    "message": "或将视频或音频文件拖放到这里"
+  },
+  "convLocal": {
+    "message": "文件在本机上转换,不会上传到任何地方。"
+  },
+  "convFromHistory": {
+    "message": "请在下载文件夹中选择“{name}”。"
+  },
+  "convFromHistoryHint": {
+    "message": "用转换器打开此文件"
+  },
+  "convOpen": {
+    "message": "转换…"
+  },
+  "convShowFile": {
+    "message": "在文件夹中显示"
+  },
+  "convNoPreview": {
+    "message": "浏览器无法播放此文件,因此无法生成 GIF、PNG 和 MP3。"
+  },
+  "convTarget": {
+    "message": "生成"
+  },
+  "convTgtGif": {
+    "message": "GIF(动图)"
+  },
+  "convTgtMp3": {
+    "message": "MP3(仅声音)"
+  },
+  "convTgtPng": {
+    "message": "PNG(单帧)"
+  },
+  "convTgtMp4": {
+    "message": "MP4(同一视频,换容器)"
+  },
+  "convTgtMkv": {
+    "message": "MKV(同一视频,换容器)"
+  },
+  "convTgtDefrag": {
+    "message": "MP4(修复分段文件)"
+  },
+  "convStart": {
+    "message": "从"
+  },
+  "convEnd": {
+    "message": "到"
+  },
+  "convNow": {
+    "message": "当前"
+  },
+  "convNowHint": {
+    "message": "使用播放器的当前时间"
+  },
+  "convFrameAt": {
+    "message": "帧位置"
+  },
+  "convWidth": {
+    "message": "宽度"
+  },
+  "convBitrate": {
+    "message": "码率"
+  },
+  "convWhole": {
+    "message": "整个文件原样转移:不重新编码,不裁剪。"
+  },
+  "convRun": {
+    "message": "转换"
+  },
+  "convSaveAgain": {
+    "message": "再次保存"
+  },
+  "convPreparing": {
+    "message": "正在准备文件…"
+  },
+  "convWorking": {
+    "message": "正在转换… {p}%"
+  },
+  "convDecoding": {
+    "message": "正在解码声音…"
+  },
+  "convDone": {
+    "message": "完成"
+  },
+  "convSaved": {
+    "message": "已保存:{name} · {size}"
+  },
+  "convCanceled": {
+    "message": "已取消"
+  },
+  "convFailed": {
+    "message": "转换失败:{e}"
+  },
+  "convNoTargets": {
+    "message": "此类文件无法在这里转换。"
+  },
+  "convNoAudio": {
+    "message": "无法从此文件解码出声音。"
+  },
+  "convRemuxFailed": {
+    "message": "此流无法原样转移(仅支持 H.264 视频 + AAC 声音)。"
+  },
+  "convBadTime": {
+    "message": "请输入秒数或 分:秒,例如 75 或 1:15。"
+  },
+  "convBadRange": {
+    "message": "“到”必须晚于“从”。"
+  },
+  "convTooLongGif": {
+    "message": "GIF:最长 {n} 秒;请选择更短的片段。"
+  },
+  "convTooLongMp3": {
+    "message": "MP3:文件最长 {n} 分钟。"
+  },
+  "convTooLarge": {
+    "message": "文件太大(最大 {n} MB)。"
   }
 }

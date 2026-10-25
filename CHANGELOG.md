@@ -2,6 +2,14 @@
 
 Added features per version (fixes and internal changes are not listed). Version history before 1.5 is condensed from the development log; the short development log is in [docs/DEVLOG-en.md](docs/DEVLOG-en.md) (English) and [docs/DEVLOG-ru.md](docs/DEVLOG-ru.md) (Russian).
 
+## 1.6.6
+
+### Added
+* **Converter** (the 🎞️ button in the popup, or *Convert…* in History): pick or drop a video or audio file and make a GIF (width, FPS, a "from–to" part), an MP3 (bitrate, a part), a PNG frame, or carry a TS stream over to MP4 / MKV and a fragmented MP4 to a plain MP4 without re-encoding. Everything runs in the page; nothing is uploaded.
+
+### Fixed
+* Microsoft Edge: the header rules (page Referer for JoyReactor and other servers that refuse the extension, TikTok, Bilibili, YouTube) never applied — Edge does not mark the extension's own requests as "tab -1"; the rules now match them by the extension's id only.
+
 ## 1.6.5
 
 ### Added

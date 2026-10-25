@@ -3,7 +3,7 @@
 # Video Downloader Legal (VDL)
 
 An extension for Firefox (including Firefox for Android), Chrome and Microsoft Edge (Manifest V3): it finds the video on a page and saves it.
-Author: AspidovSS · License: MIT · Current version: 1.6.5
+Author: AspidovSS · License: MIT · Current version: 1.6.6
 
 ## What it does
 
@@ -142,6 +142,9 @@ Details of every build are in `CHANGELOG.md` and the git history.
 - **1.6.0dev1.** AV1/H.264 + Opus joined into one `.mkv` without re-encoding (`mergeMp4Opus`). FFmpeg deliberately not used: 25–30 MB core, harder AMO review, patents and GPL builds, phone memory. If re-encoding is ever needed, look at WebCodecs.
 - **1.6.0dev2.** Sidebar button (Firefox only); configurable shortcuts (open popup, download video, download audio); Chrome rejects a manifest with Ctrl+Alt shortcuts, a test guards this. AMO validator: no errors or warnings. 205 tests.
 - **1.6.0dev3.** Log trimmed; "Hotkeys" block inside "General"; new package names (`-ff-`, `-chrome-`, `-edge-`); separate "VDL DEV" add-on for AMO signing (`npm run build:dev`, branch `1.6.0dev_amo` kept local).
+- **1.6.6 (release).** Builds 1.6.6dev1 … dev2: file converter (GIF, MP3, PNG frame, TS → MP4 / MKV, fragmented MP4 → MP4; the button right after "Settings" and "Convert…" in History), Edge header rules fixed. 289 tests.
+- **1.6.6dev2.** File converter: the 🎞️ button in the popup (right after "Settings") and "Convert…" in History open `content/convert.html`. The file is picked or dropped (an extension cannot read the downloads folder itself; from History the file name is shown, with "Show in folder"); everything runs in the page, nothing is uploaded. Outputs: GIF (width, FPS, "from–to" part, rough size, time left; up to 180 s), MP3 (bitrate, part; files up to 30 min), a PNG frame (a time or the player's current frame), TS → MP4 / MKV and fragmented MP4 → plain MP4 without re-encoding. A player on the page; the "Now" buttons take its time. Saved through the browser's downloads (with "Save as" when that is on), on Android through a link. Logic in `lib/convert.js`; `videoToGif` got `start` / `end`. 289 tests; checked in Chromium: WEBM → GIF / MP3 / PNG, TS → MP4 / MKV, fragmented MP4 → MP4, OGG → MP3.
+- **1.6.6dev1.** Edge: the header rules (Referer for JoyReactor and servers answering 403/412, TikTok, Bilibili, YouTube) never applied. Checked in Edge's service worker console: a rule with `tabIds: [-1]` does not match, one with `initiatorDomains: [extension id]` and type `xmlhttprequest` does (Edge does not give the extension's requests tab -1). The rules are now limited by the extension's id only (page requests are still never touched); without an id (tests) still tab -1. 281 tests.
 - **1.6.5 (release).** Builds 1.6.5dev1 … dev3: "GIF" settings block (on for all sites, length limit, sites and exceptions as regular expressions, default width and FPS); in the card every width, an FPS list, the rough size, the time left while converting. 281 tests.
 - **1.6.5dev3.** The GIF card always offers every width (640 / 480 / 320 / 240 px); the settings have "Default GIF width" instead of width ticks (chosen in the card at first, 480 px by default). 281 tests.
 - **1.6.5dev2.** Card: a GIF made from the video has a frame-rate choice next to the width (5 / 8 / 10 / 12 / 15, default from the settings); the "· from video" label is gone; when the GIF can be made from more than one file: "480px · WEBM", "480px · MP4". 281 tests.

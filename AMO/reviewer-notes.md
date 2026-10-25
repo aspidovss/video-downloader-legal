@@ -1,4 +1,8 @@
-# Notes for the AMO reviewer — Video Downloader Legal 1.6.5
+# Notes for the AMO reviewer — Video Downloader Legal 1.6.6
+
+**New in 1.6.6 (all local, no new permissions, no remote code):** a converter page `content/convert.html` + `content/convert.js` (opened from the popup toolbar and from History). The user picks or drops a local file with a normal `<input type="file">`; the page converts it in place with code already in the add-on: `lib/gifvideo.js` (GIF, now with a start / end), `lib/mp3.js` + `vendor/lame.js` (MP3, browser `decodeAudioData`), a `<canvas>` (PNG frame), `lib/ts2mp4.js` and `lib/mux.js` (TS → MP4 / MKV, fragmented MP4 → MP4, no re-encoding). `lib/convert.js` holds pure helpers (file type by its first bytes, time parsing, output names). The result is saved with `downloads.download` from a `blob:` URL. Nothing is sent anywhere. History only shows the file name to pick and may call `downloads.search` / `downloads.show` to open its folder.
+
+## 1.6.5
 
 **New in 1.6.5 (all local, no new permissions, no remote code):** `lib/gifrules.js` — the options page's GIF block: on/off, the longest video, the sites for GIF and the sites without GIF as the user's own regular expressions (matched only against host names, invalid ones are rejected), the default width and frame rate. The GIF itself is made exactly as in 1.6.4 (`lib/gif.js`, `lib/gifvideo.js`), now on all sites by default.
 

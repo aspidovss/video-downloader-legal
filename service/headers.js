@@ -50,15 +50,17 @@ const TYPES = ['xmlhttprequest', 'other', 'media'];
 const set = (header, value) => ({ header, operation: 'set', value });
 const remove = (header) => ({ header, operation: 'remove' });
 
-// Pure: state -> declarativeNetRequest rules. Only requests that belong to no tab (tabId -1),
-// i.e. made by the extension, are touched; the page's own requests are never modified.
+// Pure: state -> declarativeNetRequest rules. Only requests made by the extension itself are touched (initiator =
+// the extension's id); the page's own requests are never modified. Not "tabIds: [-1]" as well: Microsoft Edge does not
+// give the extension's own requests tab -1, so such rules never applied there (1.6.6). Without an initiator (tests)
+// the tab condition is the guard.
 export function buildRules(s, initiator) {
   const rules = [];
   let id = 0;
   const add = (priority, condition, requestHeaders) => rules.push({
     id: ++id, priority,
     action: { type: 'modifyHeaders', requestHeaders },
-    condition: { tabIds: [-1], resourceTypes: TYPES, ...(initiator ? { initiatorDomains: [initiator] } : {}), ...condition },
+    condition: { resourceTypes: TYPES, ...(initiator ? { initiatorDomains: [initiator] } : { tabIds: [-1] }), ...condition },
   });
 
   // session bootstrap with the browser's own UA, Referer https://www.youtube.com/sw.js

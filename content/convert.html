@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Converter</title>
+  <link rel="stylesheet" href="../styles/ui.css">
+</head>
+<body class="page convert">
+  <header>
+    <img src="../icons/icon-48.png" width="24" height="24" alt="">
+    <h1 data-i18n="convTitle"></h1>
+  </header>
+  <main>
+    <div id="from-history" class="panel" hidden>
+      <span id="from-history-text"></span>
+      <div class="actions"><button id="btn-show-file" data-i18n="convShowFile"></button></div>
+    </div>
+
+    <label id="drop" class="drop">
+      <input id="file" type="file" accept="video/*,audio/*,.ts,.mkv,.webm,.mp4,.m4v,.mov,.m4a,.mp3,.ogg,.opus,.wav,.flac">
+      <span class="drop-btn" data-i18n="convPick"></span>
+      <span class="drop-text" data-i18n="convDrop"></span>
+      <span class="hint" data-i18n="convLocal"></span>
+    </label>
+
+    <section id="work" hidden>
+      <div class="conv-file"><b id="file-name"></b> <span id="file-info" class="muted"></span></div>
+      <video id="preview" controls preload="metadata" playsinline></video>
+      <p id="no-preview" class="muted" hidden data-i18n="convNoPreview"></p>
+
+      <fieldset class="prefs conv-opts">
+        <div class="conv-row">
+          <label for="target" data-i18n="convTarget"></label>
+          <select id="target"></select>
+        </div>
+        <div class="conv-row" data-for="gif mp3">
+          <label for="start" data-i18n="convStart"></label>
+          <input id="start" type="text" inputmode="decimal" placeholder="0:00">
+          <button id="start-now" type="button" data-i18n="convNow" data-i18n-title="convNowHint"></button>
+          <label for="end" data-i18n="convEnd"></label>
+          <input id="end" type="text" inputmode="decimal">
+          <button id="end-now" type="button" data-i18n="convNow" data-i18n-title="convNowHint"></button>
+        </div>
+        <div class="conv-row" data-for="png">
+          <label for="at" data-i18n="convFrameAt"></label>
+          <input id="at" type="text" inputmode="decimal" placeholder="0:00">
+          <button id="at-now" type="button" data-i18n="convNow" data-i18n-title="convNowHint"></button>
+        </div>
+        <div class="conv-row" data-for="gif">
+          <label for="gif-width" data-i18n="convWidth"></label>
+          <select id="gif-width"></select>
+          <label for="gif-fps">FPS</label>
+          <select id="gif-fps"></select>
+          <span id="gif-est" class="muted" data-i18n-title="gifEstHint"></span>
+        </div>
+        <div class="conv-row" data-for="mp3">
+          <label for="kbps" data-i18n="convBitrate"></label>
+          <select id="kbps"></select>
+        </div>
+        <p class="hint" data-for="mp4 mkv defrag" data-i18n="convWhole"></p>
+        <p id="range-err" class="gif-err" hidden></p>
+      </fieldset>
+
+      <div class="actions conv-run">
+        <button id="btn-run" class="primary" data-i18n="convRun"></button>
+        <button id="btn-cancel" hidden data-i18n="cancel"></button>
+      </div>
+      <div id="progress" class="job" hidden>
+        <div class="bar"><div id="bar" class="fill" style="width:0%"></div></div>
+        <div id="status" class="meta"></div>
+      </div>
+      <div id="result" class="panel" hidden>
+        <span id="result-text"></span>
+        <div class="actions"><button id="btn-save-again" data-i18n="convSaveAgain"></button></div>
+      </div>
+    </section>
+  </main>
+  <script src="../vendor/lame.js"></script>
+  <script src="convert.js" type="module"></script>
+</body>
+</html>

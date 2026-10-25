@@ -1015,5 +1015,131 @@
   },
   "gifEstHint": {
     "message": "الحجم التقريبي لملف GIF: يعتمد على مقدار الحركة في الفيديو (قد يختلف بمقدار الضعف)."
+  },
+  "iconConvert": {
+    "message": "تحويل ملف"
+  },
+  "convTitle": {
+    "message": "المحوّل"
+  },
+  "convPick": {
+    "message": "اختيار ملف"
+  },
+  "convDrop": {
+    "message": "أو أفلت ملف فيديو أو صوت هنا"
+  },
+  "convLocal": {
+    "message": "يُحوَّل الملف على هذا الحاسوب؛ لا يُرفع أي شيء."
+  },
+  "convFromHistory": {
+    "message": "اختر «{name}» من مجلد التنزيلات."
+  },
+  "convFromHistoryHint": {
+    "message": "فتح المحوّل لهذا الملف"
+  },
+  "convOpen": {
+    "message": "تحويل…"
+  },
+  "convShowFile": {
+    "message": "إظهار في المجلد"
+  },
+  "convNoPreview": {
+    "message": "لا يستطيع المتصفح تشغيل هذا الملف، لذا لا تتوفر GIF وPNG وMP3."
+  },
+  "convTarget": {
+    "message": "إنشاء"
+  },
+  "convTgtGif": {
+    "message": "GIF (صورة متحركة)"
+  },
+  "convTgtMp3": {
+    "message": "MP3 (الصوت فقط)"
+  },
+  "convTgtPng": {
+    "message": "PNG (إطار واحد)"
+  },
+  "convTgtMp4": {
+    "message": "MP4 (الفيديو نفسه، حاوية جديدة)"
+  },
+  "convTgtMkv": {
+    "message": "MKV (الفيديو نفسه، حاوية جديدة)"
+  },
+  "convTgtDefrag": {
+    "message": "MP4 (إصلاح ملف مجزّأ)"
+  },
+  "convStart": {
+    "message": "من"
+  },
+  "convEnd": {
+    "message": "إلى"
+  },
+  "convNow": {
+    "message": "الآن"
+  },
+  "convNowHint": {
+    "message": "أخذ الوقت من المشغّل"
+  },
+  "convFrameAt": {
+    "message": "الإطار عند"
+  },
+  "convWidth": {
+    "message": "العرض"
+  },
+  "convBitrate": {
+    "message": "معدل البت"
+  },
+  "convWhole": {
+    "message": "يُنقل الملف كاملًا كما هو: بلا إعادة ترميز وبلا قص."
+  },
+  "convRun": {
+    "message": "تحويل"
+  },
+  "convSaveAgain": {
+    "message": "حفظ مرة أخرى"
+  },
+  "convPreparing": {
+    "message": "جارٍ تجهيز الملف…"
+  },
+  "convWorking": {
+    "message": "جارٍ التحويل… {p}%"
+  },
+  "convDecoding": {
+    "message": "جارٍ فك ترميز الصوت…"
+  },
+  "convDone": {
+    "message": "تم"
+  },
+  "convSaved": {
+    "message": "تم الحفظ: {name} · {size}"
+  },
+  "convCanceled": {
+    "message": "أُلغي"
+  },
+  "convFailed": {
+    "message": "فشل التحويل: {e}"
+  },
+  "convNoTargets": {
+    "message": "لا يمكن تحويل هذا النوع من الملفات هنا."
+  },
+  "convNoAudio": {
+    "message": "تعذّر فك ترميز الصوت من هذا الملف."
+  },
+  "convRemuxFailed": {
+    "message": "لا يمكن نقل هذا البث دون تغيير (فيديو H.264 مع صوت AAC فقط)."
+  },
+  "convBadTime": {
+    "message": "استخدم الثواني أو د:ثث، مثل 75 أو 1:15."
+  },
+  "convBadRange": {
+    "message": "يجب أن يكون «إلى» بعد «من»."
+  },
+  "convTooLongGif": {
+    "message": "GIF: {n} ثانية على الأكثر؛ اختر جزءًا أقصر."
+  },
+  "convTooLongMp3": {
+    "message": "MP3: يجب ألا يزيد طول الملف على {n} دقيقة."
+  },
+  "convTooLarge": {
+    "message": "الملف كبير جدًا ({n} ميغابايت على الأكثر)."
   }
 }

@@ -1015,5 +1015,131 @@
   },
   "gifEstHint": {
     "message": "GIF のおおよそのサイズ：動画の動きの量によります（2 倍ほど違うことがあります）。"
+  },
+  "iconConvert": {
+    "message": "ファイルを変換"
+  },
+  "convTitle": {
+    "message": "変換ツール"
+  },
+  "convPick": {
+    "message": "ファイルを選択"
+  },
+  "convDrop": {
+    "message": "または動画・音声ファイルをここにドロップ"
+  },
+  "convLocal": {
+    "message": "ファイルはこのコンピューター上で変換され、どこにもアップロードされません。"
+  },
+  "convFromHistory": {
+    "message": "ダウンロードフォルダーから「{name}」を選んでください。"
+  },
+  "convFromHistoryHint": {
+    "message": "このファイルで変換ツールを開く"
+  },
+  "convOpen": {
+    "message": "変換…"
+  },
+  "convShowFile": {
+    "message": "フォルダーで表示"
+  },
+  "convNoPreview": {
+    "message": "ブラウザーがこのファイルを再生できないため、GIF・PNG・MP3 は使えません。"
+  },
+  "convTarget": {
+    "message": "作成"
+  },
+  "convTgtGif": {
+    "message": "GIF(アニメーション)"
+  },
+  "convTgtMp3": {
+    "message": "MP3(音声のみ)"
+  },
+  "convTgtPng": {
+    "message": "PNG(1 フレーム)"
+  },
+  "convTgtMp4": {
+    "message": "MP4(同じ映像、別コンテナー)"
+  },
+  "convTgtMkv": {
+    "message": "MKV(同じ映像、別コンテナー)"
+  },
+  "convTgtDefrag": {
+    "message": "MP4(断片化ファイルを修正)"
+  },
+  "convStart": {
+    "message": "開始"
+  },
+  "convEnd": {
+    "message": "終了"
+  },
+  "convNow": {
+    "message": "現在"
+  },
+  "convNowHint": {
+    "message": "プレーヤーの再生位置を使う"
+  },
+  "convFrameAt": {
+    "message": "フレーム位置"
+  },
+  "convWidth": {
+    "message": "幅"
+  },
+  "convBitrate": {
+    "message": "ビットレート"
+  },
+  "convWhole": {
+    "message": "ファイル全体をそのまま移し替えます(再エンコード・切り取りなし)。"
+  },
+  "convRun": {
+    "message": "変換"
+  },
+  "convSaveAgain": {
+    "message": "もう一度保存"
+  },
+  "convPreparing": {
+    "message": "ファイルを準備中…"
+  },
+  "convWorking": {
+    "message": "変換中… {p}%"
+  },
+  "convDecoding": {
+    "message": "音声をデコード中…"
+  },
+  "convDone": {
+    "message": "完了"
+  },
+  "convSaved": {
+    "message": "保存しました: {name} · {size}"
+  },
+  "convCanceled": {
+    "message": "キャンセルしました"
+  },
+  "convFailed": {
+    "message": "変換に失敗しました: {e}"
+  },
+  "convNoTargets": {
+    "message": "この種類のファイルはここでは変換できません。"
+  },
+  "convNoAudio": {
+    "message": "このファイルから音声をデコードできませんでした。"
+  },
+  "convRemuxFailed": {
+    "message": "このストリームはそのまま移し替えられません(H.264 映像 + AAC 音声のみ対応)。"
+  },
+  "convBadTime": {
+    "message": "秒または m:ss で入力してください(例: 75、1:15)。"
+  },
+  "convBadRange": {
+    "message": "「終了」は「開始」より後にしてください。"
+  },
+  "convTooLongGif": {
+    "message": "GIF: 最大 {n} 秒です。短い範囲を選んでください。"
+  },
+  "convTooLongMp3": {
+    "message": "MP3: ファイルの長さは最大 {n} 分です。"
+  },
+  "convTooLarge": {
+    "message": "ファイルが大きすぎます(最大 {n} MB)。"
   }
 }

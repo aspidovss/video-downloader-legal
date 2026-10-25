@@ -1015,5 +1015,131 @@
   },
   "gifEstHint": {
     "message": "GIF का अनुमानित आकार: वीडियो में कितनी हलचल है उस पर निर्भर (2 गुना तक अलग हो सकता है)।"
+  },
+  "iconConvert": {
+    "message": "फ़ाइल बदलें"
+  },
+  "convTitle": {
+    "message": "कन्वर्टर"
+  },
+  "convPick": {
+    "message": "फ़ाइल चुनें"
+  },
+  "convDrop": {
+    "message": "या वीडियो या ऑडियो फ़ाइल यहाँ छोड़ें"
+  },
+  "convLocal": {
+    "message": "फ़ाइल इसी कंप्यूटर पर बदली जाती है; कुछ भी अपलोड नहीं होता।"
+  },
+  "convFromHistory": {
+    "message": "अपने डाउनलोड फ़ोल्डर से “{name}” चुनें।"
+  },
+  "convFromHistoryHint": {
+    "message": "इस फ़ाइल के लिए कन्वर्टर खोलें"
+  },
+  "convOpen": {
+    "message": "बदलें…"
+  },
+  "convShowFile": {
+    "message": "फ़ोल्डर में दिखाएँ"
+  },
+  "convNoPreview": {
+    "message": "ब्राउज़र यह फ़ाइल नहीं चला सकता, इसलिए GIF, PNG और MP3 उपलब्ध नहीं हैं।"
+  },
+  "convTarget": {
+    "message": "बनाएँ"
+  },
+  "convTgtGif": {
+    "message": "GIF (एनिमेशन)"
+  },
+  "convTgtMp3": {
+    "message": "MP3 (सिर्फ़ आवाज़)"
+  },
+  "convTgtPng": {
+    "message": "PNG (एक फ़्रेम)"
+  },
+  "convTgtMp4": {
+    "message": "MP4 (वही वीडियो, नया कंटेनर)"
+  },
+  "convTgtMkv": {
+    "message": "MKV (वही वीडियो, नया कंटेनर)"
+  },
+  "convTgtDefrag": {
+    "message": "MP4 (टुकड़ों वाली फ़ाइल ठीक करें)"
+  },
+  "convStart": {
+    "message": "से"
+  },
+  "convEnd": {
+    "message": "तक"
+  },
+  "convNow": {
+    "message": "अभी"
+  },
+  "convNowHint": {
+    "message": "प्लेयर से समय लें"
+  },
+  "convFrameAt": {
+    "message": "फ़्रेम का समय"
+  },
+  "convWidth": {
+    "message": "चौड़ाई"
+  },
+  "convBitrate": {
+    "message": "बिटरेट"
+  },
+  "convWhole": {
+    "message": "पूरी फ़ाइल जैसी है वैसी ले जाई जाती है: न दोबारा एन्कोडिंग, न काट-छाँट।"
+  },
+  "convRun": {
+    "message": "बदलें"
+  },
+  "convSaveAgain": {
+    "message": "फिर से सहेजें"
+  },
+  "convPreparing": {
+    "message": "फ़ाइल तैयार हो रही है…"
+  },
+  "convWorking": {
+    "message": "बदला जा रहा है… {p}%"
+  },
+  "convDecoding": {
+    "message": "आवाज़ डिकोड हो रही है…"
+  },
+  "convDone": {
+    "message": "हो गया"
+  },
+  "convSaved": {
+    "message": "सहेजा गया: {name} · {size}"
+  },
+  "convCanceled": {
+    "message": "रद्द किया गया"
+  },
+  "convFailed": {
+    "message": "बदलना विफल: {e}"
+  },
+  "convNoTargets": {
+    "message": "इस प्रकार की फ़ाइल यहाँ नहीं बदली जा सकती।"
+  },
+  "convNoAudio": {
+    "message": "इस फ़ाइल से आवाज़ डिकोड नहीं हो सकी।"
+  },
+  "convRemuxFailed": {
+    "message": "यह स्ट्रीम बिना बदलाव के नहीं ले जाई जा सकती (सिर्फ़ AAC आवाज़ वाला H.264 वीडियो)।"
+  },
+  "convBadTime": {
+    "message": "सेकंड या m:ss लिखें, जैसे 75 या 1:15।"
+  },
+  "convBadRange": {
+    "message": "“तक” का समय “से” के बाद होना चाहिए।"
+  },
+  "convTooLongGif": {
+    "message": "GIF: अधिकतम {n} सेकंड; छोटा हिस्सा चुनें।"
+  },
+  "convTooLongMp3": {
+    "message": "MP3: फ़ाइल अधिकतम {n} मिनट की हो सकती है।"
+  },
+  "convTooLarge": {
+    "message": "फ़ाइल बहुत बड़ी है (अधिकतम {n} MB)।"
   }
 }

@@ -1015,5 +1015,131 @@
   },
   "gifEstHint": {
     "message": "Примерный размер GIF: зависит от того, сколько в видео движения (может отличаться в 2 раза)."
+  },
+  "iconConvert": {
+    "message": "Конвертировать файл"
+  },
+  "convTitle": {
+    "message": "Конвертер"
+  },
+  "convPick": {
+    "message": "Выбрать файл"
+  },
+  "convDrop": {
+    "message": "или перетащите сюда видео или аудиофайл"
+  },
+  "convLocal": {
+    "message": "Файл обрабатывается на этом компьютере, никуда не загружается."
+  },
+  "convFromHistory": {
+    "message": "Выберите «{name}» в папке загрузок."
+  },
+  "convFromHistoryHint": {
+    "message": "Открыть конвертер для этого файла"
+  },
+  "convOpen": {
+    "message": "Конвертировать…"
+  },
+  "convShowFile": {
+    "message": "Показать в папке"
+  },
+  "convNoPreview": {
+    "message": "Браузер не может воспроизвести этот файл, поэтому GIF, PNG и MP3 недоступны."
+  },
+  "convTarget": {
+    "message": "Сделать"
+  },
+  "convTgtGif": {
+    "message": "GIF (анимация)"
+  },
+  "convTgtMp3": {
+    "message": "MP3 (только звук)"
+  },
+  "convTgtPng": {
+    "message": "PNG (один кадр)"
+  },
+  "convTgtMp4": {
+    "message": "MP4 (то же видео, другой контейнер)"
+  },
+  "convTgtMkv": {
+    "message": "MKV (то же видео, другой контейнер)"
+  },
+  "convTgtDefrag": {
+    "message": "MP4 (исправить фрагментированный файл)"
+  },
+  "convStart": {
+    "message": "С"
+  },
+  "convEnd": {
+    "message": "До"
+  },
+  "convNow": {
+    "message": "Сейчас"
+  },
+  "convNowHint": {
+    "message": "Взять время из плеера"
+  },
+  "convFrameAt": {
+    "message": "Кадр на"
+  },
+  "convWidth": {
+    "message": "Ширина"
+  },
+  "convBitrate": {
+    "message": "Битрейт"
+  },
+  "convWhole": {
+    "message": "Файл переносится целиком как есть: без перекодирования и обрезки."
+  },
+  "convRun": {
+    "message": "Конвертировать"
+  },
+  "convSaveAgain": {
+    "message": "Сохранить ещё раз"
+  },
+  "convPreparing": {
+    "message": "Подготовка файла…"
+  },
+  "convWorking": {
+    "message": "Конвертация… {p}%"
+  },
+  "convDecoding": {
+    "message": "Декодирование звука…"
+  },
+  "convDone": {
+    "message": "Готово"
+  },
+  "convSaved": {
+    "message": "Сохранено: {name} · {size}"
+  },
+  "convCanceled": {
+    "message": "Отменено"
+  },
+  "convFailed": {
+    "message": "Не удалось конвертировать: {e}"
+  },
+  "convNoTargets": {
+    "message": "Этот тип файла здесь не конвертируется."
+  },
+  "convNoAudio": {
+    "message": "Не удалось декодировать звук из этого файла."
+  },
+  "convRemuxFailed": {
+    "message": "Этот поток нельзя перенести без изменений (только видео H.264 со звуком AAC)."
+  },
+  "convBadTime": {
+    "message": "Укажите секунды или м:сс, например 75 или 1:15."
+  },
+  "convBadRange": {
+    "message": "«До» должно быть позже, чем «С»."
+  },
+  "convTooLongGif": {
+    "message": "GIF: не больше {n} с; выберите отрезок короче."
+  },
+  "convTooLongMp3": {
+    "message": "MP3: файл должен быть не длиннее {n} мин."
+  },
+  "convTooLarge": {
+    "message": "Файл слишком большой (не больше {n} МБ)."
   }
 }

@@ -293,3 +293,23 @@ html.android .check-row .check { flex: 1 1 0; min-width: 0; }
 .gif-sizes .check { flex: none !important; }
 .check-row.has-field .gif-err { grid-column: 1 / -1; }
 .gif-est { font-size: 11px; color: var(--muted); text-align: right; margin-top: 3px; }
+
+/* converter page (1.6.6) */
+body.convert main { display: flex; flex-direction: column; gap: 12px; }
+.drop { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 22px 12px; text-align: center; border: 2px dashed var(--border); border-radius: 10px; background: var(--card); cursor: pointer; }
+.drop.over { border-color: var(--accent); }
+.drop input[type="file"] { position: absolute; width: 1px; height: 1px; opacity: 0; }
+.drop .drop-btn { background: var(--accent); color: var(--accent-fg); border-radius: 6px; padding: 6px 14px; font-weight: 600; }
+.drop .hint, .convert .hint { font-size: 12px; color: var(--muted); margin: 0; }
+.muted { color: var(--muted); }
+.conv-file { word-break: break-all; }
+#preview { width: 100%; max-height: 360px; background: #000; border-radius: 8px; }
+.conv-row { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; }
+.conv-row > label { min-width: 64px; }
+.conv-row input[type="text"] { width: 84px; }
+.conv-row select { min-width: 0; }
+#target { flex: 1 1 220px; max-width: 360px; }
+.conv-run { margin-top: 0; }
+#from-history-text { word-break: break-all; }
+#preview.audio-only { max-height: 54px; background: transparent; }
+.conv-row > label:not(:first-child) { min-width: 0; margin-left: 8px; }

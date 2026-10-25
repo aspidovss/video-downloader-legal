@@ -85,6 +85,13 @@ I did VDL because I was tired of paywalls in third-party solutions.
 ## Privacy policy
 Plain-text version in [privacy-policy.md](privacy-policy.md).
 
+## Version 1.6.6 — release notes (shown to users)
+```
+New in 1.6.6:
+- Converter: the new button next to Settings opens a page where a video or audio file from your computer becomes a GIF (with a "from–to" part, width and FPS), an MP3, a PNG frame, or — without re-encoding — a TS stream an MP4 / MKV and a fragmented MP4 a plain MP4. Also "Convert…" in History. The file never leaves the browser.
+- Fixed: Microsoft Edge applied no header rules (JoyReactor and other sites failed with HTTP 404).
+```
+
 ## Version 1.6.5 — release notes (shown to users)
 ```
 New in 1.6.5:

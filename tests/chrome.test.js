@@ -13,9 +13,10 @@ import { parseMPD } from '../lib/dash.js';
 
 const hdrOf = (r, name) => r.action.requestHeaders.find((h) => h.header === name);
 
-test('buildRules: only extension-made requests (tabId -1), Bilibili/TikTok/sw.js rules are always present', () => {
+test('buildRules: only extension-made requests (initiator = the extension; no tab condition, Edge), Bilibili/TikTok/sw.js rules are always present', () => {
   const rules = buildRules({ ua: '', live: false, on: true }, 'abc');
-  assert.ok(rules.every((r) => r.condition.tabIds[0] === -1 && r.condition.initiatorDomains[0] === 'abc'));
+  assert.ok(rules.every((r) => r.condition.initiatorDomains[0] === 'abc' && r.condition.tabIds === undefined));
+  assert.ok(buildRules({ ua: '', live: false, on: true }).every((r) => r.condition.tabIds[0] === -1), 'without an initiator: tab -1');
   assert.equal(new Set(rules.map((r) => r.id)).size, rules.length);
   const tt = rules.find((r) => r.condition.requestDomains?.includes('tiktok.com'));
   assert.equal(hdrOf(tt, 'referer').value, 'https://www.tiktok.com/');

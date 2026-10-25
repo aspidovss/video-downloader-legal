@@ -1015,5 +1015,131 @@
   },
   "gifEstHint": {
     "message": "Tamanho aproximado do GIF: depende de quanto o vídeo se move (pode variar 2×)."
+  },
+  "iconConvert": {
+    "message": "Converter um arquivo"
+  },
+  "convTitle": {
+    "message": "Conversor"
+  },
+  "convPick": {
+    "message": "Escolher um arquivo"
+  },
+  "convDrop": {
+    "message": "ou solte aqui um arquivo de vídeo ou áudio"
+  },
+  "convLocal": {
+    "message": "O arquivo é convertido neste computador; nada é enviado."
+  },
+  "convFromHistory": {
+    "message": "Escolha “{name}” na sua pasta de downloads."
+  },
+  "convFromHistoryHint": {
+    "message": "Abrir o conversor para este arquivo"
+  },
+  "convOpen": {
+    "message": "Converter…"
+  },
+  "convShowFile": {
+    "message": "Mostrar na pasta"
+  },
+  "convNoPreview": {
+    "message": "O navegador não consegue reproduzir este arquivo, então GIF, PNG e MP3 não estão disponíveis."
+  },
+  "convTarget": {
+    "message": "Criar"
+  },
+  "convTgtGif": {
+    "message": "GIF (animação)"
+  },
+  "convTgtMp3": {
+    "message": "MP3 (só o som)"
+  },
+  "convTgtPng": {
+    "message": "PNG (um quadro)"
+  },
+  "convTgtMp4": {
+    "message": "MP4 (mesmo vídeo, novo contêiner)"
+  },
+  "convTgtMkv": {
+    "message": "MKV (mesmo vídeo, novo contêiner)"
+  },
+  "convTgtDefrag": {
+    "message": "MP4 (corrigir um arquivo fragmentado)"
+  },
+  "convStart": {
+    "message": "De"
+  },
+  "convEnd": {
+    "message": "Até"
+  },
+  "convNow": {
+    "message": "Agora"
+  },
+  "convNowHint": {
+    "message": "Pegar o tempo do player"
+  },
+  "convFrameAt": {
+    "message": "Quadro em"
+  },
+  "convWidth": {
+    "message": "Largura"
+  },
+  "convBitrate": {
+    "message": "Taxa de bits"
+  },
+  "convWhole": {
+    "message": "O arquivo inteiro é copiado como está: sem recodificar nem cortar."
+  },
+  "convRun": {
+    "message": "Converter"
+  },
+  "convSaveAgain": {
+    "message": "Salvar de novo"
+  },
+  "convPreparing": {
+    "message": "Preparando o arquivo…"
+  },
+  "convWorking": {
+    "message": "Convertendo… {p}%"
+  },
+  "convDecoding": {
+    "message": "Decodificando o som…"
+  },
+  "convDone": {
+    "message": "Pronto"
+  },
+  "convSaved": {
+    "message": "Salvo: {name} · {size}"
+  },
+  "convCanceled": {
+    "message": "Cancelado"
+  },
+  "convFailed": {
+    "message": "Falha na conversão: {e}"
+  },
+  "convNoTargets": {
+    "message": "Este tipo de arquivo não pode ser convertido aqui."
+  },
+  "convNoAudio": {
+    "message": "Não foi possível decodificar o som deste arquivo."
+  },
+  "convRemuxFailed": {
+    "message": "Este stream não pode ser copiado sem alterações (só vídeo H.264 com som AAC)."
+  },
+  "convBadTime": {
+    "message": "Use segundos ou m:ss, ex.: 75 ou 1:15."
+  },
+  "convBadRange": {
+    "message": "“Até” deve ser depois de “De”."
+  },
+  "convTooLongGif": {
+    "message": "GIF: no máximo {n} s; escolha um trecho menor."
+  },
+  "convTooLongMp3": {
+    "message": "MP3: o arquivo pode ter no máximo {n} min."
+  },
+  "convTooLarge": {
+    "message": "O arquivo é grande demais (no máximo {n} MB)."
   }
 }

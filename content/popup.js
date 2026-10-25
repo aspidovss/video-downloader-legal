@@ -544,6 +544,7 @@ async function init() {
   };
   document.getElementById('btn-settings').onclick = () => (isAndroid() ? openPage('settings.html') : browser.runtime.openOptionsPage());
   document.getElementById('btn-history').onclick = () => openPage('history.html');
+  document.getElementById('btn-convert').onclick = () => openPage('convert.html');
   document.getElementById('btn-reload').onclick = async () => {
     if (tabId !== null) await browser.tabs.reload(tabId);
     window.close();
