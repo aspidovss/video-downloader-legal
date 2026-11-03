@@ -1,6 +1,11 @@
-# Notes for the AMO reviewer — Video Downloader Legal 1.6.7
+# Notes for the AMO reviewer — Video Downloader Legal 1.6.8
 
-1.6.6 was published on GitHub only, so this upload contains the changes of both versions (1.6.6 below).
+**New in 1.6.8 (all local, no new permissions, no remote code):**
+* `lib/split.js` (pure helpers) and `lib/liverec.js`: a live HLS recording is saved in parts (a part ends at a size or a length set in the options) with `downloads.download`, so the data held in memory stays bounded. The same for long HLS/DASH downloads when the user switches it on (`planCuts` / `splitTrackParts`), and for the YouTube "record from the player" feature (`injected/youtube_rec.js`: the captured fragments of a finished part are written and dropped; the background only sends back file names).
+* `lib/mux.js` `trimMp4` / `trimMkv`: the converter page cuts a part of a local MP4 / WebM / MKV file the user picked, without re-encoding (only the samples / blocks between the two times are copied into a new file). `defragMp4` was split into `fragTracks` + `writeMp4` (same output as before).
+* New options (`splitLive`, `splitVideo`, `partMB`, `partMin`) in `storage.local`; the live recording limit now defaults to 0 (no limit).
+
+## 1.6.7
 
 **New in 1.6.7 (all local, no new permissions, no remote code):** `lib/caption.js` — captions on a GIF made in the converter page: a white bar with text, text drawn on the video, or a "demotivator" (black background, white frame, two lines of text). Pure layout code (word wrap, font fitting) plus canvas 2D drawing (`fillRect`, `strokeRect`, `fillText`, `strokeText`) with the system's own fonts; no font files, no network. `lib/gifvideo.js` `videoToGif` got a `compose` option that draws this layout with every frame. The style and position chosen are kept in `storage.local` (`convCaption`), the text is not stored.
 

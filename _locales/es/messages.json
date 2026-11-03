@@ -387,7 +387,7 @@
     "message": "Transmisión en directo: la grabación empieza ahora y sigue hasta que pulses Detener o termine la emisión."
   },
   "optLiveMax": {
-    "message": "Límite de grabación en directo (minutos)"
+    "message": "Límite de grabación en directo (minutos, 0 = sin límite)"
   },
   "perMinute": {
     "message": "min"
@@ -639,10 +639,10 @@
     "message": "Cuántas partes (segmentos) de un flujo HLS o DASH se descargan a la vez. Más es más rápido, pero carga más el sitio y tu conexión; bájalo si el sitio devuelve errores. También se usa al grabar directos."
   },
   "hintLiveMax": {
-    "message": "Una grabación en directo se detiene sola pasado este tiempo y el archivo se guarda. Se aplica a Twitch, otros directos HLS y la grabación desde el reproductor de YouTube."
+    "message": "Una grabación en directo se detiene sola tras este tiempo y se guarda el archivo; 0 = sin límite (por defecto: con partes la memoria no crece). Se aplica a Twitch, otros directos HLS y la grabación desde el reproductor de YouTube."
   },
   "hintMaxStream": {
-    "message": "Límite máximo de una descarga o grabación HLS/DASH. Los datos se mantienen en memoria hasta guardarse, así que el límite protege el navegador: al alcanzar este tamaño la descarga o grabación se detiene. Súbelo solo si tienes memoria suficiente."
+    "message": "Límite superior para una descarga o grabación HLS/DASH que no se guarda por partes. Los datos están en memoria hasta guardarse, así que el límite protege el navegador: la descarga o grabación se detiene en este tamaño. Las grabaciones por partes se limitan por el tamaño de la parte."
   },
   "hintYtRecordUi": {
     "message": "Muestra el botón de grabar desde el reproductor en los vídeos normales de YouTube, como último recurso cuando no hay enlaces directos. No afecta a los directos ni a grabaciones ya en curso. Desactivado por defecto."
@@ -1198,5 +1198,47 @@
   },
   "capPreview": {
     "message": "Vista previa (fotograma actual del reproductor):"
+  },
+  "splitTitle": {
+    "message": "Guardar por partes"
+  },
+  "optSplitLive": {
+    "message": "Guardar las grabaciones en directo por partes"
+  },
+  "hintSplitLive": {
+    "message": "Una grabación larga en directo se guarda por partes: cuando una parte alcanza el tamaño o la duración de abajo (lo que ocurra antes), se guarda enseguida y la grabación sigue sin cortes. La memoria se libera tras cada parte y un fallo cuesta como mucho la parte actual. Los nombres llevan la hora de inicio de la parte: «Directo (01-00-00).mp4»."
+  },
+  "optSplitVideo": {
+    "message": "Guardar vídeos largos (HLS/DASH) por partes"
+  },
+  "hintSplitVideo": {
+    "message": "Lo mismo para vídeos HLS/DASH largos que no son en directo: cada parte se descarga, se une y se guarda antes de la siguiente. Desactivado por defecto."
+  },
+  "optPartMB": {
+    "message": "Tamaño de la parte (MB)"
+  },
+  "hintPartMB": {
+    "message": "Una parte termina en este tamaño. La conversión de un flujo TS a MP4/MKV se hace en memoria y funciona para partes de hasta unos 700 MB; las partes TS mayores se guardan como TS."
+  },
+  "optPartMin": {
+    "message": "Duración de la parte (minutos)"
+  },
+  "hintPartMin": {
+    "message": "Una parte termina tras este tiempo."
+  },
+  "partN": {
+    "message": "Parte {n}"
+  },
+  "convTgtCut": {
+    "message": "Vídeo: cortar un fragmento (sin recodificar)"
+  },
+  "convCutHint": {
+    "message": "El fragmento se copia sin recodificar, así que empieza en el fotograma clave más cercano en «Desde» o antes (normalmente 0–2 s antes); el final se corta en «Hasta»."
+  },
+  "convCutDone": {
+    "message": "de {from} a {to}"
+  },
+  "convCutFailed": {
+    "message": "No se pudo cortar este archivo sin recodificar."
   }
 }

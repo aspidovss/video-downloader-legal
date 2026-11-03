@@ -7,6 +7,7 @@ import { isAccepted } from '../lib/consent.js';
 import { readLog, clearLog } from '../utils/debuglog.js';
 import { isUpdaterBuild, isNewer } from '../lib/updatecheck.js';
 import { parsePatterns, gifPrefs, GIF_LIMIT_SECONDS } from '../lib/gifrules.js';
+import { PART_MB, PART_MIN, SPLIT_DEFAULTS } from '../lib/split.js';
 import { LOG_KEY, formatLog } from '../lib/debuglog.js';
 
 await loadUiLang();
@@ -191,7 +192,9 @@ form.addEventListener('submit', async (e) => {
   if (!['best', '192', '128'].includes(patch.defaultAudioQuality)) patch.defaultAudioQuality = 'best';
   if (!['best', '1080', '720', '480'].includes(patch.defaultQuality)) patch.defaultQuality = 'best';
   if (!['auto', 'page', 'background'].includes(patch.ytMethod)) patch.ytMethod = 'auto';
-  patch.liveMaxMinutes = Math.min(720, Math.max(1, patch.liveMaxMinutes || 180));
+  patch.liveMaxMinutes = Math.min(1440, Math.max(0, Math.round(Number(patch.liveMaxMinutes)) || 0)); // 0 = no limit (1.6.8)
+  patch.partMB = Math.min(PART_MB.max, Math.max(PART_MB.min, Math.round(Number(patch.partMB)) || SPLIT_DEFAULTS.partMB));
+  patch.partMin = Math.min(PART_MIN.max, Math.max(PART_MIN.min, Math.round(Number(patch.partMin)) || SPLIT_DEFAULTS.partMin));
   patch.ytRecordSpeed = Math.min(4, Math.max(1, patch.ytRecordSpeed || 2));
   patch.ytClients = String(patch.ytClients || '').toUpperCase().replace(/[^A-Z0-9_,\s]/g, '').trim() || 'VISIONOS,ANDROID_VR,IOS,IOS_VDL';
   try { if (patch.ytClientOverrides.trim()) JSON.parse(patch.ytClientOverrides); } catch { patch.ytClientOverrides = ''; }

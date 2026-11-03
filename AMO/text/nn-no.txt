@@ -1,0 +1,38 @@
+LOCALE: nn-no
+
+=== NAME (max 50) [39] ===
+Video Downloader Legal – Last ned video
+
+=== SUMMARY (max 250) [208] ===
+Lagre video og lyd frå sida du ser på: YouTube, Shorts, Instagram, Twitch, TikTok, VK, Bilibili, Dailymotion og fleire. Gjer om kva som helst video til GIF. Gratis, lokalt, ingen betalingsmur og inga sporing.
+
+=== DESCRIPTION ===
+Lagre video og lyd frå sida du ser på: YouTube, Shorts, Instagram, Twitch, TikTok, VK, Bilibili, Dailymotion og fleire. Gjer om kva som helst video til GIF. Gratis, lokalt, ingen betalingsmur og inga sporing.
+
+VDL - Video Downloader Legal viser kva den opne sida speler av, og lagrar det du vel. Alt skjer i nettlesaren: ingen eksterne tenarar, inga analyse og ingen hjelpeprogram som må installerast. Video og lyd blir slått saman, og TS blir konvertert til MP4 av utvidinga sin eigen kode, utan omkoding.
+
+FUNKSJONAR
+- Videonedlasting — direkte filer og HLS- (m3u8) og DASH-straumar (mpd) på alle nettstader: vel kvalitet, separate lydspor blir slått saman til éi fil.
+- Video til GIF — korte videoar (opptil 3 min) blir ein animert GIF rett i nettlesaren: breidd 640 / 480 / 320 / 240 px, 5–15 FPS, omtrentleg storleik blir vist på førehand.
+- Konvertering — vel ei video- eller lydfil på datamaskina og lag ein GIF (utsnitt «frå–til», breidd, FPS) med valfri bodtekst: kvit stolpe, tekst på videoen eller demotivator, med direkte førehandsvising. Også MP3, PNG-bilete, TS → MP4 / MKV og fragmentert MP4 → MP4 utan omkoding. Fila forlèt aldri nettlesaren din.
+- YouTube og YouTube Shorts — vel type (MP4, WEBM, AV1) og oppløysing; lyd som MP3, M4A eller WEBM; video og lyd i éi fil.
+- Direktesendingar — ta opp Twitch og andre HLS-direktesendingar til du trykkjer Stopp; opptak av YouTube-direkte frå spelaren (beta).
+- TS til MP4 — MPEG-TS-straumar blir lagra som vanleg MP4 som standard (utan omkoding); også MKV og TS.
+- TikTok — videoen på skjermen kjem først, med tittel og omslag; resten av straumen ligg under «Meir».
+- Andre nettstader — Vimeo, Dailymotion, RuTube, Dzen, Instagram, Facebook, X (Twitter), Bilibili, Canva, OKru, VK og alle andre nettstader via generell straumgjenkjenning (resultatet avheng av kva sida tilbyr).
+- Lydnedlasting — MP3 (konvertert i nettlesaren), M4A eller WEBM.
+- Lyst og mørkt tema — følgjer systemet ditt. 10 språk: engelsk, russisk, kinesisk, spansk, hindi, fransk, arabisk, portugisisk, tysk, japansk.
+- Praktisk — nedlastingshistorikk, mal for filnamn, varsel, hurtigtast Alt+pil ned, val i hurtigmenyen, innebygd hjelp.
+- Diagnostikk — éin knapp lagrar ei lokal fil (lenkjer maskerte) du kan leggje ved ei feilmelding; ein valfri feilsøkingslogg (av som standard) registrerer kva utvidinga gjer. Ingenting blir sendt automatisk.
+
+PERSONVERN FØRST
+Ingen kontoar, inga telemetri, ingen eigne tenarar. Innstillingar og historikk blir i nettlesaren din. Utvidinga kontaktar berre nettstader du allereie brukar.
+
+KI-OPPLYSING
+Dette prosjektet inneheld kode generert av KI.
+Alle kommentarar og omsetjingar er genererte av KI.
+
+GOTT Å VITE
+- Etter installasjon må du tillate tilgang til alle nettstader i about:addons → utvidinga → Løyve, elles ser ikkje sideskanneren media.
+- Straumenettstader endrar seg ofte; YouTube og sosiale nettverk blir støtta etter beste evne og kan slutte å fungere. Viss noko ikkje verkar, trykk på feilknappen i vindauget og send diagnostikkfila.
+- DRM-verna tenester (Netflix, Disney+ og liknande) er ikkje støtta og kjem aldri til å bli det.

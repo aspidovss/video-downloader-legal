@@ -7,7 +7,11 @@ export const DEFAULTS = {
   minSizeKB: 150,      // 1.6.0dev6: back to 150 KB (10 KB since 1.5.5dev7 showed too many small files)
   concurrency: 4,
   maxStreamMB: 4096,
-  liveMaxMinutes: 180, // 1.5.1: limit of one live recording
+  liveMaxMinutes: 0,   // limit of one live recording (1.5.1: 180); 1.6.8: 0 = no limit (recordings go in parts)
+  splitLive: true,     // 1.6.8: live recordings saved in parts as they go
+  splitVideo: false,   // 1.6.8: long HLS/DASH videos (not live) saved in parts too
+  partMB: 2000,        // 1.6.8: a part ends at this size ...
+  partMin: 60,         // ... or this length, whichever comes first
   saveAs: false,
   joinFormat: 'mp4',   // 1.6.0dev6: video + audio of different containers are joined into 'mp4' (Telegram sends it as a video) or 'mkv'
   tsToMp4: true,       // 1.5.2: TS streams are saved as MP4 (no re-encoding); kept for older settings

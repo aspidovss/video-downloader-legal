@@ -1,0 +1,38 @@
+LOCALE: tr
+
+=== NAME (max 50) [36] ===
+Video Downloader Legal – Video indir
+
+=== SUMMARY (max 250) [206] ===
+İzlediğiniz sayfadaki video ve sesleri kaydedin: YouTube, Shorts, Instagram, Twitch, TikTok, VK, Bilibili, Dailymotion ve daha fazlası. Her videoyu GIF'e çevirin. Ücretsiz, yerel, ödeme duvarı ve takip yok.
+
+=== DESCRIPTION ===
+İzlediğiniz sayfadaki video ve sesleri kaydedin: YouTube, Shorts, Instagram, Twitch, TikTok, VK, Bilibili, Dailymotion ve daha fazlası. Her videoyu GIF'e çevirin. Ücretsiz, yerel, ödeme duvarı ve takip yok.
+
+VDL - Video Downloader Legal, açık sayfanın oynattıklarını listeler ve seçtiğinizi kaydeder. Her şey tarayıcınızın içinde olur: harici sunucu, analiz ya da yüklenecek yardımcı program yoktur. Video ve ses birleştirilir, TS dosyaları eklentinin kendi koduyla yeniden kodlama yapılmadan MP4'e dönüştürülür.
+
+ÖZELLİKLER
+- Video indirme — her sitede doğrudan dosyalar ile HLS (m3u8) ve DASH (mpd) akışları: kaliteyi seçin, ayrı ses kanalları tek dosyada birleştirilir.
+- Videodan GIF'e — kısa videolar (en fazla 3 dk) doğrudan tarayıcıda hareketli GIF'e dönüşür: 640 / 480 / 320 / 240 px genişlik, 5–15 FPS, tahmini boyut önceden gösterilir.
+- Dönüştürücü — bilgisayarınızdan bir video veya ses dosyası seçip GIF oluşturun (“başlangıç–bitiş” bölümü, genişlik, FPS); isteğe bağlı altyazı: beyaz şerit, video üzerinde yazı veya demotivatör, canlı önizlemeyle. Ayrıca MP3, PNG kare, TS → MP4 / MKV ve parçalı MP4 → MP4 dönüşümü, yeniden kodlama olmadan. Dosya tarayıcınızdan asla çıkmaz.
+- YouTube ve YouTube Shorts — tür (MP4, WEBM, AV1) ve çözünürlük seçin; ses MP3, M4A veya WEBM olarak; video ve ses tek dosyada.
+- Canlı yayınlar — Twitch ve diğer HLS canlı yayınlarını Durdur'a basana kadar kaydedin; oynatıcıdan YouTube canlı yayın kaydı (beta).
+- TS'den MP4'e — MPEG-TS akışları varsayılan olarak normal MP4 olarak kaydedilir (yeniden kodlama yok); MKV ve TS de seçilebilir.
+- TikTok — ekrandaki video başlığı ve kapak görseliyle en üstte yer alır; akışın geri kalanı “Daha fazla” altındadır.
+- Diğer siteler — Vimeo, Dailymotion, RuTube, Dzen, Instagram, Facebook, X (Twitter), Bilibili, Canva, OKru, VK ve genel akış algılama sayesinde diğer tüm siteler (sonuç, sayfanın sunduklarına bağlıdır).
+- Ses indirme — MP3 (tarayıcıda dönüştürülür), M4A veya WEBM.
+- Açık ve koyu tema — sisteminizi izler. 10 dil: İngilizce, Rusça, Çince, İspanyolca, Hintçe, Fransızca, Arapça, Portekizce, Almanca, Japonca.
+- Kullanışlı — indirme geçmişi, dosya adı şablonu, bildirimler, Alt+Aşağı ok kısayolu, bağlam menüsü öğesi, yerleşik yardım.
+- Tanılama — tek düğmeyle hata raporuna ekleyebileceğiniz yerel bir dosya (bağlantılar maskeli) kaydedilir; isteğe bağlı hata ayıklama günlüğü (varsayılan olarak kapalı) eklentinin yaptıklarını kaydeder. Hiçbir şey otomatik olarak gönderilmez.
+
+ÖNCE GİZLİLİK
+Hesap yok, telemetri yok, kendi sunucumuz yok. Ayarlar ve geçmiş tarayıcınızda kalır. Eklenti yalnızca zaten kullandığınız sitelerle iletişim kurar.
+
+YAPAY ZEKÂ BİLDİRİMİ
+Bu proje yapay zekâ tarafından üretilen kod içerir.
+Tüm yorumlar ve çeviriler yapay zekâ tarafından üretilmiştir.
+
+BİLMENİZDE FAYDA VAR
+- Kurulumdan sonra about:addons → eklenti → İzinler bölümünden tüm sitelere erişime izin verin; aksi halde sayfa tarayıcısı medyayı göremez.
+- Yayın siteleri sık değişir; YouTube ve sosyal ağlar elimizden geldiğince desteklenir ve ileride çalışmayabilir. Bir şey çalışmazsa penceredeki hata düğmesine basıp tanılama dosyasını gönderin.
+- DRM korumalı hizmetler (Netflix, Disney+ ve benzerleri) desteklenmez ve hiçbir zaman desteklenmeyecektir.

@@ -2,6 +2,15 @@
 
 Added features per version (fixes and internal changes are not listed). Version history before 1.5 is condensed from the development log; the short development log is in [docs/DEVLOG-en.md](docs/DEVLOG-en.md) (English) and [docs/DEVLOG-ru.md](docs/DEVLOG-ru.md) (Russian).
 
+## 1.6.8
+
+### Added
+* **Recordings in parts:** a live recording (Twitch and other HLS streams, YouTube live from the player) is saved piece by piece — a part ends at 2000 MB or 60 minutes, whichever comes first, is saved at once and the recording goes on without a gap; memory is freed after every part. File names carry the part's start time: `Stream (01-00-00).mp4`. Settings → Downloads → *Saving in parts*: on/off, part size and length; *long HLS/DASH videos in parts* (off by default).
+* **Converter: cut a part of a video** (MP4, M4A, WebM, MKV, TS) without re-encoding: the start moves to the nearest keyframe at or before *From* (the result says where it begins), the end is cut at *To*.
+
+### Changed
+* The live recording limit is off by default (0 = no limit); the old default 180 minutes becomes "no limit" once.
+
 ## 1.6.7
 
 ### Added

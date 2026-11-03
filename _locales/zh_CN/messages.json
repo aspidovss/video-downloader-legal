@@ -387,7 +387,7 @@
     "message": "直播：现在开始录制，直到您点击停止或直播结束。"
   },
   "optLiveMax": {
-    "message": "直播录制上限（分钟）"
+    "message": "直播录制上限(分钟,0 = 不限)"
   },
   "perMinute": {
     "message": "分钟"
@@ -639,10 +639,10 @@
     "message": "同时下载 HLS 或 DASH 流的多少个分段。数值越大越快，但会增加网站和网络负担；网站报错时请调低。录制直播时也使用此值。"
   },
   "hintLiveMax": {
-    "message": "直播录制在此时间后自动停止并保存文件。适用于 Twitch、其他 HLS 直播以及从 YouTube 播放器录制。"
+    "message": "直播录制在此时间后自动停止并保存文件;0 = 不限(默认:分段保存时内存不会增长)。适用于 Twitch、其他 HLS 直播以及从 YouTube 播放器录制。"
   },
   "hintMaxStream": {
-    "message": "单次 HLS/DASH 下载或录制的上限。数据在保存前保存在内存中，因此该上限用于保护浏览器：达到此大小时下载或录制会停止。内存充足时才建议调高。"
+    "message": "不分段保存的单个 HLS/DASH 下载或录制的上限。数据在保存前保存在内存中,此上限用于保护浏览器:达到该大小时下载或录制停止。分段录制受每段大小限制。"
   },
   "hintYtRecordUi": {
     "message": "为普通 YouTube 视频显示“从播放器录制”按钮，在无法获得直接链接时作为最后手段。不影响直播和正在进行的录制。默认关闭。"
@@ -1198,5 +1198,47 @@
   },
   "capPreview": {
     "message": "预览(播放器当前帧):"
+  },
+  "splitTitle": {
+    "message": "分段保存"
+  },
+  "optSplitLive": {
+    "message": "直播录制分段保存"
+  },
+  "hintSplitLive": {
+    "message": "长时间直播录制按段保存:当一段达到下面的大小或时长(先到者为准)时立即保存,录制不间断地继续。每段保存后释放内存,出错时最多丢失当前一段。文件名带有该段的开始时间:“直播 (01-00-00).mp4”。"
+  },
+  "optSplitVideo": {
+    "message": "长视频(HLS/DASH)分段保存"
+  },
+  "hintSplitVideo": {
+    "message": "对非直播的长 HLS/DASH 视频也这样做:每段下载、合并并保存后再处理下一段。默认关闭。"
+  },
+  "optPartMB": {
+    "message": "每段大小(MB)"
+  },
+  "hintPartMB": {
+    "message": "一段在达到此大小时结束。TS 流转换为 MP4/MKV 在内存中进行,适用于约 700 MB 以内的段;更大的 TS 段保存为 TS。"
+  },
+  "optPartMin": {
+    "message": "每段时长(分钟)"
+  },
+  "hintPartMin": {
+    "message": "一段在此时间后结束。"
+  },
+  "partN": {
+    "message": "第 {n} 段"
+  },
+  "convTgtCut": {
+    "message": "视频:剪取片段(不重新编码)"
+  },
+  "convCutHint": {
+    "message": "片段不经重新编码直接复制,因此从“从”处或之前最近的关键帧开始(通常早 0–2 秒);结尾在“到”处切断。"
+  },
+  "convCutDone": {
+    "message": "从 {from} 到 {to}"
+  },
+  "convCutFailed": {
+    "message": "无法在不重新编码的情况下剪切此文件。"
   }
 }

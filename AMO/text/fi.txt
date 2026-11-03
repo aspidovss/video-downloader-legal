@@ -1,0 +1,38 @@
+LOCALE: fi
+
+=== NAME (max 50) [39] ===
+Video Downloader Legal – Lataa videoita
+
+=== SUMMARY (max 250) [222] ===
+Tallenna videot ja ääni katsomaltasi sivulta: YouTube, Shorts, Instagram, Twitch, TikTok, VK, Bilibili, Dailymotion ja muut. Muunna mikä tahansa video GIF-animaatioksi. Ilmainen, paikallinen, ei maksumuuria eikä seurantaa.
+
+=== DESCRIPTION ===
+Tallenna videot ja ääni katsomaltasi sivulta: YouTube, Shorts, Instagram, Twitch, TikTok, VK, Bilibili, Dailymotion ja muut. Muunna mikä tahansa video GIF-animaatioksi. Ilmainen, paikallinen, ei maksumuuria eikä seurantaa.
+
+VDL - Video Downloader Legal listaa sen, mitä avoin sivu toistaa, ja tallentaa valitsemasi. Kaikki tapahtuu selaimessa: ei ulkoisia palvelimia, ei analytiikkaa eikä asennettavia apuohjelmia. Video ja ääni yhdistetään ja TS muunnetaan MP4:ksi laajennuksen omalla koodilla ilman uudelleenkoodausta.
+
+OMINAISUUDET
+- Videoiden lataus — suorat tiedostot sekä HLS (m3u8)- ja DASH (mpd) -virrat millä tahansa sivustolla: valitse laatu, erilliset ääniraidat yhdistetään yhdeksi tiedostoksi.
+- Video GIF:ksi — lyhyet videot (enintään 3 min) muuttuvat animoiduksi GIF:ksi suoraan selaimessa: leveys 640 / 480 / 320 / 240 px, 5–15 FPS, likimääräinen koko näkyy etukäteen.
+- Muunnin — valitse tietokoneeltasi video- tai äänitiedosto ja tee siitä GIF (osuus ”alku–loppu”, leveys, FPS) valinnaisella tekstityksellä: valkoinen palkki, teksti videon päällä tai demotivaattori, reaaliaikaisella esikatselulla. Lisäksi MP3, PNG-kuva, TS → MP4 / MKV ja pirstaloitu MP4 → MP4 ilman uudelleenkoodausta. Tiedosto ei koskaan poistu selaimestasi.
+- YouTube ja YouTube Shorts — valitse tyyppi (MP4, WEBM, AV1) ja tarkkuus; ääni MP3-, M4A- tai WEBM-muodossa; video ja ääni samassa tiedostossa.
+- Suorat lähetykset — tallenna Twitchin ja muut HLS-lähetykset, kunnes painat Pysäytä; YouTube-livetallennus soittimesta (beta).
+- TS MP4:ksi — MPEG-TS-virrat tallennetaan oletuksena tavallisena MP4:nä (ilman uudelleenkoodausta); myös MKV ja TS.
+- TikTok — ruudulla oleva video on ensimmäisenä otsikon ja kansikuvan kanssa; muu syöte on kohdassa ”Lisää”.
+- Muut sivustot — Vimeo, Dailymotion, RuTube, Dzen, Instagram, Facebook, X (Twitter), Bilibili, Canva, OKru, VK ja mikä tahansa muu sivusto yleisen virtatunnistuksen avulla (tulos riippuu siitä, mitä sivu tarjoaa).
+- Äänen lataus — MP3 (muunnetaan selaimessa), M4A tai WEBM.
+- Vaalea ja tumma teema — noudattaa järjestelmääsi. 10 kieltä: englanti, venäjä, kiina, espanja, hindi, ranska, arabia, portugali, saksa, japani.
+- Kätevä — latausloki, tiedostonimen malli, ilmoitukset, pikanäppäin Alt+Nuoli alas, kontekstivalikon kohta, sisäänrakennettu ohje.
+- Diagnostiikka — yhdellä painikkeella tallennat paikallisen tiedoston (linkit peitetty), jonka voi liittää virheilmoitukseen; valinnainen vianetsintäloki (oletuksena pois) kirjaa laajennuksen toimet. Mitään ei lähetetä automaattisesti.
+
+YKSITYISYYS ENSIN
+Ei tilejä, ei telemetriaa, ei omia palvelimia. Asetukset ja historia pysyvät selaimessasi. Laajennus ottaa yhteyttä vain sivustoihin, joita jo käytät.
+
+TEKOÄLYILMOITUS
+Tämä projekti sisältää tekoälyn tuottamaa koodia.
+Kaikki kommentit ja käännökset on tuotettu tekoälyllä.
+
+HYVÄ TIETÄÄ
+- Salli asennuksen jälkeen pääsy kaikille sivustoille kohdassa about:addons → laajennus → Käyttöoikeudet, muuten sivuskanneri ei näe mediaa.
+- Suoratoistosivustot muuttuvat usein; YouTube ja sosiaalinen media ovat tuettuja parhaan kykymme mukaan ja voivat lakata toimimasta. Jos jokin ei toimi, paina ikkunan virhepainiketta ja lähetä diagnostiikkatiedosto.
+- DRM-suojattuja palveluja (Netflix, Disney+ ja vastaavat) ei tueta eikä tulla tukemaan.

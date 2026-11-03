@@ -1,0 +1,38 @@
+LOCALE: cs
+
+=== NAME (max 50) [39] ===
+Video Downloader Legal – Stáhnout videa
+
+=== SUMMARY (max 250) [207] ===
+Ukládejte videa a zvuk ze stránky, kterou sledujete: YouTube, Shorts, Instagram, Twitch, TikTok, VK, Bilibili, Dailymotion a další. Převeďte libovolné video na GIF. Zdarma, lokálně, bez paywallu a sledování.
+
+=== DESCRIPTION ===
+Ukládejte videa a zvuk ze stránky, kterou sledujete: YouTube, Shorts, Instagram, Twitch, TikTok, VK, Bilibili, Dailymotion a další. Převeďte libovolné video na GIF. Zdarma, lokálně, bez paywallu a sledování.
+
+VDL - Video Downloader Legal zobrazí, co otevřená stránka přehrává, a uloží to, co si vyberete. Vše probíhá přímo v prohlížeči: žádné externí servery, žádná analytika, žádné pomocné programy k instalaci. Video a zvuk se spojí a TS se převede na MP4 vlastním kódem rozšíření, bez překódování.
+
+FUNKCE
+- Stahování videa — přímé soubory a streamy HLS (m3u8) i DASH (mpd) na libovolném webu: vyberte kvalitu, oddělené zvukové stopy se spojí do jednoho souboru.
+- Video na GIF — krátká videa (do 3 min) se přímo v prohlížeči změní na animovaný GIF: šířka 640 / 480 / 320 / 240 px, 5–15 FPS, přibližná velikost je vidět předem.
+- Převodník — vyberte video nebo zvukový soubor z počítače a vytvořte GIF (úsek „od–do“, šířka, FPS) s volitelným titulkem: bílý pruh, text přes video nebo demotivátor, s živým náhledem. Dále MP3, snímek PNG, TS → MP4 / MKV a fragmentované MP4 → MP4 bez překódování. Soubor váš prohlížeč nikdy neopustí.
+- YouTube a YouTube Shorts — vyberte typ (MP4, WEBM, AV1) a rozlišení; zvuk jako MP3, M4A nebo WEBM; video i zvuk v jednom souboru.
+- Živé přenosy — nahrávejte živé přenosy z Twitche a další HLS, dokud nestisknete Stop; nahrávání živých přenosů YouTube z přehrávače (beta).
+- TS na MP4 — streamy MPEG-TS se ve výchozím nastavení ukládají jako běžné MP4 (bez překódování); také MKV a TS.
+- TikTok — video na obrazovce je první, s názvem a obálkou; zbytek feedu je pod „Více“.
+- Další weby — Vimeo, Dailymotion, RuTube, Dzen, Instagram, Facebook, X (Twitter), Bilibili, Canva, OKru, VK a jakýkoli jiný web díky obecné detekci streamů (výsledek závisí na tom, co stránka nabízí).
+- Stahování zvuku — MP3 (převedeno v prohlížeči), M4A nebo WEBM.
+- Světlý a tmavý motiv — podle systému. 10 jazyků: angličtina, ruština, čínština, španělština, hindština, francouzština, arabština, portugalština, němčina, japonština.
+- Pohodlí — historie stahování, šablona názvu souboru, oznámení, klávesová zkratka Alt+šipka dolů, položka v kontextové nabídce, vestavěná nápověda.
+- Diagnostika — jedno tlačítko uloží místní soubor (odkazy jsou zakryté), který můžete přiložit k hlášení chyby; volitelný ladicí protokol (ve výchozím stavu vypnutý) zaznamenává, co rozšíření dělá. Nic se neodesílá automaticky.
+
+SOUKROMÍ NA PRVNÍM MÍSTĚ
+Žádné účty, žádná telemetrie, žádné vlastní servery. Nastavení a historie zůstávají ve vašem prohlížeči. Rozšíření komunikuje pouze s weby, které už používáte.
+
+UPOZORNĚNÍ NA UMĚLOU INTELIGENCI
+Tento projekt obsahuje kód vytvořený umělou inteligencí.
+Všechny komentáře a překlady jsou vytvořeny umělou inteligencí.
+
+DOBRÉ VĚDĚT
+- Po instalaci povolte přístup ke všem webům v about:addons → rozšíření → Oprávnění, jinak skener stránky média neuvidí.
+- Streamovací weby se často mění; YouTube a sociální sítě jsou podporovány v rámci možností a mohou časem přestat fungovat. Pokud něco nefunguje, klikněte v okně na tlačítko chyby a odešlete diagnostický soubor.
+- Služby chráněné DRM (Netflix, Disney+ a podobné) nejsou podporovány a nikdy nebudou.

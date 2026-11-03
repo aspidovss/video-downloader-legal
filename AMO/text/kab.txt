@@ -1,0 +1,38 @@
+LOCALE: kab
+
+=== NAME (max 50) [41] ===
+Video Downloader Legal – Sider tividyutin
+
+=== SUMMARY (max 250) [215] ===
+Sekles tividyutin akked umeslaw seg usebter i tettwalid: YouTube, Shorts, Instagram, Twitch, TikTok, VK, Bilibili, Dailymotion d wayen nniḍen. Sennef yal tavidyut ɣer GIF. Ilelli, deg uselkim, war paywall, war ḍfer.
+
+=== DESCRIPTION ===
+Sekles tividyutin akked umeslaw seg usebter i tettwalid: YouTube, Shorts, Instagram, Twitch, TikTok, VK, Bilibili, Dailymotion d wayen nniḍen. Sennef yal tavidyut ɣer GIF. Ilelli, deg uselkim, war paywall, war ḍfer.
+
+VDL - Video Downloader Legal yesskan ayen i yettwaru usebter yeldin yerna yeskles ayen i tferneḍ. Kullec yeḍra deg yiminig-ik: war iqeddacen ibeṛṛaniyen, war tasleḍt, war ahrawen n tallalt ara tsebdeḍ. Tavidyut akked umeslaw ttwagen d yiwen, TS yettuɣal ɣer MP4 s tangalt n usiɣzef ɣef yiman-is, war uwennez i tikelt-nniḍen.
+
+ISULEN
+- Asider n tvidyutin — ifuyla usrid d yiṣuṭiyen HLS (m3u8) akked DASH (mpd) deg yal asmel: fren taɣara, iḍuṛan imeslawen yemgaradnen ttwagen d yiwen n ufaylu.
+- Tavidyut ɣer GIF — tividyutin imeẓẓyanen (alamma d 3 tesdatin) ttuɣalent d GIF yettudmuqen srid deg yiminig: tehri 640 / 480 / 320 / 240 px, 5–15 FPS, teɣzi tuqqnit ittwaseknen send.
+- Asnifel — fren afaylu n tvidyut neɣ n umeslaw seg uselkim-ik rnu GIF (aẓaṭṭa “seg–ɣer”, tehri, FPS) s uzwel afrayan: tafeggagt tamellalt, aḍris ɣef tvidyut neɣ demotivator, s teskant n usenqed srid. Daɣen MP3, tawlaft PNG, TS → MP4 / MKV akked MP4 yebḍan → MP4 war uwennez i tikelt-nniḍen. Afaylu ur yeffeɣ ara si yiminig-ik.
+- YouTube akked YouTube Shorts — fren anaw (MP4, WEBM, AV1) akked tafesna; umeslaw d MP3, M4A neɣ WEBM; tavidyut akked umeslaw deg yiwen n ufaylu.
+- Tuzzna tusrimt — sekles tuzzna tusrimt n Twitch akked HLS niḍen alamma tsit ɣef Seḥbes; asekles n tuzzna tusrimt n YouTube seg umeqqun (beta).
+- TS ɣer MP4 — iṣuṭiyen MPEG-TS ttwaskelsen s wudem amezwer d MP4 amagnu (war uwennez i tikelt-nniḍen); daɣen MKV d TS.
+- TikTok — tavidyut i d-yettban ɣef ugdil ad tili d tamezwarut, s uzwel d tgara-ines; ayen yeqqimen n usuddem yella deg “Ugar”.
+- Isemlen nniḍen — Vimeo, Dailymotion, RuTube, Dzen, Instagram, Facebook, X (Twitter), Bilibili, Canva, OKru, VK akked yal asmel nniḍen s usnirem amatu n yiṣuṭiyen (agmuḍ yettwali ɣef wayen i d-yettak usebter).
+- Asider n umeslaw — MP3 (yettwasenfal deg yiminig), M4A neɣ WEBM.
+- Asentel afaw d yeṭṭuqqet — ad yerr i unagraw-ik. 10 n tutlayin: taglizit, tarusit, tacinwat, taspanyulit, tahindit, tafransist, taɛrabt, tapurtugit, talmanit, tajapunit.
+- Yelha — amazray n yisidar, tamudemt n yisem n ufaylu, ilɣa, anegzum Alt+taneccabt ɣer wadda, aferdis deg umuɣ n usatal, tallalt yettwarnan.
+- Asenqed — yiwen n tqeffalt tskelles afaylu adigan (iseɣwan ffren) ara tsedmeḍ ɣer uneqqis n wuguren; amazray afrayan n usewten (yettwasens s wudem amezwer) yettara ayen ittxeddem usiɣzef. Ulac ayen ara yettwazen s wudem awurman.
+
+AMEKNAS AMEZWARU
+Ulac imiḍanen, ulac tilɣa n usnirem, ulac iqeddacen nniḍen. Iɣewwaren akked umazray qqimen deg yiminig-ik. Asiɣzef yeqqen kan ɣer yisemlen i tesseqdaceḍ yakan.
+
+ASEFHEM ƔEF AI
+Ameɣnu-a yegber tangalt i d-yessufɣen AI.
+Isental akked yisuqal akk ttwasufɣen s AI.
+
+YELHA ASEN TEǦǦED
+- Ticki tsebdeḍ, sireg anekcum ɣer yisemlen akk deg about:addons → asiɣzef → Tisirag, ma ulac ur d-yettafaɣ ara usenqed n usebter imidyaten.
+- Isemlen n usuddem ttbeddilen s waṭas; YouTube d izeḍwan inmettiyen ttwasefrak akken i yezmer rnu zemren ad ḥbsen. Ma yella kra ur teddu ara, ssed ɣef tqeffalt n wuguren deg usfaylu, tazneḍ afaylu n usenqed.
+- Imeẓla yettwaḥerzen s DRM (Netflix, Disney+ d wid n tuget-nsen) ur ttwasefrak ara u ur ttwasefrak ara akk.

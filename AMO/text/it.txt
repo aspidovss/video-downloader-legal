@@ -1,0 +1,38 @@
+LOCALE: it
+
+=== NAME (max 50) [38] ===
+Video Downloader Legal – Scarica video
+
+=== SUMMARY (max 250) [206] ===
+Salva video e audio dalla pagina che guardi: YouTube, Shorts, Instagram, Twitch, TikTok, VK, Bilibili, Dailymotion e altri. Converti qualsiasi video in GIF. Gratis, in locale, senza paywall né tracciamento.
+
+=== DESCRIPTION ===
+Salva video e audio dalla pagina che guardi: YouTube, Shorts, Instagram, Twitch, TikTok, VK, Bilibili, Dailymotion e altri. Converti qualsiasi video in GIF. Gratis, in locale, senza paywall né tracciamento.
+
+VDL - Video Downloader Legal elenca ciò che la pagina aperta riproduce e salva quello che scegli. Tutto avviene nel browser: nessun server esterno, nessuna analisi, nessun programma ausiliario da installare. Video e audio vengono uniti e il TS convertito in MP4 dal codice dell'estensione, senza ricodifica.
+
+FUNZIONI
+- Download video — file diretti e flussi HLS (m3u8) e DASH (mpd) su qualsiasi sito: scegli la qualità, le tracce audio separate vengono unite in un unico file.
+- Da video a GIF — i video brevi (fino a 3 min) diventano GIF animate direttamente nel browser: larghezza 640 / 480 / 320 / 240 px, 5–15 FPS, con le dimensioni approssimative mostrate in anticipo.
+- Convertitore — scegli un file video o audio dal computer e crea una GIF (intervallo «da–a», larghezza, FPS) con didascalia facoltativa: barra bianca, testo sul video o demotivatore, con anteprima dal vivo. Anche MP3, fotogramma PNG, TS → MP4 / MKV e MP4 frammentato → MP4 senza ricodifica. Il file non lascia mai il tuo browser.
+- YouTube e YouTube Shorts — scegli il tipo (MP4, WEBM, AV1) e la risoluzione; audio in MP3, M4A o WEBM; video e audio in un unico file.
+- Dirette — registra le dirette di Twitch e altri flussi HLS fino a quando premi Stop; registrazione delle dirette YouTube dal lettore (beta).
+- Da TS a MP4 — i flussi MPEG-TS vengono salvati di default come normali MP4 (senza ricodifica); disponibili anche MKV e TS.
+- TikTok — il video sullo schermo è il primo, con titolo e copertina; il resto del feed è sotto «Altro».
+- Altri siti — Vimeo, Dailymotion, RuTube, Dzen, Instagram, Facebook, X (Twitter), Bilibili, Canva, OKru, VK e qualsiasi altro sito grazie al rilevamento generale dei flussi (il risultato dipende da ciò che offre la pagina).
+- Download audio — MP3 (convertito nel browser), M4A o WEBM.
+- Tema chiaro e scuro — segue il sistema. 10 lingue: inglese, russo, cinese, spagnolo, hindi, francese, arabo, portoghese, tedesco, giapponese.
+- Comodo — cronologia dei download, modello per il nome file, notifiche, scorciatoia Alt+Freccia giù, voce nel menu contestuale, guida integrata.
+- Diagnostica — un pulsante salva un file locale (link oscurati) da allegare a una segnalazione di bug; un registro di debug facoltativo (disattivato di default) annota ciò che fa l'estensione. Nulla viene mai inviato automaticamente.
+
+PRIMA DI TUTTO LA PRIVACY
+Nessun account, nessuna telemetria, nessun server nostro. Impostazioni e cronologia restano nel tuo browser. L'estensione contatta solo i siti che stai già usando.
+
+INFORMATIVA SULL'IA
+Questo progetto contiene codice generato dall'IA.
+Tutti i commenti e le traduzioni sono generati dall'IA.
+
+DA SAPERE
+- Dopo l'installazione, consenti l'accesso a tutti i siti in about:addons → l'estensione → Autorizzazioni, altrimenti lo scanner della pagina non vede i contenuti multimediali.
+- I siti di streaming cambiano spesso; YouTube e i social sono supportati al meglio delle possibilità e potrebbero smettere di funzionare. Se qualcosa non va, premi il pulsante del bug nella finestra e invia il file di diagnostica.
+- I servizi protetti da DRM (Netflix, Disney+ e simili) non sono supportati e non lo saranno mai.

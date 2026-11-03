@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { sniffKind, mp4TopBoxes, isFragmented, convertTargets, parseTime, formatTime, trimRange, pcmSlice, outName, gifEstimateBytes } from '../lib/convert.js';
+import { sniffKind, mp4TopBoxes, isFragmented, convertTargets, cutExt, parseTime, formatTime, trimRange, pcmSlice, outName, gifEstimateBytes } from '../lib/convert.js';
 
 const box = (type, len) => { const b = new Uint8Array(len); new DataView(b.buffer).setUint32(0, len); for (let i = 0; i < 4; i++) b[4 + i] = type.charCodeAt(i); return b; };
 const join = (...p) => { const out = new Uint8Array(p.reduce((n, x) => n + x.length, 0)); let o = 0; for (const x of p) { out.set(x, o); o += x.length; } return out; };
@@ -31,13 +31,22 @@ test('mp4TopBoxes + isFragmented', async () => {
 });
 
 test('convertTargets', () => {
-  assert.deepEqual(convertTargets('mp4'), ['gif', 'mp3', 'png']);
-  assert.deepEqual(convertTargets('mp4', { fragmented: true }), ['gif', 'mp3', 'png', 'defrag']);
-  assert.deepEqual(convertTargets('ts'), ['gif', 'mp3', 'png', 'mp4', 'mkv']);
+  assert.deepEqual(convertTargets('mp4'), ['gif', 'mp3', 'png', 'cut']);
+  assert.deepEqual(convertTargets('mp4', { fragmented: true }), ['gif', 'mp3', 'png', 'cut', 'defrag']);
+  assert.deepEqual(convertTargets('ts'), ['gif', 'mp3', 'png', 'cut', 'mp4', 'mkv']);
   assert.deepEqual(convertTargets('ts', { video: false, audio: false }), ['mp4', 'mkv']);
   assert.deepEqual(convertTargets('audio'), ['mp3']);
-  assert.deepEqual(convertTargets('webm', { video: false }), ['mp3']);
+  assert.deepEqual(convertTargets('webm', { video: false }), ['mp3', 'cut']);
   assert.deepEqual(convertTargets('other'), []);
+});
+
+test('cutExt / outName for a cut part (1.6.8)', () => {
+  assert.equal(cutExt('ts', 'a.ts'), 'mp4');
+  assert.equal(cutExt('mp4', 'song.M4A'), 'm4a');
+  assert.equal(cutExt('mp4', 'clip.mov'), 'mp4');
+  assert.equal(cutExt('webm', 'x.mkv'), 'mkv');
+  assert.equal(cutExt('webm', 'x.webm'), 'webm');
+  assert.equal(outName('clip.mp4', 'cut', { start: 4, end: 12.3, whole: false, ext: 'mp4' }), 'clip 4s-12.3s.mp4');
 });
 
 test('parseTime / formatTime', () => {

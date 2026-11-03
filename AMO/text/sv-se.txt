@@ -1,0 +1,38 @@
+LOCALE: sv-se
+
+=== NAME (max 50) [40] ===
+Video Downloader Legal – Ladda ner video
+
+=== SUMMARY (max 250) [208] ===
+Spara video och ljud från sidan du tittar på: YouTube, Shorts, Instagram, Twitch, TikTok, VK, Bilibili, Dailymotion med flera. Gör om valfri video till GIF. Gratis, lokalt, ingen betalvägg och ingen spårning.
+
+=== DESCRIPTION ===
+Spara video och ljud från sidan du tittar på: YouTube, Shorts, Instagram, Twitch, TikTok, VK, Bilibili, Dailymotion med flera. Gör om valfri video till GIF. Gratis, lokalt, ingen betalvägg och ingen spårning.
+
+VDL - Video Downloader Legal listar vad den öppna sidan spelar upp och sparar det du väljer. Allt sker i webbläsaren: inga externa servrar, ingen analys och inga hjälpprogram att installera. Video och ljud slås ihop och TS konverteras till MP4 av tilläggets egen kod, utan omkodning.
+
+FUNKTIONER
+- Videonedladdning — direkta filer samt HLS- (m3u8) och DASH-strömmar (mpd) på vilken webbplats som helst: välj kvalitet, separata ljudspår slås ihop till en fil.
+- Video till GIF — korta videor (upp till 3 min) blir en animerad GIF direkt i webbläsaren: bredd 640 / 480 / 320 / 240 px, 5–15 FPS, ungefärlig storlek visas i förväg.
+- Omvandlare — välj en video- eller ljudfil på datorn och skapa en GIF (del ”från–till”, bredd, FPS) med valfri bildtext: vitt fält, text på videon eller demotivator, med liveförhandsvisning. Även MP3, PNG-bild, TS → MP4 / MKV och fragmenterad MP4 → MP4 utan omkodning. Filen lämnar aldrig webbläsaren.
+- YouTube och YouTube Shorts — välj typ (MP4, WEBM, AV1) och upplösning; ljud som MP3, M4A eller WEBM; video och ljud i en fil.
+- Livesändningar — spela in Twitch och andra HLS-livesändningar tills du trycker på Stopp; inspelning av YouTube-livesändningar från spelaren (beta).
+- TS till MP4 — MPEG-TS-strömmar sparas som vanlig MP4 som standard (utan omkodning); även MKV och TS.
+- TikTok — videon på skärmen kommer först, med titel och omslag; resten av flödet finns under ”Mer”.
+- Andra webbplatser — Vimeo, Dailymotion, RuTube, Dzen, Instagram, Facebook, X (Twitter), Bilibili, Canva, OKru, VK och alla andra webbplatser via allmän strömidentifiering (resultatet beror på vad sidan erbjuder).
+- Ljudnedladdning — MP3 (konverteras i webbläsaren), M4A eller WEBM.
+- Ljust och mörkt tema — följer ditt system. 10 språk: engelska, ryska, kinesiska, spanska, hindi, franska, arabiska, portugisiska, tyska, japanska.
+- Praktiskt — nedladdningshistorik, mall för filnamn, aviseringar, kortkommando Alt+Pil ned, post i snabbmenyn, inbyggd hjälp.
+- Diagnostik — en knapp sparar en lokal fil (länkar maskerade) som du kan bifoga i en felrapport; en valfri felsökningslogg (av som standard) registrerar vad tillägget gör. Inget skickas någonsin automatiskt.
+
+INTEGRITET FÖRST
+Inga konton, ingen telemetri, inga egna servrar. Inställningar och historik stannar i din webbläsare. Tillägget kontaktar bara de webbplatser du redan använder.
+
+AI-INFORMATION
+Det här projektet innehåller kod som genererats av AI.
+Alla kommentarer och översättningar är AI-genererade.
+
+BRA ATT VETA
+- Tillåt åtkomst till alla webbplatser efter installationen i about:addons → tillägget → Behörigheter, annars ser sidskannern inte mediet.
+- Streamingwebbplatser ändras ofta; YouTube och sociala nätverk stöds efter bästa förmåga och kan sluta fungera. Om något inte fungerar, tryck på felknappen i fönstret och skicka diagnostikfilen.
+- DRM-skyddade tjänster (Netflix, Disney+ och liknande) stöds inte och kommer aldrig att göra det.

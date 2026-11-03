@@ -81,8 +81,43 @@
     return t === 'ftyp' || t === 'moov';
   }
 
+  // 1.6.8: a recording in parts. "Video 720p.mp4" + 3600 -> "Video 720p (01-00-00).mp4" (as lib/split.js withPartSuffix)
+  function partName(name, sec) {
+    const s = Math.max(0, Math.floor(Number(sec) || 0));
+    const p = (n) => String(n).padStart(2, '0');
+    const stamp = ` (${p(Math.floor(s / 3600))}-${p(Math.floor(s / 60) % 60)}-${p(s % 60)})`;
+    const m = /^(.*?)((?:\.audio)?\.[a-z0-9]{1,5})$/i.exec(String(name || ''));
+    return m ? `${m[1]}${stamp}${m[2]}` : `${name}${stamp}`;
+  }
+
+  // The fragments of every track that start before `cut` (media ms), moved out into a stand-alone copy
+  // (same init segment) that save() can write; the tracks keep the rest. -> [{ kind, container, ext, mime, best() }]
+  function takeBefore(tracks, cut) {
+    return tracks.map((t) => {
+      const r = t.best();
+      const keys = [...r.frags.keys()].filter((k) => k < cut).sort((a, b) => a - b);
+      const frags = new Map();
+      let bytes = 0;
+      for (const k of keys) { const b = r.frags.get(k); frags.set(k, b); bytes += b.size; r.frags.delete(k); }
+      r.bytes -= bytes;
+      for (const o of t.reps.values()) if (o !== r) for (const k of [...o.frags.keys()]) if (k < cut) { o.bytes -= o.frags.get(k).size; o.frags.delete(k); }
+      const rep = { init: r.init, frags, height: r.height, bytes };
+      return { kind: t.kind, container: t.container, ext: t.ext, mime: t.mime, reps: new Map([['p', rep]]), best: () => rep };
+    }).filter((x) => x.best().frags.size);
+  }
+
+  // Where to cut: the media time every track has reached, once the part is long or big enough; null = not yet.
+  // firsts / lasts: earliest / latest fragment time (ms) of each track's part; from: where the part began (ms)
+  function cutPoint(firsts, lasts, partBytes, lim, from) {
+    if (!lim || !lasts.length) return null;
+    const reached = Math.min(...lasts);
+    const begin = from == null ? Math.min(...firsts) : from;
+    if (!(reached > begin)) return null;
+    return reached - begin >= lim.ms || partBytes >= lim.bytes ? reached : null;
+  }
+
   if (typeof module !== 'undefined' && module.exports) {
-    module.exports = { ...globalThis.__vdlMux, TrackCapture, decideEnd, looksLikeInit };
+    module.exports = { ...globalThis.__vdlMux, TrackCapture, decideEnd, looksLikeInit, partName, takeBefore, cutPoint };
     return;
   }
 
@@ -110,6 +145,13 @@
     t0: 0,
     maxMs: 0,
     ms: null, // MediaSource of the main player (live recording without a reload)
+    split: null, // 1.6.8: { bytes, ms } of one part, or null
+    parts: [], // finished parts waiting for their names: { id, start (s from the recording's start), list }
+    partSeq: 0,
+    partFrom: null, // media time (ms) where the current part begins
+    recFrom: null, // media time (ms) where the recording begins
+    cutBytes: 0, // rec.bytes when the last part was cut
+    partsSaved: 0,
   };
   const sbMime = new WeakMap();
   const sbInit = new WeakMap(); // last init segment per SourceBuffer, kept while idle so a LIVE recording can start without a reload
@@ -157,6 +199,8 @@
       state: rec.state, error: rec.error, bytes: rec.bytes, merged: !!rec.merged, tracks,
       dbg: [...rec.tracks.values()].map((t) => ({ kind: t.kind, mime: t.mime.slice(0, 70), appends: t.appends, appendBytes: t.appendBytes, reps: t.reps.size, frags: [...t.reps.values()].map((r) => r.frags.size).slice(0, 6), dropping: t.dropping, first: t.first || '', pend: t.parser && t.parser.pending ? t.parser.pending.length : 0 })).slice(0, 4),
       draining: !!rec.draining, live: !!rec.live, seconds: rec.live && rec.t0 ? Math.round((Date.now() - rec.t0) / 1000) : 0,
+      parts: rec.parts.map((p) => ({ id: p.id, start: p.start })), partsSaved: rec.partsSaved,
+      part: rec.split ? rec.partsSaved + rec.parts.length + 1 : 0, partStart: rec.split && rec.partFrom != null && rec.recFrom != null ? Math.round((rec.partFrom - rec.recFrom) / 1000) : 0, partBytes: rec.bytes - rec.cutBytes,
       interrupted: !!rec.interrupted, current: v ? v.currentTime : 0, duration: v && isFinite(v.duration) ? v.duration : 0,
       progress: v && isFinite(v.duration) && v.duration > 0 ? Math.min(1, v.currentTime / v.duration) : 0,
     };
@@ -204,7 +248,7 @@
     t.appends++;
     t.appendBytes += view.byteLength;
     t.parser.push(view.slice());
-    if (rec.bytes > rec.maxBytes) fail('toolarge');
+    if (!rec.split && rec.bytes > rec.maxBytes) fail('toolarge');
   }
 
   // Hooks are installed always (cheap pass-through) so nothing is missed after a reload.
@@ -371,7 +415,14 @@
     rec.id = videoIdNow();
     rec.live = !!opts.live;
     rec.t0 = Date.now();
-    rec.maxMs = rec.live ? Math.max(1, Number(opts.maxMin) || 180) * 60000 : 0;
+    rec.maxMs = rec.live && Number(opts.maxMin) > 0 ? Number(opts.maxMin) * 60000 : 0; // 1.6.8: 0 = no limit
+    rec.split = opts.split && Number(opts.split.mb) > 0 && Number(opts.split.min) > 0 ? { bytes: Number(opts.split.mb) * 1048576, ms: Number(opts.split.min) * 60000 } : null;
+    rec.parts = [];
+    rec.partSeq = 0;
+    rec.partFrom = null;
+    rec.recFrom = null;
+    rec.cutBytes = 0;
+    rec.partsSaved = 0;
     rec.speed = rec.live ? 1 : Math.min(4, Math.max(1, Number(opts.speed) || 2));
     rec.maxBytes = (Number(opts.maxMB) || 4096) * 1024 * 1024;
     if (opts.live && opts.noReload && primeLive() < 2) {
@@ -391,8 +442,40 @@
       }
       check();
       verifyStart();
+      if (rec.split && rec.state === 'recording' && rec.tick % 4 === 0) maybeCut();
       if (rec.state === 'recording' && ++rec.tick % 4 === 0) report();
     }, 250);
+    report();
+  }
+
+  // 1.6.8: a part long / big enough: its fragments go out as a finished part, the background is told (it answers
+  // with the file names, see savePart) and the recording goes on
+  function maybeCut() {
+    if (!rec.live && !rec.startOk) return; // a regular video: only once it is known to start at 0:00
+    const list = usedTracks();
+    if (list.length < 1) return;
+    const keys = list.map((t) => [...t.best().frags.keys()]);
+    if (keys.some((k) => !k.length)) return;
+    const firsts = keys.map((k) => Math.min(...k));
+    const lasts = keys.map((k) => Math.max(...k));
+    if (rec.recFrom == null) rec.recFrom = Math.min(...firsts);
+    const cut = cutPoint(firsts, lasts, rec.bytes - rec.cutBytes, rec.split, rec.partFrom);
+    if (cut == null) return;
+    const from = rec.partFrom == null ? rec.recFrom : rec.partFrom;
+    const taken = takeBefore(list, cut);
+    if (!taken.length) return;
+    rec.parts.push({ id: ++rec.partSeq, start: Math.max(0, Math.round((from - rec.recFrom) / 1000)), list: taken });
+    rec.partFrom = cut;
+    rec.cutBytes = rec.bytes;
+    report();
+  }
+
+  async function savePart(id, names) {
+    const k = rec.parts.findIndex((p) => p.id === id);
+    if (k < 0) return;
+    const [p] = rec.parts.splice(k, 1);
+    await writeFiles(p.list, (names || []).map((n) => partName(n, p.start)), { trimSilent: !!rec.live });
+    rec.partsSaved++;
     report();
   }
 
@@ -422,19 +505,19 @@
     download(new Blob([r.init, ...times.map((k) => r.frags.get(k))], { type: t.mime.split(';')[0] }), name || `youtube-audio.${t.ext}`);
   }
 
-  async function save(names) {
-    const list = usedTracks()
-      .sort((a, b) => (a.kind === 'video' ? -1 : 1) - (b.kind === 'video' ? -1 : 1));
-    rec.merged = false;
+  // tracks -> one joined file, or one file per track; -> true when joined
+  async function writeFiles(tracks, names, opts) {
+    const list = tracks.slice().sort((a, b) => (a.kind === 'video' ? -1 : 1) - (b.kind === 'video' ? -1 : 1));
+    let merged = false;
     if (list.length === 2 && list[0].kind === 'video' && list[1].kind === 'audio') {
       // VP9 + AAC / AV1 + Opus: MP4 unless the name the background chose ends in .mkv (setting "joinFormat")
-      const blob = await mergeReps(list[0], list[1], { trimSilent: !!rec.live, mkv: /\.mkv$/i.test((names && names[0]) || '') });
+      const blob = await mergeReps(list[0], list[1], { trimSilent: !!opts.trimSilent, mkv: /\.mkv$/i.test((names && names[0]) || '') });
       if (blob) {
         download(blob, (names && names[0]) || `youtube.${list[0].container}`);
-        rec.merged = true;
+        merged = true;
       }
     }
-    if (!rec.merged) {
+    if (!merged) {
       list.forEach((t, i) => {
         setTimeout(() => {
           const r = t.best();
@@ -444,13 +527,22 @@
         }, i * 900);
       });
     }
+    return merged;
+  }
+
+  async function save(names) {
+    // parts still waiting for their names go first (with the same names), then the last piece
+    for (const p of rec.parts.splice(0)) { await writeFiles(p.list, (names || []).map((n) => partName(n, p.start)), { trimSilent: !!rec.live }); rec.partsSaved++; }
+    const last = rec.partsSaved && rec.recFrom != null && rec.partFrom != null ? Math.max(0, Math.round((rec.partFrom - rec.recFrom) / 1000)) : null;
+    rec.merged = await writeFiles(usedTracks(), last == null ? names : (names || []).map((n) => partName(n, last)), { trimSilent: !!rec.live });
     rec.state = 'saved';
     report();
   }
 
   window.addEventListener('message', (e) => {
     if (e.source !== window || !e.data || e.data.__vdl !== 'rec-cmd') return;
-    if (e.data.cmd === 'start') start({ speed: 1, maxMB: e.data.maxMB, live: !!e.data.live, maxMin: e.data.maxMin, noReload: true });
+    if (e.data.cmd === 'start') start({ speed: 1, maxMB: e.data.maxMB, live: !!e.data.live, maxMin: e.data.maxMin, split: e.data.split || null, noReload: true });
+    else if (e.data.cmd === 'savepart') savePart(e.data.id, e.data.names).catch(() => {});
     else if (e.data.cmd === 'save' && e.data.only === 'audio') saveAudioOnly(e.data.names && e.data.names[0]);
     else if (e.data.cmd === 'save') save(e.data.names).catch(() => fail('save'));
     else if (e.data.cmd === 'stopsave') {

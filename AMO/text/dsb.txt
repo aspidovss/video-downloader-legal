@@ -1,0 +1,38 @@
+LOCALE: dsb
+
+=== NAME (max 50) [39] ===
+Video Downloader Legal – Wideo ześěgnuś
+
+=== SUMMARY (max 250) [222] ===
+Składujśo wideo a zwuk ze boka, kótaryž se woglědujośo: YouTube, Shorts, Instagram, Twitch, TikTok, VK, Bilibili, Dailymotion a wěcej. Pśetwórjśo kuždy wideo do GIF. Darmotnje, lokalnje, bźez płaśiźneje murje a slědowanja.
+
+=== DESCRIPTION ===
+Składujśo wideo a zwuk ze boka, kótaryž se woglědujośo: YouTube, Shorts, Instagram, Twitch, TikTok, VK, Bilibili, Dailymotion a wěcej. Pśetwórjśo kuždy wideo do GIF. Darmotnje, lokalnje, bźez płaśiźneje murje a slědowanja.
+
+VDL - Video Downloader Legal pokazujo, což wótwórjony bok wótgrawa, a składujo to, což wuběraśo. Wšykno se w grajkarju stawa: bźez eksternych serwerow, analyzy a pomocnych programow. Wideo a zwuk se zjadnośytej a TS se z kodom rozšyrjenja bźez znowakoděrowanja do MP4 pśetwórja.
+
+FUNKCIJE
+- Ześěgnjenje wideo — direktne dataje a HLS- (m3u8) a DASH-bruki (mpd) na kuždem boku: wubjeŕśo kwalitu, źělone zwukowe slědy se do jadneje dataje zjadnośeju.
+- Wideo do GIF — krotke wideo (až do 3 min) se direktnje w grajkarju do animowanego GIF pśetwórje: šyrokosć 640 / 480 / 320 / 240 px, 5–15 FPS, pśibližna wjelikosć se wob rukowu pokazujo.
+- Konwertor — wubjeŕśo wideo- abo awdiodataju na licadle a napóraśo GIF (wótrězk „wót–do“, šyrokosć, FPS) z wolenym pódpisom: běła lejsta, tekst na wideo abo demotiwator, z pśeglědom live. Teke MP3, PNG-wobraz, TS → MP4 / MKV a fragmentěrowany MP4 → MP4 bźez znowakoděrowanja. Dataja swój grajkaŕ nigdy njewopušća.
+- YouTube a YouTube Shorts — wubjeŕśo typ (MP4, WEBM, AV1) a rozeznaśe; zwuk ako MP3, M4A abo WEBM; wideo a zwuk w jadnej dataji.
+- Live-pósłanja — nagrawajśo Twitch a druge HLS-pósłanja, až „Stop“ njetłocyśo; nagrawanje YouTube-live-pósłanjow z wótgrawaka (beta).
+- TS do MP4 — MPEG-TS-bruki se pó standarźe ako zwučony MP4 składuju (bźez znowakoděrowanja); teke MKV a TS.
+- TikTok — wideo na wobrazowce jo prědne, z titulom a wobalku; zbytk kanala jo pód „Wěcej“.
+- Druge sedła — Vimeo, Dailymotion, RuTube, Dzen, Instagram, Facebook, X (Twitter), Bilibili, Canva, OKru, VK a kuždy drugi websedło pśez powšykne spóznawanje brukow (wuslědk wótwisujo wót togo, což bok póbitujo).
+- Ześěgnjenje zwuka — MP3 (w grajkarju pśetwórjone), M4A abo WEBM.
+- Swětły a śamny motiw — slěduje wašomu systemoju. 10 rěcow: engelšćina, rušćina, chinšćina, špańšćina, hindišćina, francojšćina, arabšćina, portugalšćina, nimšćina, japańšćina.
+- Komfortnje — historija ześěgnjenjow, pśedłoga datajowego mjenja, powěsće, tastowa skrotka Alt+šypka dołoj, zapisk w kontekstowem meniju, zatwarjona pomoc.
+- Diagnoza — jadno tłocydło składujo lokalnu dataju (wótkaze schowane), kótaruž móžośo k powěsći zmólki pśipósłaś; wolony protokol za zmólkowe pytanje (pó standarźe wupinjony) zapisujo, což rozšyrjenje cyni. Nic se awtomatiski njepósćelo.
+
+DATOWY ŠKIT NEJPJERWJEJ
+Žedne konta, žedna telemetrija, žedne swójske serwery. Nastajenja a historija w grajkarju wóstanu. Rozšyrjenje kontaktujo jano sedła, kótarež južo wužywaśo.
+
+NAMJELNJENJE K KI
+Ten projekt wopśimujo kod, kótaryž jo kunsna inteligenca napórała.
+Wšykne komentary a pśełožki jo kunsna inteligenca napórała.
+
+DOBRE WĚDŹEŚ
+- Pó instalaciji dowólśo pśistup ku wšym sedłam w about:addons → rozšyrjenje → Pšawa, howac skener boka medije njewiźi.
+- Streaming-sedła se cesto měnje; YouTube a socialne seśi se pó móžnosći pódpěraju a mógu pózdźej pśestaś funkcioněrowaś. Jolic něco njefunkcioněrujo, tłoćśo tłocydło zmólki we woknje a pósćelśo diagnostiku.
+- Słužby z DRM-škitom (Netflix, Disney+ a pódobne) se njepódpěraju a se teke nigdy njepódpěraju.

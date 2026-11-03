@@ -502,6 +502,29 @@ test('YouTube recording: start arms the tab; status updates show on the item; sa
   assert.equal(store.local.history[0].kind, 'yt');
 });
 
+test('YouTube recording in parts (1.6.8): start sends the part limits; a finished part gets its names once; history per part', async () => {
+  store.local.settings = { ytRecordSpeed: 3, template: '{title}', ytCcOnly: false, ytRecordUi: true, splitVideo: true, partMB: 500, partMin: 30 };
+  listeners['storage.onChanged'][0].fn({ settings: { newValue: store.local.settings } }, 'local');
+  assert.deepEqual(await send({ type: 'yt_rec', tabId: 2, cmd: 'start' }, ytSender), { ok: true });
+  const startMsg = tabMessages.at(-1).msg;
+  assert.deepEqual(startMsg.split, { mb: 500, min: 30 });
+  assert.equal(startMsg.maxMin, 0);
+  const tracks = [{ kind: 'video', ext: 'webm', height: 720, fragments: 10, bytes: 1 }, { kind: 'audio', ext: 'weba', height: 0, fragments: 10, bytes: 1 }];
+  const hist = store.local.history.length;
+  const st = { state: 'recording', progress: 0.5, tracks, parts: [{ id: 1, start: 0 }], partsSaved: 0, part: 2, partStart: 1800 };
+  await send({ type: 'yt_rec_status', state: st }, ytSender);
+  await send({ type: 'yt_rec_status', state: st }, ytSender);
+  const asks = tabMessages.filter((m) => m.msg.cmd === 'savepart');
+  assert.equal(asks.length, 1, 'names sent once per part');
+  assert.equal(asks[0].msg.id, 1);
+  assert.deepEqual(asks[0].msg.names, ['Clip_ Test.webm', 'Clip_ Test.audio.weba']);
+  await tick();
+  assert.equal(store.local.history.length, hist + 1);
+  assert.equal(store.local.history[0].filename, 'Clip_ Test (00-00-00).webm');
+  await send({ type: 'yt_rec_status', state: { state: 'saved', tracks, parts: [], partsSaved: 1, partStart: 1800 } }, ytSender);
+  assert.equal(store.local.history[0].filename, 'Clip_ Test (00-30-00).webm', 'the last piece carries its start time too');
+});
+
 test('YouTube recording: status from a page whose summary has not arrived yet is kept', async () => {
   await send({ type: 'yt_rec_status', state: { state: 'recording', progress: 0.1, tracks: [] } }, { tab: { id: 9 } });
   const st = await send({ type: 'get_state', tabId: 9 }, { tab: { id: 9 } });
@@ -1279,6 +1302,71 @@ test('LIVE HLS: a live stream offers recording; Stop saves what was captured as 
   const txt = await captured.text();
   assert.match(txt, /^<1><2><3><4>/);
   assert.match(downloadsStarted.at(-1).filename, /\.ts$/);
+});
+
+test('LIVE HLS in parts (1.6.8): a part is saved when it reaches its length, the recording goes on; names carry the start time', async () => {
+  const store0 = { ...store.local.settings };
+  store.local.settings = { ...store0, template: '{title}', tsFormat: 'ts', partMin: 1 };
+  listeners['storage.onChanged'][0].fn({ settings: { newValue: store.local.settings } }, 'local');
+  let polls = 0;
+  const origFetch = globalThis.fetch;
+  globalThis.fetch = async (url) => {
+    if (url === 'https://parts.io/live.m3u8') {
+      const base = 3 * polls++; // three new 25 s segments per poll
+      return { ok: true, status: 200, text: async () => `#EXTM3U\n#EXT-X-MEDIA-SEQUENCE:${base}\n${[0, 1, 2].map((k) => `#EXTINF:25,\np${base + k}.ts`).join('\n')}\n` };
+    }
+    const m = /p(\d+)\.ts$/.exec(url);
+    if (m) return { ok: true, status: 200, arrayBuffer: async () => new TextEncoder().encode(`<${m[1]}>`).buffer };
+    return origFetch(url);
+  };
+  const blobs = [];
+  const origCreate = URL.createObjectURL;
+  URL.createObjectURL = (b) => { blobs.push(b); return origCreate(b); };
+  hit('https://parts.io/live.m3u8', { 'content-type': 'application/vnd.apple.mpegurl' });
+  await tick(80);
+  const item = (await send({ type: 'get_state', tabId: 1 })).items.find((i) => i.url === 'https://parts.io/live.m3u8');
+  const before = downloadsStarted.length;
+  assert.equal((await send({ type: 'download', tabId: 1, itemId: item.id })).ok, true);
+  for (let i = 0; i < 80 && downloadsStarted.length === before; i++) await tick(100); // the second poll comes after ~5 s
+  let job = (await send({ type: 'get_state', tabId: 1 })).jobs.at(-1);
+  assert.equal(job.recording, true, 'still recording after the first part');
+  assert.ok(job.part >= 2);
+  assert.match(downloadsStarted[before].filename, / \(00-00-00\)\.ts$/);
+  const first = await blobs.at(-1).text(); // the first window the recording saw (the item check polled the playlist already)
+  const m0 = /^<(\d+)><\d+><(\d+)>$/.exec(first);
+  assert.ok(m0, first);
+  await send({ type: 'stop_job', jobId: job.id });
+  await tick(400);
+  job = (await send({ type: 'get_state', tabId: 1 })).jobs.at(-1);
+  assert.equal(job.state, 'done');
+  assert.match(downloadsStarted.at(-1).filename, / \(00-01-15\)\.ts$/);
+  assert.ok((await blobs.at(-1).text()).startsWith(`<${Number(m0[2]) + 1}>`), 'the next part goes on right after the first one');
+  URL.createObjectURL = origCreate;
+  globalThis.fetch = origFetch;
+  store.local.settings = store0;
+  listeners['storage.onChanged'][0].fn({ settings: { newValue: store0 } }, 'local');
+});
+
+test('HLS video (not live) in parts when switched on (1.6.8): planned cuts, every part saved with its start time', async () => {
+  const store0 = { ...store.local.settings };
+  store.local.settings = { ...store0, template: '{title}', tsFormat: 'ts', splitVideo: true, partMin: 1 };
+  listeners['storage.onChanged'][0].fn({ settings: { newValue: store.local.settings } }, 'local');
+  fixtures['https://vod.io/v.m3u8'] = '#EXTM3U\n#EXT-X-TARGETDURATION:30\n' + [0, 1, 2, 3, 4, 5].map((i) => `#EXTINF:30,\nv${i}.ts`).join('\n') + '\n#EXT-X-ENDLIST\n';
+  for (let i = 0; i < 6; i++) fixtures[`https://vod.io/v${i}.ts`] = new TextEncoder().encode(`{${i}}`).buffer;
+  const blobs = [];
+  const origCreate = URL.createObjectURL;
+  URL.createObjectURL = (b) => { blobs.push(b); return origCreate(b); };
+  hit('https://vod.io/v.m3u8', { 'content-type': 'application/vnd.apple.mpegurl' });
+  await tick(80);
+  const item = (await send({ type: 'get_state', tabId: 1 })).items.find((i) => i.url === 'https://vod.io/v.m3u8');
+  const before = downloadsStarted.length;
+  assert.equal((await send({ type: 'download', tabId: 1, itemId: item.id })).ok, true);
+  await tick(600);
+  assert.deepEqual(downloadsStarted.slice(before).map((d) => / \((\d\d-\d\d-\d\d)\)\.ts$/.exec(d.filename)?.[1]), ['00-00-00', '00-01-00', '00-02-00']);
+  assert.deepEqual(await Promise.all(blobs.slice(-3).map((b) => b.text())), ['{0}{1}', '{2}{3}', '{4}{5}']);
+  URL.createObjectURL = origCreate;
+  store.local.settings = store0;
+  listeners['storage.onChanged'][0].fn({ settings: { newValue: store0 } }, 'local');
 });
 
 test('LIVE HLS master: duplicate (backup CDN) variants are merged; variants show format and data rate per minute', async () => {

@@ -1,0 +1,38 @@
+LOCALE: ro
+
+=== NAME (max 50) [39] ===
+Video Downloader Legal – Descarcă video
+
+=== SUMMARY (max 250) [224] ===
+Salvează videoclipuri și audio de pe pagina pe care o urmărești: YouTube, Shorts, Instagram, Twitch, TikTok, VK, Bilibili, Dailymotion și altele. Convertește orice video în GIF. Gratuit, local, fără paywall și fără urmărire.
+
+=== DESCRIPTION ===
+Salvează videoclipuri și audio de pe pagina pe care o urmărești: YouTube, Shorts, Instagram, Twitch, TikTok, VK, Bilibili, Dailymotion și altele. Convertește orice video în GIF. Gratuit, local, fără paywall și fără urmărire.
+
+VDL - Video Downloader Legal afișează ce redă pagina deschisă și salvează ce alegi. Totul se întâmplă în browser: fără servere externe, fără analize, fără programe auxiliare de instalat. Video și audio sunt îmbinate, iar TS este convertit în MP4 de codul propriu al extensiei, fără recodare.
+
+FUNCȚII
+- Descărcare video — fișiere directe și fluxuri HLS (m3u8) și DASH (mpd) pe orice site: alege calitatea, pistele audio separate sunt unite într-un singur fișier.
+- Video în GIF — videoclipurile scurte (până la 3 min) devin GIF animat direct în browser: lățime 640 / 480 / 320 / 240 px, 5–15 FPS, cu dimensiunea aproximativă afișată dinainte.
+- Convertor — alege un fișier video sau audio de pe calculator și creează un GIF (secvența „de la–până la”, lățime, FPS) cu legendă opțională: bandă albă, text pe video sau demotivator, cu previzualizare live. Și MP3, cadru PNG, TS → MP4 / MKV și MP4 fragmentat → MP4 fără recodare. Fișierul nu părăsește niciodată browserul.
+- YouTube și YouTube Shorts — alege tipul (MP4, WEBM, AV1) și rezoluția; audio ca MP3, M4A sau WEBM; video și audio într-un singur fișier.
+- Transmisiuni live — înregistrează transmisiuni Twitch și alte HLS până apeși Stop; înregistrare live YouTube din player (beta).
+- TS în MP4 — fluxurile MPEG-TS se salvează implicit ca MP4 obișnuit (fără recodare); și MKV sau TS.
+- TikTok — videoclipul de pe ecran apare primul, cu titlu și copertă; restul feedului se află la „Mai multe”.
+- Alte site-uri — Vimeo, Dailymotion, RuTube, Dzen, Instagram, Facebook, X (Twitter), Bilibili, Canva, OKru, VK și orice alt site prin detectarea generală a fluxurilor (rezultatul depinde de ce oferă pagina).
+- Descărcare audio — MP3 (convertit în browser), M4A sau WEBM.
+- Temă luminoasă și întunecată — urmează sistemul. 10 limbi: engleză, rusă, chineză, spaniolă, hindi, franceză, arabă, portugheză, germană, japoneză.
+- Comod — istoric descărcări, șablon pentru numele fișierului, notificări, scurtătură Alt+Săgeată în jos, element în meniul contextual, ajutor integrat.
+- Diagnosticare — un buton salvează un fișier local (linkuri mascate) pe care îl poți atașa unui raport de eroare; un jurnal de depanare opțional (dezactivat implicit) notează ce face extensia. Nimic nu se trimite automat.
+
+CONFIDENȚIALITATEA ÎNTÂI
+Fără conturi, fără telemetrie, fără servere proprii. Setările și istoricul rămân în browserul tău. Extensia contactează doar site-urile pe care le folosești deja.
+
+MENȚIUNE DESPRE IA
+Acest proiect conține cod generat de IA.
+Toate comentariile și traducerile sunt generate de IA.
+
+BINE DE ȘTIUT
+- După instalare, permite accesul la toate site-urile în about:addons → extensia → Permisiuni, altfel scanerul paginii nu vede conținutul media.
+- Site-urile de streaming se schimbă des; YouTube și rețelele sociale sunt suportate în limita posibilităților și pot înceta să funcționeze. Dacă ceva nu merge, apasă butonul de eroare din fereastră și trimite fișierul de diagnosticare.
+- Serviciile protejate prin DRM (Netflix, Disney+ și similare) nu sunt suportate și nu vor fi niciodată.

@@ -129,10 +129,33 @@
         <div class="hint" hidden data-i18n="hintConcurrency"></div>
       </div>
       <div class="check-row has-field">
-        <label class="field"><span data-i18n="optLiveMax"></span><input type="number" name="liveMaxMinutes" min="1" max="720" step="1"></label>
+        <label class="field"><span data-i18n="optLiveMax"></span><input type="number" name="liveMaxMinutes" min="0" max="1440" step="1"></label>
         <button type="button" class="info" aria-expanded="false" data-i18n-title="hintToggle" data-i18n-aria="hintToggle">?</button>
         <div class="hint" hidden data-i18n="hintLiveMax"></div>
       </div>
+      <fieldset class="prefs sub" id="split-block">
+        <legend data-i18n="splitTitle"></legend>
+        <div class="check-row">
+          <label class="check"><input type="checkbox" name="splitLive"> <span data-i18n="optSplitLive"></span></label>
+          <button type="button" class="info" aria-expanded="false" data-i18n-title="hintToggle" data-i18n-aria="hintToggle">?</button>
+          <div class="hint" hidden data-i18n="hintSplitLive"></div>
+        </div>
+        <div class="check-row">
+          <label class="check"><input type="checkbox" name="splitVideo"> <span data-i18n="optSplitVideo"></span></label>
+          <button type="button" class="info" aria-expanded="false" data-i18n-title="hintToggle" data-i18n-aria="hintToggle">?</button>
+          <div class="hint" hidden data-i18n="hintSplitVideo"></div>
+        </div>
+        <div class="check-row has-field">
+          <label class="field"><span data-i18n="optPartMB"></span><input type="number" name="partMB" min="50" max="4000" step="50"></label>
+          <button type="button" class="info" aria-expanded="false" data-i18n-title="hintToggle" data-i18n-aria="hintToggle">?</button>
+          <div class="hint" hidden data-i18n="hintPartMB"></div>
+        </div>
+        <div class="check-row has-field">
+          <label class="field"><span data-i18n="optPartMin"></span><input type="number" name="partMin" min="1" max="720" step="1"></label>
+          <button type="button" class="info" aria-expanded="false" data-i18n-title="hintToggle" data-i18n-aria="hintToggle">?</button>
+          <div class="hint" hidden data-i18n="hintPartMin"></div>
+        </div>
+      </fieldset>
       <div class="check-row has-field">
         <label class="field"><span data-i18n="optJoinFormat"></span>
           <select name="joinFormat">

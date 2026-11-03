@@ -1,0 +1,38 @@
+LOCALE: nl
+
+=== NAME (max 50) [40] ===
+Video Downloader Legal – Video's opslaan
+
+=== SUMMARY (max 250) [208] ===
+Sla video's en audio op van de pagina die je bekijkt: YouTube, Shorts, Instagram, Twitch, TikTok, VK, Bilibili, Dailymotion en meer. Zet elke video om naar GIF. Gratis, lokaal, geen betaalmuur, geen tracking.
+
+=== DESCRIPTION ===
+Sla video's en audio op van de pagina die je bekijkt: YouTube, Shorts, Instagram, Twitch, TikTok, VK, Bilibili, Dailymotion en meer. Zet elke video om naar GIF. Gratis, lokaal, geen betaalmuur, geen tracking.
+
+VDL - Video Downloader Legal toont wat de geopende pagina afspeelt en slaat op wat je kiest. Alles gebeurt in je browser: geen externe servers, geen analyses, geen hulpprogramma's om te installeren. Video en audio worden samengevoegd en TS wordt door de eigen code van de extensie omgezet naar MP4, zonder hercoderen.
+
+FUNCTIES
+- Video's downloaden — directe bestanden en HLS- (m3u8) en DASH-streams (mpd) op elke site: kies de kwaliteit, aparte audiosporen worden samengevoegd tot één bestand.
+- Video naar GIF — korte video's (tot 3 min) worden direct in de browser een geanimeerde GIF: breedte 640 / 480 / 320 / 240 px, 5–15 FPS, met vooraf de ongeveer verwachte grootte.
+- Converter — kies een video- of audiobestand op je computer en maak een GIF (fragment ‘van–tot’, breedte, FPS) met optioneel onderschrift: witte balk, tekst op de video of demotivator, met live voorbeeld. Ook MP3, een PNG-frame, TS → MP4 / MKV en gefragmenteerde MP4 → MP4 zonder hercoderen. Het bestand verlaat je browser nooit.
+- YouTube en YouTube Shorts — kies het type (MP4, WEBM, AV1) en de resolutie; audio als MP3, M4A of WEBM; video en audio in één bestand.
+- Livestreams — neem Twitch- en andere HLS-livestreams op tot je op Stop drukt; YouTube-liveopname vanuit de speler (bèta).
+- TS naar MP4 — MPEG-TS-streams worden standaard als gewone MP4 opgeslagen (zonder hercoderen); ook MKV en TS.
+- TikTok — de video op het scherm staat bovenaan, met titel en cover; de rest van de feed vind je onder ‘Meer’.
+- Andere sites — Vimeo, Dailymotion, RuTube, Dzen, Instagram, Facebook, X (Twitter), Bilibili, Canva, OKru, VK en elke andere site via algemene streamdetectie (het resultaat hangt af van wat de pagina biedt).
+- Audio downloaden — MP3 (omgezet in de browser), M4A of WEBM.
+- Licht en donker thema — volgt je systeem. 10 talen: Engels, Russisch, Chinees, Spaans, Hindi, Frans, Arabisch, Portugees, Duits, Japans.
+- Handig — downloadgeschiedenis, sjabloon voor bestandsnamen, meldingen, sneltoets Alt+pijl-omlaag, item in het contextmenu, ingebouwde help.
+- Diagnose — met één knop sla je een lokaal bestand op (links verborgen) dat je bij een bugmelding kunt voegen; een optioneel debuglogboek (standaard uit) legt vast wat de extensie doet. Er wordt nooit iets automatisch verzonden.
+
+PRIVACY EERST
+Geen accounts, geen telemetrie, geen eigen servers. Instellingen en geschiedenis blijven in je browser. De extensie maakt alleen contact met de sites die je al gebruikt.
+
+AI-VERMELDING
+Dit project bevat door AI gegenereerde code.
+Alle opmerkingen en vertalingen zijn door AI gegenereerd.
+
+HANDIG OM TE WETEN
+- Sta na de installatie toegang tot alle sites toe via about:addons → de extensie → Machtigingen, anders ziet de paginascanner de media niet.
+- Streamingsites veranderen vaak; YouTube en sociale netwerken worden naar beste vermogen ondersteund en kunnen later stoppen met werken. Werkt er iets niet, klik dan op de bugknop in het venster en stuur het diagnosebestand mee.
+- DRM-beveiligde diensten (Netflix, Disney+ en dergelijke) worden niet ondersteund en dat zal ook nooit gebeuren.

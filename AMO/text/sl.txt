@@ -1,0 +1,38 @@
+LOCALE: sl
+
+=== NAME (max 50) [38] ===
+Video Downloader Legal – Prenesi videe
+
+=== SUMMARY (max 250) [216] ===
+Shranite videe in zvok s strani, ki jo gledate: YouTube, Shorts, Instagram, Twitch, TikTok, VK, Bilibili, Dailymotion in drugo. Pretvorite poljuben video v GIF. Brezplačno, lokalno, brez plačljivega zidu in sledenja.
+
+=== DESCRIPTION ===
+Shranite videe in zvok s strani, ki jo gledate: YouTube, Shorts, Instagram, Twitch, TikTok, VK, Bilibili, Dailymotion in drugo. Pretvorite poljuben video v GIF. Brezplačno, lokalno, brez plačljivega zidu in sledenja.
+
+VDL - Video Downloader Legal prikaže, kaj predvaja odprta stran, in shrani izbrano. Vse poteka v brskalniku: brez zunanjih strežnikov, analitike in dodatnih programov za namestitev. Video in zvok se združita, TS pa se v MP4 pretvori z lastno kodo razširitve, brez ponovnega kodiranja.
+
+FUNKCIJE
+- Prenos videa — neposredne datoteke ter pretoki HLS (m3u8) in DASH (mpd) na kateri koli strani: izberite kakovost, ločene zvočne sledi se združijo v eno datoteko.
+- Video v GIF — kratki videi (do 3 min) postanejo animiran GIF kar v brskalniku: širina 640 / 480 / 320 / 240 px, 5–15 FPS, okvirna velikost je vidna vnaprej.
+- Pretvornik — izberite video ali zvočno datoteko v računalniku in ustvarite GIF (odsek »od–do«, širina, FPS) z neobveznim podnapisom: bel trak, besedilo na videu ali demotivator, z predogledom v živo. Tudi MP3, sličica PNG, TS → MP4 / MKV in razdrobljeni MP4 → MP4 brez ponovnega kodiranja. Datoteka brskalnika nikoli ne zapusti.
+- YouTube in YouTube Shorts — izberite vrsto (MP4, WEBM, AV1) in ločljivost; zvok kot MP3, M4A ali WEBM; video in zvok v eni datoteki.
+- Prenosi v živo — snemajte prenose v živo s Twitcha in druge HLS, dokler ne pritisnete Ustavi; snemanje prenosov v živo na YouTubu iz predvajalnika (beta).
+- TS v MP4 — pretoki MPEG-TS se privzeto shranijo kot navaden MP4 (brez ponovnega kodiranja); na voljo sta tudi MKV in TS.
+- TikTok — video na zaslonu je prvi, z naslovom in naslovnico; preostanek vira je pod »Več«.
+- Druge strani — Vimeo, Dailymotion, RuTube, Dzen, Instagram, Facebook, X (Twitter), Bilibili, Canva, OKru, VK in katera koli druga stran s splošnim zaznavanjem pretokov (rezultat je odvisen od tega, kaj stran nudi).
+- Prenos zvoka — MP3 (pretvorjen v brskalniku), M4A ali WEBM.
+- Svetla in temna tema — sledi sistemu. 10 jezikov: angleščina, ruščina, kitajščina, španščina, hindujščina, francoščina, arabščina, portugalščina, nemščina, japonščina.
+- Priročno — zgodovina prenosov, predloga imena datoteke, obvestila, bližnjica Alt+puščica navzdol, vnos v kontekstnem meniju, vgrajena pomoč.
+- Diagnostika — en gumb shrani lokalno datoteko (povezave so prikrite), ki jo lahko priložite poročilu o napaki; neobvezen dnevnik odpravljanja napak (privzeto izklopljen) beleži, kaj razširitev počne. Nič se nikoli ne pošlje samodejno.
+
+ZASEBNOST NA PRVEM MESTU
+Brez računov, telemetrije in lastnih strežnikov. Nastavitve in zgodovina ostanejo v vašem brskalniku. Razširitev vzpostavi stik le s stranmi, ki jih že uporabljate.
+
+OBVESTILO O UI
+Ta projekt vsebuje kodo, ki jo je ustvarila umetna inteligenca.
+Vsi komentarji in prevodi so ustvarjeni z umetno inteligenco.
+
+DOBRO JE VEDETI
+- Po namestitvi dovolite dostop do vseh strani v about:addons → razširitev → Dovoljenja, sicer optični bralnik strani ne vidi predstavnosti.
+- Spletne strani za pretakanje se pogosto spreminjajo; YouTube in družbena omrežja so podprta po najboljših močeh in lahko nehajo delovati. Če kaj ne deluje, kliknite gumb za napako v oknu in pošljite diagnostično datoteko.
+- Storitve z zaščito DRM (Netflix, Disney+ in podobne) niso podprte in nikoli ne bodo.

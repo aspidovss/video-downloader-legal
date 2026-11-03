@@ -1,0 +1,38 @@
+LOCALE: fy-nl
+
+=== NAME (max 50) [40] ===
+Video Downloader Legal – Fideo's bewarje
+
+=== SUMMARY (max 250) [209] ===
+Bewarje fideo's en audio fan de side dy't jo besjogge: YouTube, Shorts, Instagram, Twitch, TikTok, VK, Bilibili, Dailymotion en mear. Set elke fideo om nei GIF. Fergees, lokaal, gjin betelmuorre, gjin folgjen.
+
+=== DESCRIPTION ===
+Bewarje fideo's en audio fan de side dy't jo besjogge: YouTube, Shorts, Instagram, Twitch, TikTok, VK, Bilibili, Dailymotion en mear. Set elke fideo om nei GIF. Fergees, lokaal, gjin betelmuorre, gjin folgjen.
+
+VDL - Video Downloader Legal toant wat de iepene side ôfspilet en bewarret wat jo kieze. Alles bart yn jo browser: gjin eksterne tsjinners, gjin analyze, gjin helpprogramma's om te ynstallearjen. Fideo en audio wurde gearfoege en TS wurdt troch de eigen koade fan de útwreiding omset nei MP4, sûnder opnij kodearjen.
+
+FUNKSJES
+- Fideo's downloade — streekrjochte bestannen en HLS- (m3u8) en DASH-streamen (mpd) op elke side: kies de kwaliteit, aparte audiospoaren wurde gearfoege ta ien bestân.
+- Fideo nei GIF — koarte fideo's (oant 3 min) wurde direkt yn de browser in animearre GIF: breedte 640 / 480 / 320 / 240 px, 5–15 FPS, mei fan tefoaren de rûsde grutte.
+- Omsetter — kies in fideo- of audiobestân op jo kompjûter en meitsje in GIF (diel ‘fan–oant’, breedte, FPS) mei opsjoneel ûnderskrift: wite balke, tekst op de fideo of demotivator, mei live foarbyld. Ek MP3, in PNG-frame, TS → MP4 / MKV en fragminteare MP4 → MP4 sûnder opnij kodearjen. It bestân ferlit jo browser nea.
+- YouTube en YouTube Shorts — kies it type (MP4, WEBM, AV1) en de resolúsje; audio as MP3, M4A of WEBM; fideo en audio yn ien bestân.
+- Live-streamen — nim Twitch- en oare HLS-livestreamen op oant jo op Stop drukke; YouTube-live-opname fan de ôfspiler (beta).
+- TS nei MP4 — MPEG-TS-streamen wurde standert as gewoane MP4 bewarre (sûnder opnij kodearjen); ek MKV en TS.
+- TikTok — de fideo op it skerm stiet boppeaan, mei titel en omslach; de rest fan de feed stiet ûnder ‘Mear’.
+- Oare siden — Vimeo, Dailymotion, RuTube, Dzen, Instagram, Facebook, X (Twitter), Bilibili, Canva, OKru, VK en elke oare side troch algemiene streamdeteksje (it resultaat hinget ôf fan wat de side biedt).
+- Audio downloade — MP3 (omset yn de browser), M4A of WEBM.
+- Ljocht en tsjuster tema — folget jo systeem. 10 talen: Ingelsk, Russysk, Sineesk, Spaansk, Hindi, Frânsk, Arabysk, Portegeesk, Dútsk, Japansk.
+- Handich — downloadskiednis, sjabloan foar bestânsnammen, meldingen, fluchtoets Alt+pylk omleech, item yn it kontekstmenu, ynboude help.
+- Diagnoaze — mei ien knop bewarje jo in lokaal bestân (keppelings ferburgen) dat jo oan in bugmelding taheakje kinne; in opsjoneel debuglochboek (standert út) hâldt by wat de útwreiding docht. Der wurdt nea automatysk wat ferstjoerd.
+
+PRIVACY FOARTSJE
+Gjin accounts, gjin telemetry, gjin eigen tsjinners. Ynstellingen en skiednis bliuwe yn jo browser. De útwreiding makket allinnich kontakt mei de siden dy't jo al brûke.
+
+AI-FERMELDING
+Dit projekt befettet troch AI generearre koade.
+Alle opmerkingen en oersettingen binne troch AI generearre.
+
+HANDICH OM TE WITTEN
+- Lit nei de ynstallaasje tagong ta alle siden ta yn about:addons → de útwreiding → Tastimmingen, oars sjocht de sidescanner de media net.
+- Streamingsiden feroarje faak; YouTube en sosjale netwurken wurde nei bêst fermogen stipe en kinne letter ophâlde mei wurkjen. Wurket der wat net, klik dan op de bugknop yn it finster en stjoer it diagnoazebestân.
+- DRM-beskerme tsjinsten (Netflix, Disney+ en fergelykbere) wurde net stipe en sille dat ek nea wurde.

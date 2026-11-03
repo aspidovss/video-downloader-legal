@@ -1,0 +1,38 @@
+LOCALE: fur
+
+=== NAME (max 50) [40] ===
+Video Downloader Legal – Discjame videos
+
+=== SUMMARY (max 250) [207] ===
+Salve videos e audio de pagjine che tu vuardis: YouTube, Shorts, Instagram, Twitch, TikTok, VK, Bilibili, Dailymotion e altris. Convertìs ogni video in GIF. Gratis, in locâl, cence paywall e cence tracement.
+
+=== DESCRIPTION ===
+Salve videos e audio de pagjine che tu vuardis: YouTube, Shorts, Instagram, Twitch, TikTok, VK, Bilibili, Dailymotion e altris. Convertìs ogni video in GIF. Gratis, in locâl, cence paywall e cence tracement.
+
+VDL - Video Downloader Legal al mostre ce che la pagjine vierte e riprodûs e al salve ce che tu sielzis. Dut al sucêt dentri dal navigadôr: nissun servidôr esterni, nissune analisi, nissun program daûr di instalâ. Video e audio a vegnin unîts e il TS al ven convertît in MP4 dal codiç de estension, cence ricodificâ.
+
+FUNZIONS
+- Discjariament di video — files direts e flus HLS (m3u8) e DASH (mpd) suntun sît cualsisei: sielç la cualitât, lis tracis audio separadis a vegnin unidis intun file nome.
+- Video in GIF — i videos curts (fin a 3 min) a deventin une GIF animade diretementri tal navigadôr: largjece 640 / 480 / 320 / 240 px, 5–15 FPS, cu la dimension approssimative mostrade in prin.
+- Convertidôr — sielç un file video o audio dal computer e cree une GIF (tros «di–a», largjece, FPS) cuntune didascalie facoltative: sbare blancje, test sul video o demotivadôr, cun anteprime in direte. Ancje MP3, un fotograme PNG, TS → MP4 / MKV e MP4 frammentât → MP4 cence ricodificâ. Il file nol lasse mai il to navigadôr.
+- YouTube e YouTube Shorts — sielç il gjenar (MP4, WEBM, AV1) e la risoluzion; audio come MP3, M4A o WEBM; video e audio intun file sôl.
+- Direts — regjistre lis direts di Twitch e altris flus HLS fintremai che no tu strenzis Ferme; regjistrazion des direts di YouTube dal riprodutôr (beta).
+- TS in MP4 — i flus MPEG-TS a vegnin salvâts par stândard come MP4 normâl (cence ricodificâ); ancje MKV e TS.
+- TikTok — il video su schermi al è il prin, cul so titul e cu la copertine; il rest dal feed al è sot di «Altri».
+- Altris sîts — Vimeo, Dailymotion, RuTube, Dzen, Instagram, Facebook, X (Twitter), Bilibili, Canva, OKru, VK e ogni altri sît cu la rilevazion gjenerâl dai flus (il risultât al dipent di ce che la pagjine e ufrìs).
+- Discjariament di audio — MP3 (convertît tal navigadôr), M4A o WEBM.
+- Teme clâr e scûr — al va daûr dal to sisteme. 10 lenghis: inglês, rus, cinês, spagnûl, hindi, francês, arap, portughês, todesc, gjaponês.
+- Comoditât — storic dai discjariaments, model pal non dal file, notifichis, scurte Alt+frecie in jù, vôs tal menù contestuâl, jutori integrât.
+- Diagnostiche — un boton al salve un file locâl (colegaments platâts) che tu puedis zontâ a une segnalazion di erôr; un regjistri opzionâl di debug (distudât par stândard) al note ce che al fas la estension. Nuie nol ven mandât in automatic.
+
+PRIVACY DAI PRIN
+Nissun account, nissune telemetrie, nissun servidôr nestri. Impostazions e storic a restin tal to navigadôr. La estension e contate dome i sîts che tu stâs za doprant.
+
+INFORMATIVE SUL IA
+Chest progjet al conten codiç gjenerât de IA.
+Tancj i coments e lis traduzions a son gjenerâts de IA.
+
+BON SAVÊ
+- Dopo de instalazion, permet l'acès a ducj i sîts in about:addons → la estension → Permès, in câs contrari l'analizadôr de pagjine nol viôt i contignûts multimediâi.
+- I sîts di streaming a cambiin dispès; YouTube e i social a son supuartâts al mior des pussibilitâts e a puedin dismeti di funzionâ. Se alc nol va, struc il boton dal bug te finestre e mande il file di diagnostiche.
+- I servizis protezûts di DRM (Netflix, Disney+ e compagnons) no son supuartâts e no lu saran mai.

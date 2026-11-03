@@ -1,0 +1,38 @@
+LOCALE: de
+
+=== NAME (max 50) [41] ===
+Video Downloader Legal – Videos speichern
+
+=== SUMMARY (max 250) [216] ===
+Videos und Audio direkt von der geöffneten Seite speichern – YouTube, Shorts, Instagram, Twitch, TikTok, VK, Bilibili, Dailymotion u. v. m. Jedes Video in GIF umwandeln. Kostenlos, lokal, ohne Paywall, ohne Tracking.
+
+=== DESCRIPTION ===
+Videos und Audio direkt von der geöffneten Seite speichern – YouTube, Shorts, Instagram, Twitch, TikTok, VK, Bilibili, Dailymotion u. v. m. Jedes Video in GIF umwandeln. Kostenlos, lokal, ohne Paywall, ohne Tracking.
+
+VDL – Video Downloader Legal zeigt, was die geöffnete Seite abspielt, und speichert genau das, was Sie auswählen. Alles läuft im Browser: keine externen Server, keine Analyse-Tools, keine Zusatzprogramme. Video und Audio werden zusammengeführt und TS wird ohne Neukodierung in MP4 umgewandelt – mit dem eigenen Code der Erweiterung.
+
+FUNKTIONEN
+- Video-Download – direkte Dateien sowie HLS- (m3u8) und DASH-Streams (mpd) auf beliebigen Seiten: Qualität wählen, getrennte Tonspuren werden zu einer Datei zusammengeführt.
+- Video zu GIF – kurze Videos (bis 3 Min.) werden direkt im Browser zu animierten GIFs: Breite 640 / 480 / 320 / 240 px, 5–15 FPS, die ungefähre Dateigröße vorab sichtbar.
+- Konverter – Video- oder Audiodatei vom Computer wählen und ein GIF erstellen (Ausschnitt „von–bis“, Breite, FPS), optional mit Beschriftung: weißer Balken, Text im Video oder Demotivator, mit Live-Vorschau. Außerdem MP3, PNG-Einzelbild, TS → MP4 / MKV und fragmentiertes MP4 → MP4 ohne Neukodierung. Die Datei verlässt Ihren Browser nie.
+- YouTube und YouTube Shorts – Typ (MP4, WEBM, AV1) und Auflösung wählen; Audio als MP3, M4A oder WEBM; Video und Audio in einer Datei.
+- Livestreams – Twitch und andere HLS-Livestreams aufzeichnen, bis Sie auf Stopp drücken; YouTube-Live-Aufnahme aus dem Player (Beta).
+- TS zu MP4 – MPEG-TS-Streams werden standardmäßig als normales MP4 gespeichert (ohne Neukodierung); auch MKV und TS möglich.
+- TikTok – das gerade angezeigte Video steht an erster Stelle, mit Titel und Cover; der restliche Feed ist unter „Mehr“.
+- Weitere Seiten – Vimeo, Dailymotion, RuTube, Dzen, Instagram, Facebook, X (Twitter), Bilibili, Canva, OKru, VK und jede andere Seite über die allgemeine Stream-Erkennung (das Ergebnis hängt davon ab, was die Seite bereitstellt).
+- Audio-Download – MP3 (im Browser konvertiert), M4A oder WEBM.
+- Helles und dunkles Design – folgt Ihrem System. 10 Sprachen: Englisch, Russisch, Chinesisch, Spanisch, Hindi, Französisch, Arabisch, Portugiesisch, Deutsch, Japanisch.
+- Praktisch – Download-Verlauf, Dateinamen-Vorlage, Benachrichtigungen, Tastenkürzel Alt+Pfeil runter, Kontextmenü-Eintrag, integrierte Hilfe.
+- Diagnose – ein Klick speichert eine lokale Datei (Links maskiert), die Sie einem Fehlerbericht beifügen können; ein optionales Debug-Protokoll (standardmäßig aus) hält fest, was die Erweiterung tut. Nichts wird automatisch gesendet.
+
+DATENSCHUTZ ZUERST
+Keine Konten, keine Telemetrie, keine eigenen Server. Einstellungen und Verlauf bleiben in Ihrem Browser. Die Erweiterung kontaktiert nur die Seiten, die Sie ohnehin nutzen.
+
+KI-HINWEIS
+Dieses Projekt enthält von KI generierten Code.
+Alle Kommentare und Übersetzungen sind KI-generiert.
+
+WISSENSWERT
+- Erlauben Sie nach der Installation den Zugriff auf alle Seiten unter about:addons → Erweiterung → Berechtigungen, sonst kann der Seiten-Scanner die Medien nicht sehen.
+- Streaming-Seiten ändern sich häufig; YouTube und soziale Netzwerke werden nach bestem Bemühen unterstützt und können später ausfallen. Wenn etwas nicht funktioniert, klicken Sie im Fenster auf die Fehler-Schaltfläche und senden Sie die Diagnosedatei.
+- DRM-geschützte Dienste (Netflix, Disney+ und ähnliche) werden nicht unterstützt – und auch künftig nicht.

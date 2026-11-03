@@ -1,0 +1,38 @@
+LOCALE: vi
+
+=== NAME (max 50) [44] ===
+Video Downloader Legal – Tải video, âm thanh
+
+=== SUMMARY (max 250) [216] ===
+Lưu video và âm thanh từ trang bạn đang xem: YouTube, Shorts, Instagram, Twitch, TikTok, VK, Bilibili, Dailymotion và nhiều nơi khác. Chuyển mọi video thành GIF. Miễn phí, xử lý cục bộ, không paywall, không theo dõi.
+
+=== DESCRIPTION ===
+Lưu video và âm thanh từ trang bạn đang xem: YouTube, Shorts, Instagram, Twitch, TikTok, VK, Bilibili, Dailymotion và nhiều nơi khác. Chuyển mọi video thành GIF. Miễn phí, xử lý cục bộ, không paywall, không theo dõi.
+
+VDL - Video Downloader Legal liệt kê những gì trang đang mở phát và lưu mục bạn chọn. Mọi thứ diễn ra ngay trong trình duyệt: không máy chủ bên ngoài, không phân tích, không cần cài chương trình phụ trợ. Video và âm thanh được ghép lại, TS được chuyển sang MP4 bằng mã của chính tiện ích mà không cần mã hóa lại.
+
+TÍNH NĂNG
+- Tải video — tệp trực tiếp, luồng HLS (m3u8) và DASH (mpd) trên mọi trang: chọn chất lượng, các luồng âm thanh riêng được ghép thành một tệp.
+- Video sang GIF — video ngắn (tối đa 3 phút) thành ảnh GIF động ngay trong trình duyệt: rộng 640 / 480 / 320 / 240 px, 5–15 FPS, hiển thị trước dung lượng ước tính.
+- Trình chuyển đổi — chọn tệp video hoặc âm thanh trên máy tính để tạo GIF (đoạn “từ–đến”, chiều rộng, FPS) kèm chú thích tùy chọn: dải trắng, chữ trên video hoặc kiểu demotivator, có xem trước trực tiếp. Ngoài ra có MP3, khung hình PNG, TS → MP4 / MKV và MP4 phân mảnh → MP4 mà không mã hóa lại. Tệp không bao giờ rời khỏi trình duyệt của bạn.
+- YouTube và YouTube Shorts — chọn loại (MP4, WEBM, AV1) và độ phân giải; âm thanh dạng MP3, M4A hoặc WEBM; video và âm thanh trong một tệp.
+- Phát trực tiếp — ghi luồng trực tiếp Twitch và HLS khác cho đến khi bạn nhấn Dừng; ghi phát trực tiếp YouTube từ trình phát (beta).
+- TS sang MP4 — luồng MPEG-TS mặc định được lưu thành MP4 thông thường (không mã hóa lại); cũng có MKV và TS.
+- TikTok — video đang hiển thị trên màn hình đứng đầu, kèm tiêu đề và ảnh bìa; phần còn lại của bảng tin nằm trong “Thêm”.
+- Trang khác — Vimeo, Dailymotion, RuTube, Dzen, Instagram, Facebook, X (Twitter), Bilibili, Canva, OKru, VK và mọi trang khác nhờ tính năng phát hiện luồng chung (kết quả phụ thuộc vào nội dung trang cung cấp).
+- Tải âm thanh — MP3 (chuyển đổi trong trình duyệt), M4A hoặc WEBM.
+- Giao diện sáng và tối — theo hệ thống. 10 ngôn ngữ: Anh, Nga, Trung, Tây Ban Nha, Hindi, Pháp, Ả Rập, Bồ Đào Nha, Đức, Nhật.
+- Tiện lợi — lịch sử tải xuống, mẫu tên tệp, thông báo, phím tắt Alt+Mũi tên xuống, mục trong menu ngữ cảnh, trợ giúp tích hợp.
+- Chẩn đoán — một nút lưu tệp cục bộ (liên kết được che) để đính kèm báo cáo lỗi; nhật ký gỡ lỗi tùy chọn (mặc định tắt) ghi lại hoạt động của tiện ích. Không có gì được gửi tự động.
+
+QUYỀN RIÊNG TƯ LÀ TRÊN HẾT
+Không tài khoản, không thu thập dữ liệu từ xa, không có máy chủ riêng. Cài đặt và lịch sử nằm trong trình duyệt của bạn. Tiện ích chỉ kết nối đến những trang bạn đang dùng.
+
+THÔNG BÁO VỀ AI
+Dự án này có mã do AI tạo ra.
+Tất cả chú thích và bản dịch đều do AI tạo.
+
+CẦN BIẾT
+- Sau khi cài đặt, hãy cho phép truy cập mọi trang web tại about:addons → tiện ích → Quyền, nếu không trình quét trang sẽ không thấy phương tiện.
+- Các trang phát video thay đổi thường xuyên; YouTube và mạng xã hội được hỗ trợ trong khả năng có thể và có thể ngừng hoạt động sau này. Nếu có gì không chạy, hãy nhấn nút lỗi trong cửa sổ và gửi tệp chẩn đoán.
+- Các dịch vụ có bảo vệ DRM (Netflix, Disney+ và tương tự) không được hỗ trợ và sẽ không bao giờ được hỗ trợ.

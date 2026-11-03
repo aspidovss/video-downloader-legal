@@ -1,0 +1,38 @@
+LOCALE: hr
+
+=== NAME (max 50) [38] ===
+Video Downloader Legal – Preuzmi videe
+
+=== SUMMARY (max 250) [211] ===
+Spremite videozapise i zvuk sa stranice koju gledate: YouTube, Shorts, Instagram, Twitch, TikTok, VK, Bilibili, Dailymotion i drugo. Pretvorite bilo koji video u GIF. Besplatno, lokalno, bez paywalla i praćenja.
+
+=== DESCRIPTION ===
+Spremite videozapise i zvuk sa stranice koju gledate: YouTube, Shorts, Instagram, Twitch, TikTok, VK, Bilibili, Dailymotion i drugo. Pretvorite bilo koji video u GIF. Besplatno, lokalno, bez paywalla i praćenja.
+
+VDL - Video Downloader Legal prikazuje što otvorena stranica reproducira i sprema ono što odaberete. Sve se događa u pregledniku: bez vanjskih poslužitelja, analitike i dodatnih programa za instalaciju. Video i zvuk se spajaju, a TS se pretvara u MP4 vlastitim kodom proširenja, bez ponovnog kodiranja.
+
+ZNAČAJKE
+- Preuzimanje videa — izravne datoteke te HLS (m3u8) i DASH (mpd) tokovi na bilo kojoj stranici: odaberite kvalitetu, odvojene zvučne staze spajaju se u jednu datoteku.
+- Video u GIF — kratki videozapisi (do 3 min) postaju animirani GIF izravno u pregledniku: širina 640 / 480 / 320 / 240 px, 5–15 FPS, okvirna veličina prikazana unaprijed.
+- Pretvarač — odaberite video ili audio datoteku s računala i izradite GIF (isječak „od–do”, širina, FPS) s neobveznim natpisom: bijela traka, tekst na videu ili demotivator, uz pregled uživo. Također MP3, PNG sličica, TS → MP4 / MKV i fragmentirani MP4 → MP4 bez ponovnog kodiranja. Datoteka nikad ne napušta vaš preglednik.
+- YouTube i YouTube Shorts — odaberite vrstu (MP4, WEBM, AV1) i razlučivost; zvuk kao MP3, M4A ili WEBM; video i zvuk u jednoj datoteci.
+- Prijenosi uživo — snimajte Twitch i druge HLS prijenose uživo dok ne pritisnete Zaustavi; snimanje YouTube prijenosa uživo iz playera (beta).
+- TS u MP4 — MPEG-TS tokovi prema zadanim se postavkama spremaju kao obični MP4 (bez ponovnog kodiranja); dostupni su i MKV i TS.
+- TikTok — video na ekranu je prvi, s naslovom i naslovnicom; ostatak feeda nalazi se pod „Više”.
+- Ostale stranice — Vimeo, Dailymotion, RuTube, Dzen, Instagram, Facebook, X (Twitter), Bilibili, Canva, OKru, VK i bilo koja druga stranica putem općeg prepoznavanja tokova (rezultat ovisi o tome što stranica nudi).
+- Preuzimanje zvuka — MP3 (pretvoreno u pregledniku), M4A ili WEBM.
+- Svijetla i tamna tema — prati vaš sustav. 10 jezika: engleski, ruski, kineski, španjolski, hindi, francuski, arapski, portugalski, njemački, japanski.
+- Praktično — povijest preuzimanja, predložak naziva datoteke, obavijesti, prečac Alt+strelica dolje, stavka u kontekstnom izborniku, ugrađena pomoć.
+- Dijagnostika — jedan gumb sprema lokalnu datoteku (poveznice su prikrivene) koju možete priložiti prijavi pogreške; neobvezni dnevnik otklanjanja pogrešaka (prema zadanome isključen) bilježi što proširenje radi. Ništa se nikad ne šalje automatski.
+
+PRIVATNOST NA PRVOM MJESTU
+Bez računa, telemetrije i vlastitih poslužitelja. Postavke i povijest ostaju u vašem pregledniku. Proširenje kontaktira samo stranice koje već koristite.
+
+NAPOMENA O UI-ju
+Ovaj projekt sadrži kod koji je generirala umjetna inteligencija.
+Svi komentari i prijevodi generirani su umjetnom inteligencijom.
+
+DOBRO JE ZNATI
+- Nakon instalacije dopustite pristup svim stranicama u about:addons → proširenje → Dozvole, inače skener stranice ne vidi medije.
+- Stranice za streaming često se mijenjaju; YouTube i društvene mreže podržani su koliko je moguće i mogu prestati raditi. Ako nešto ne radi, pritisnite gumb za pogrešku u prozoru i pošaljite dijagnostičku datoteku.
+- Usluge zaštićene DRM-om (Netflix, Disney+ i slične) nisu podržane i nikada neće biti.

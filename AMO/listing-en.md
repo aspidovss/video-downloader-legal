@@ -27,12 +27,12 @@ VDL - Video Downloader Legal lists what the open page plays and saves the one yo
 FEATURES
 - Video download — direct files, HLS (m3u8) and DASH (mpd) streams on any site: choose the quality, separate audio tracks are joined into one file.
 - Video to GIF — short videos (up to 3 min) become an animated GIF right in the browser: width 640 / 480 / 320 / 240 px, 5–15 FPS, the rough size shown up front.
-- Converter — pick a video or audio file on your computer and make a GIF (a "from–to" part, width, FPS) with an optional caption: a white bar, text on the video or a demotivator, with a live preview. Also MP3, a PNG frame, TS → MP4 / MKV and fragmented MP4 → MP4 without re-encoding. The file never leaves your browser.
+- Converter — pick a video or audio file on your computer and make a GIF (a "from–to" part, width, FPS) with an optional caption: a white bar, text on the video or a demotivator, with a live preview. Also MP3, a PNG frame, a cut part of the video, TS → MP4 / MKV and fragmented MP4 → MP4 without re-encoding. The file never leaves your browser.
 - YouTube and YouTube Shorts — choose type (MP4, WEBM, AV1) and resolution; audio as MP3, M4A or WEBM; video and audio in one file.
 - YouTube subtitles — as an .srt file or with the video.
 - Ready for Telegram — video and sound of different formats are joined into an ordinary MP4 (no re-encoding), so Telegram sends it as a video.
 - Clear reasons — when YouTube does not give a video, the window says why (age restriction, private, removed, region, members only, paid…) and whether recording can help. Creative Commons videos get a CC BY badge.
-- Live streams — record Twitch and other HLS live streams until you press Stop; YouTube live recording from the player (beta).
+- Live streams — record Twitch and other HLS live streams until you press Stop; long recordings are saved in parts as they go (2000 MB / 60 min by default, the start time in the name), so memory does not grow. YouTube live recording from the player (beta).
 - TS to MP4 — streams in MPEG-TS are saved as ordinary MP4 by default (no re-encoding); TS stays available as the second choice.
 - TikTok — the video on screen is first, with its title and cover; the rest of the feed is under "More".
 - Other sites — Vimeo, Dailymotion, RuTube, Dzen, Instagram, Facebook, X (Twitter), Bilibili, Canva, OKru, VK and any other site through general stream detection (results depend on what the page provides).
@@ -86,6 +86,14 @@ I did VDL because I was tired of paywalls in third-party solutions.
 
 ## Privacy policy
 Plain-text version in [privacy-policy.md](privacy-policy.md).
+
+## Version 1.6.8 — release notes (shown to users)
+```
+New in 1.6.8:
+- Live recordings in parts: a long recording (Twitch and other HLS streams, YouTube live) is saved piece by piece — a part ends at 2000 MB or 60 minutes, whichever comes first, is saved at once and the recording goes on without a gap. File names carry the part's start time, e.g. "Stream (01-00-00).mp4". Settings → Downloads → Saving in parts; long HLS/DASH videos can be saved in parts too (off by default).
+- The live recording limit is off by default (0 = no limit).
+- Converter: cut a part of a video (MP4, M4A, WebM, MKV, TS) without re-encoding; it starts at the nearest keyframe at or before "From".
+```
 
 ## Version 1.6.7 — release notes (shown to users)
 ```

@@ -1,0 +1,38 @@
+LOCALE: hsb
+
+=== NAME (max 50) [39] ===
+Video Downloader Legal – Wideja sćahnyć
+
+=== SUMMARY (max 250) [227] ===
+Składujće wideja a zwuk ze strony, kotruž sej wobhladujeće: YouTube, Shorts, Instagram, Twitch, TikTok, VK, Bilibili, Dailymotion a wjace. Přetworće kóždy wideo do GIF. Darmotnje, lokalnje, bjez płaćiweje murje a přesćěhowanja.
+
+=== DESCRIPTION ===
+Składujće wideja a zwuk ze strony, kotruž sej wobhladujeće: YouTube, Shorts, Instagram, Twitch, TikTok, VK, Bilibili, Dailymotion a wjace. Přetworće kóždy wideo do GIF. Darmotnje, lokalnje, bjez płaćiweje murje a přesćěhowanja.
+
+VDL - Video Downloader Legal pokazuje, štož wotewrjena strona wothrawa, a składuje to, štož wuberaće. Wšo so w přeglědowaku stawa: bjez eksternych serwerow, analyzy a pomocnych programow. Wideo a zwuk so zjednoćitej a TS so z kodom rozšěrjenja bjez znowakoděrowanja do MP4 přetwori.
+
+FUNKCIJE
+- Sćahnjenje wideja — direktne dataje a HLS- (m3u8) a DASH-bruki (mpd) na kóždej stronje: wubjerće kwalitu, dźělene zwukowe slědy so do jedneje dataje zjednoćeja.
+- Wideo do GIF — krótke wideja (hač do 3 min) so direktnje w přeglědowaku do animowaneho GIF přetworja: šěrokosć 640 / 480 / 320 / 240 px, 5–15 FPS, přibližna wulkosć so z prědka pokazuje.
+- Konwertor — wubjerće wideo- abo awdiodataju na ličaku a wutworće GIF (wotrězk „wot–do“, šěrokosć, FPS) z wolitym podpisom: běła lěsta, tekst na wideju abo demotiwator, z přehladom live. Tež MP3, PNG-wobraz, TS → MP4 / MKV a fragmentowany MP4 → MP4 bjez znowakoděrowanja. Dataja swój přeglědowak nihdy njewopušća.
+- YouTube a YouTube Shorts — wubjerće typ (MP4, WEBM, AV1) a rozeznaće; zwuk jako MP3, M4A abo WEBM; wideo a zwuk w jednej dataji.
+- Live-pósłanja — nahrawajće Twitch a druhe HLS-pósłanja, doniž „Stop“ njetłóčiće; nahrawanje YouTube-live-pósłanjow z wothrawaka (beta).
+- TS do MP4 — MPEG-TS-bruki so po standardźe jako wšědny MP4 składuja (bjez znowakoděrowanja); tež MKV a TS.
+- TikTok — wideo na wobrazowce je prěnje, z titulom a wobalkom; zbytk kanala je pod „Wjace“.
+- Druhe sydła — Vimeo, Dailymotion, RuTube, Dzen, Instagram, Facebook, X (Twitter), Bilibili, Canva, OKru, VK a kóždy druhi websydło přez powšitkowne spóznawanje brukow (wuslědk wotwisuje wot toho, štož strona poskića).
+- Sćahnjenje zwuka — MP3 (w přeglědowaku přetworjene), M4A abo WEBM.
+- Swětły a ćmowy motiw — slěduje wašemu systemej. 10 rěčow: jendźelšćina, rušćina, chinšćina, španišćina, hindišćina, francozšćina, arabšćina, portugalšćina, němčina, japanšćina.
+- Komfortnje — historija sćahnjenjow, předłoha datajoweho mjena, zdźělenki, tastowa skrótšenka Alt+šipka dele, zapisk w kontekstowym meniju, zatwarjena pomoc.
+- Diagnoza — jedyn tłóčatko składuje lokalnu dataju (wotkazy zakryte), kotruž móžeće k zdźělence zmylka přidać; wolity protokol za zmylkowe pytanje (po standardźe wupinjeny) zapisuje, štož rozšěrjenje čini. Ničo so awtomatisce njesćele.
+
+DATOWY ŠKIT NAJPRJE
+Žane konta, žana telemetrija, žane swójske serwery. Nastajenja a historija w přeglědowaku wostanu. Rozšěrjenje kontaktuje jenož sydła, kotrež hižo wužiwaće.
+
+NAMOŁWA K KI
+Tutón projekt wobsahuje kod, kotryž je kunsćena inteligenca wutworiła.
+Wšě komentary a přełožki je kunsćena inteligenca wutworiła.
+
+DOBRE WĚDŹEĆ
+- Po instalaciji dowolće přistup ke wšěm sydłam w about:addons → rozšěrjenje → Prawa, hewak skener strony medije njewidźi.
+- Streaming-sydła so husto měnja; YouTube a socialne syće so po móžnosći podpěruja a móža pozdźišo přestać fungować. Jeli něšto njefunguje, tłóčće tłóčatko zmylka we woknje a pósćelće diagnostiku.
+- Słužby z DRM-škitom (Netflix, Disney+ a podobne) so njepodpěruja a so tež nihdy njepodpěruja.

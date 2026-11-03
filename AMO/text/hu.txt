@@ -1,0 +1,38 @@
+LOCALE: hu
+
+=== NAME (max 50) [37] ===
+Video Downloader Legal – Videoletöltő
+
+=== SUMMARY (max 250) [201] ===
+Mentsen videót és hangot a megnyitott oldalról: YouTube, Shorts, Instagram, Twitch, TikTok, VK, Bilibili, Dailymotion és más. Bármely videót GIF-fé alakít. Ingyenes, helyi, fizetőfal és követés nélkül.
+
+=== DESCRIPTION ===
+Mentsen videót és hangot a megnyitott oldalról: YouTube, Shorts, Instagram, Twitch, TikTok, VK, Bilibili, Dailymotion és más. Bármely videót GIF-fé alakít. Ingyenes, helyi, fizetőfal és követés nélkül.
+
+A VDL - Video Downloader Legal kilistázza, amit a megnyitott oldal lejátszik, és a kiválasztottat menti. Minden a böngészőben történik: nincsenek külső szerverek, elemzések vagy telepítendő segédprogramok. A videó és a hang összefűzését, valamint a TS MP4-gyé alakítását a bővítmény saját kódja végzi, újrakódolás nélkül.
+
+FUNKCIÓK
+- Videoletöltés — közvetlen fájlok, HLS (m3u8) és DASH (mpd) adatfolyamok bármely oldalon: válasszon minőséget, a különálló hangsávok egyetlen fájlba kerülnek.
+- Videó GIF-fé — a rövid videók (legfeljebb 3 perc) közvetlenül a böngészőben animált GIF-fé alakulnak: szélesség 640 / 480 / 320 / 240 px, 5–15 FPS, a közelítő méret előre látható.
+- Átalakító — válasszon videó- vagy hangfájlt a számítógépéről, és készítsen GIF-et („-tól–ig” szakasz, szélesség, FPS) opcionális felirattal: fehér sáv, szöveg a videón vagy demotivátor, élő előnézettel. Emellett MP3, PNG-képkocka, TS → MP4 / MKV és töredezett MP4 → MP4 újrakódolás nélkül. A fájl sosem hagyja el a böngészőjét.
+- YouTube és YouTube Shorts — válasszon típust (MP4, WEBM, AV1) és felbontást; hang MP3, M4A vagy WEBM formátumban; videó és hang egy fájlban.
+- Élő közvetítések — rögzítse a Twitch és más HLS élő adásokat a Leállítás megnyomásáig; YouTube élő adás rögzítése a lejátszóból (béta).
+- TS → MP4 — az MPEG-TS adatfolyamok alapértelmezés szerint hagyományos MP4-ként mentődnek (újrakódolás nélkül); MKV és TS is lehetséges.
+- TikTok — a képernyőn lévő videó az első, címmel és borítóval; a többi tartalom a „Továbbiak” alatt található.
+- Egyéb oldalak — Vimeo, Dailymotion, RuTube, Dzen, Instagram, Facebook, X (Twitter), Bilibili, Canva, OKru, VK és bármely más oldal az általános adatfolyam-felismeréssel (az eredmény az oldal kínálatától függ).
+- Hangletöltés — MP3 (a böngészőben konvertálva), M4A vagy WEBM.
+- Világos és sötét téma — a rendszerét követi. 10 nyelv: angol, orosz, kínai, spanyol, hindi, francia, arab, portugál, német, japán.
+- Kényelmes — letöltési előzmények, fájlnévsablon, értesítések, Alt+Le nyíl gyorsbillentyű, helyi menüelem, beépített súgó.
+- Diagnosztika — egy gombbal helyi fájlt menthet (a hivatkozások eltakarva), amelyet csatolhat a hibajelentéshez; az opcionális hibakeresési napló (alapból kikapcsolva) rögzíti a bővítmény műveleteit. Semmi sem kerül automatikusan elküldésre.
+
+AZ ADATVÉDELEM AZ ELSŐ
+Nincs fiók, nincs telemetria, nincsenek saját szerverek. A beállítások és az előzmények a böngészőjében maradnak. A bővítmény csak azokkal az oldalakkal tart kapcsolatot, amelyeket már használ.
+
+MESTERSÉGES INTELLIGENCIA
+Ez a projekt mesterséges intelligencia által generált kódot tartalmaz.
+Minden megjegyzés és fordítás mesterséges intelligenciával készült.
+
+FONTOS TUDNIVALÓK
+- Telepítés után engedélyezze a hozzáférést minden webhelyhez az about:addons → a bővítmény → Engedélyek alatt, különben az oldalszkenner nem látja a médiát.
+- A streamoldalak gyakran változnak; a YouTube-ot és a közösségi hálózatokat legjobb tudásunk szerint támogatjuk, és később leállhatnak. Ha valami nem működik, nyomja meg az ablakban a hiba gombot, és küldje el a diagnosztikai fájlt.
+- A DRM-védett szolgáltatások (Netflix, Disney+ és hasonlók) nem támogatottak, és nem is lesznek.

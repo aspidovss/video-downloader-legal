@@ -1,0 +1,38 @@
+LOCALE: sq
+
+=== NAME (max 50) [38] ===
+Video Downloader Legal – Shkarko video
+
+=== SUMMARY (max 250) [195] ===
+Ruani video dhe audio nga faqja që shikoni: YouTube, Shorts, Instagram, Twitch, TikTok, VK, Bilibili, Dailymotion e më shumë. Shndërroni çdo video në GIF. Falas, lokal, pa paywall dhe pa gjurmim.
+
+=== DESCRIPTION ===
+Ruani video dhe audio nga faqja që shikoni: YouTube, Shorts, Instagram, Twitch, TikTok, VK, Bilibili, Dailymotion e më shumë. Shndërroni çdo video në GIF. Falas, lokal, pa paywall dhe pa gjurmim.
+
+VDL - Video Downloader Legal liston ç'luan faqja e hapur dhe ruan atë që zgjidhni. Gjithçka ndodh brenda shfletuesit: pa shërbyes të jashtëm, pa analitikë, pa programe ndihmëse për instalim. Videoja dhe audioja bashkohen, ndërsa TS shndërrohet në MP4 nga kodi i vetë zgjerimit, pa rikodim.
+
+VEÇORITË
+- Shkarkim videosh — skedarë të drejtpërdrejtë dhe rryma HLS (m3u8) e DASH (mpd) në çdo faqe: zgjidhni cilësinë, pistat e veçanta audio bashkohen në një skedar.
+- Video në GIF — videot e shkurtra (deri në 3 min) bëhen GIF i animuar drejtpërdrejt në shfletues: gjerësi 640 / 480 / 320 / 240 px, 5–15 FPS, me madhësinë përafërsisht të shfaqur paraprakisht.
+- Konvertuesi — zgjidhni një skedar video ose audio në kompjuter dhe krijoni GIF (pjesa «nga–deri», gjerësia, FPS) me titull opsional: shirit i bardhë, tekst mbi video ose demotivator, me pamje paraprake të drejtpërdrejtë. Gjithashtu MP3, kuadër PNG, TS → MP4 / MKV dhe MP4 i fragmentuar → MP4 pa rikodim. Skedari nuk del kurrë nga shfletuesi juaj.
+- YouTube dhe YouTube Shorts — zgjidhni llojin (MP4, WEBM, AV1) dhe rezolucionin; audio si MP3, M4A ose WEBM; video dhe audio në një skedar.
+- Transmetime live — regjistroni transmetime Twitch dhe HLS të tjera derisa të shtypni Ndalo; regjistrim i transmetimeve live të YouTube nga luajtësi (beta).
+- TS në MP4 — rrymat MPEG-TS ruhen si parazgjedhje si MP4 i zakonshëm (pa rikodim); edhe MKV dhe TS.
+- TikTok — videoja në ekran është e para, me titull dhe kopertinë; pjesa tjetër e burimit është nën «Më shumë».
+- Faqe të tjera — Vimeo, Dailymotion, RuTube, Dzen, Instagram, Facebook, X (Twitter), Bilibili, Canva, OKru, VK dhe çdo faqe tjetër përmes zbulimit të përgjithshëm të rrymave (rezultati varet nga ajo që ofron faqja).
+- Shkarkim audioje — MP3 (e shndërruar në shfletues), M4A ose WEBM.
+- Temë e çelët dhe e errët — ndjek sistemin tuaj. 10 gjuhë: anglisht, rusisht, kinezisht, spanjisht, hindisht, frëngjisht, arabisht, portugalisht, gjermanisht, japonisht.
+- Të përshtatshme — historik shkarkimesh, model emri skedari, njoftime, shkurtore Alt+shigjeta poshtë, zë në menunë kontekstuale, ndihmë e integruar.
+- Diagnostikim — një buton ruan një skedar lokal (lidhjet të fshehura) që mund ta bashkëngjitni në një raport gabimi; një regjistër opsional korrigjimi (i fikur si parazgjedhje) shënon ç'bën zgjerimi. Asgjë nuk dërgohet automatikisht.
+
+PRIVATËSIA NË PLAN TË PARË
+Pa llogari, pa telemetri, pa shërbyesit tanë. Cilësimet dhe historiku mbeten në shfletuesin tuaj. Zgjerimi kontakton vetëm faqet që po përdorni tashmë.
+
+SHËNIM PËR INTELIGJENCËN ARTIFICIALE
+Ky projekt përmban kod të gjeneruar nga IA.
+Të gjitha komentet dhe përkthimet janë të gjeneruara nga IA.
+
+MIRË ËSHTË TË DINI
+- Pas instalimit, lejoni qasjen në të gjitha faqet te about:addons → zgjerimi → Lejet, përndryshe skaneri i faqes nuk i sheh mediat.
+- Faqet e transmetimit ndryshojnë shpesh; YouTube dhe rrjetet sociale mbështeten sa të jetë e mundur dhe mund të pushojnë së funksionuari më vonë. Nëse diçka nuk funksionon, shtypni butonin e gabimit në dritare dhe dërgoni skedarin e diagnostikimit.
+- Shërbimet e mbrojtura me DRM (Netflix, Disney+ e të ngjashme) nuk mbështeten dhe nuk do të mbështeten kurrë.

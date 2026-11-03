@@ -11,7 +11,7 @@
     if (e.data.__vdl === 'yt') browser.runtime.sendMessage({ type: 'yt_player', data, top: window.top === window }).catch(() => {});
     else if (e.data.__vdl === 'api-res' || e.data.__vdl === 'live-res') { const w = apiWait.get(data.id); if (w) { apiWait.delete(data.id); w(data); } }
     else if (e.data.__vdl === 'rec-reload' && window.top === window) {
-      try { sessionStorage.setItem('vdlRec', JSON.stringify({ speed: 1, maxMB: lastStart.maxMB, live: true, maxMin: lastStart.maxMin, at: Date.now() })); } catch { /* ignore */ }
+      try { sessionStorage.setItem('vdlRec', JSON.stringify({ speed: 1, maxMB: lastStart.maxMB, live: true, maxMin: lastStart.maxMin, split: lastStart.split || null, at: Date.now() })); } catch { /* ignore */ }
       location.reload();
     } else if (e.data.__vdl === 'rec-status' && window.top === window) browser.runtime.sendMessage({ type: 'yt_rec_status', state: data }).catch(() => {});
   });
@@ -37,10 +37,10 @@
     }
     if (!msg || msg.type !== 'yt_rec_cmd' || window.top !== window) return undefined;
     if (msg.cmd === 'start' && msg.live) {
-      lastStart = { maxMB: msg.maxMB, maxMin: msg.maxMin };
-      window.postMessage({ __vdl: 'rec-cmd', cmd: 'start', live: true, maxMB: msg.maxMB, maxMin: msg.maxMin }, window.location.origin);
+      lastStart = { maxMB: msg.maxMB, maxMin: msg.maxMin, split: msg.split || null };
+      window.postMessage({ __vdl: 'rec-cmd', cmd: 'start', live: true, maxMB: msg.maxMB, maxMin: msg.maxMin, split: msg.split || null }, window.location.origin);
     } else if (msg.cmd === 'start') {
-      try { sessionStorage.setItem('vdlRec', JSON.stringify({ speed: msg.speed, maxMB: msg.maxMB, live: !!msg.live, maxMin: msg.maxMin, at: Date.now() })); } catch { /* ignore */ }
+      try { sessionStorage.setItem('vdlRec', JSON.stringify({ speed: msg.speed, maxMB: msg.maxMB, live: !!msg.live, maxMin: msg.maxMin, split: msg.split || null, at: Date.now() })); } catch { /* ignore */ }
       // a link with a start time (t=, start=) would begin in the middle of the video: reload without it
       try {
         const u = new URL(location.href);
@@ -48,7 +48,7 @@
         if (had.length) { had.forEach((k) => u.searchParams.delete(k)); location.replace(u.href); } else location.reload();
       } catch { location.reload(); }
     } else {
-      window.postMessage({ __vdl: 'rec-cmd', cmd: msg.cmd, names: msg.names, only: msg.only }, window.location.origin);
+      window.postMessage({ __vdl: 'rec-cmd', cmd: msg.cmd, names: msg.names, only: msg.only, id: msg.id }, window.location.origin);
     }
     return Promise.resolve({ ok: true });
   });

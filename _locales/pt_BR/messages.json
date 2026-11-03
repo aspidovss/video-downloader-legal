@@ -387,7 +387,7 @@
     "message": "Transmissão ao vivo: a gravação começa agora e continua até você parar ou a transmissão acabar."
   },
   "optLiveMax": {
-    "message": "Limite de gravação ao vivo (minutos)"
+    "message": "Limite de gravação ao vivo (minutos, 0 = sem limite)"
   },
   "perMinute": {
     "message": "min"
@@ -639,10 +639,10 @@
     "message": "Quantas partes (segmentos) de um fluxo HLS ou DASH são baixadas ao mesmo tempo. Mais é mais rápido, mas sobrecarrega mais o site e sua conexão; diminua se o site retornar erros. Também é usado ao gravar transmissões ao vivo."
   },
   "hintLiveMax": {
-    "message": "Uma gravação ao vivo para sozinha após esse tempo e o arquivo é salvo. Vale para Twitch, outras transmissões HLS ao vivo e gravação a partir do player do YouTube."
+    "message": "Uma gravação ao vivo para sozinha após este tempo e o arquivo é salvo; 0 = sem limite (padrão: com partes, a memória não cresce). Vale para a Twitch, outras lives HLS e a gravação pelo player do YouTube."
   },
   "hintMaxStream": {
-    "message": "Limite máximo de um download ou gravação HLS/DASH. Os dados ficam na memória até serem salvos, então o limite protege o navegador: ao atingir esse tamanho, o download ou a gravação para. Aumente só se tiver memória suficiente."
+    "message": "Limite máximo para um download ou gravação HLS/DASH que não é salvo em partes. Os dados ficam na memória até serem salvos, então o limite protege o navegador: o download ou a gravação para neste tamanho. Gravações em partes são limitadas pelo tamanho da parte."
   },
   "hintYtRecordUi": {
     "message": "Mostra o botão de gravar a partir do player para vídeos comuns do YouTube, como último recurso quando não há links diretos. Transmissões ao vivo e gravações em andamento não são afetadas. Desativado por padrão."
@@ -1198,5 +1198,47 @@
   },
   "capPreview": {
     "message": "Prévia (quadro atual do player):"
+  },
+  "splitTitle": {
+    "message": "Salvar em partes"
+  },
+  "optSplitLive": {
+    "message": "Salvar gravações ao vivo em partes"
+  },
+  "hintSplitLive": {
+    "message": "Uma gravação ao vivo longa é salva aos pedaços: quando uma parte atinge o tamanho ou a duração abaixo (o que vier primeiro), ela é salva na hora e a gravação continua sem falhas. A memória é liberada após cada parte, e uma falha custa no máximo a parte atual. Os nomes recebem o início da parte: “Live (01-00-00).mp4”."
+  },
+  "optSplitVideo": {
+    "message": "Salvar vídeos longos (HLS/DASH) em partes"
+  },
+  "hintSplitVideo": {
+    "message": "O mesmo para vídeos HLS/DASH longos que não são ao vivo: cada parte é baixada, unida e salva antes da próxima. Desativado por padrão."
+  },
+  "optPartMB": {
+    "message": "Tamanho da parte (MB)"
+  },
+  "hintPartMB": {
+    "message": "Uma parte termina neste tamanho. A conversão de um stream TS para MP4/MKV é feita na memória e funciona para partes de até cerca de 700 MB; partes TS maiores são salvas como TS."
+  },
+  "optPartMin": {
+    "message": "Duração da parte (minutos)"
+  },
+  "hintPartMin": {
+    "message": "Uma parte termina após este tempo."
+  },
+  "partN": {
+    "message": "Parte {n}"
+  },
+  "convTgtCut": {
+    "message": "Vídeo: cortar um trecho (sem recodificar)"
+  },
+  "convCutHint": {
+    "message": "O trecho é copiado sem recodificar, por isso começa no quadro-chave mais próximo em “De” ou antes (em geral 0–2 s antes); o fim é cortado em “Até”."
+  },
+  "convCutDone": {
+    "message": "de {from} a {to}"
+  },
+  "convCutFailed": {
+    "message": "Não foi possível cortar este arquivo sem recodificar."
   }
 }

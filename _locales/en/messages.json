@@ -387,7 +387,7 @@
     "message": "Live stream: recording starts now and runs until you press Stop or the stream ends."
   },
   "optLiveMax": {
-    "message": "Live recording limit (minutes)"
+    "message": "Live recording limit (minutes, 0 = no limit)"
   },
   "perMinute": {
     "message": "min"
@@ -639,10 +639,10 @@
     "message": "How many parts (segments) of an HLS or DASH stream are downloaded at the same time. A higher number is faster but loads the site and your connection more; lower it if a site returns errors. Also used when recording live streams."
   },
   "hintLiveMax": {
-    "message": "A live recording stops by itself after this time and the file is saved. It applies to Twitch, other HLS live streams and recording from the YouTube player."
+    "message": "A live recording stops by itself after this time and the file is saved; 0 = no limit (the default: with parts on, memory does not grow). It applies to Twitch, other HLS live streams and recording from the YouTube player."
   },
   "hintMaxStream": {
-    "message": "Upper limit for one HLS/DASH download or recording. The data is kept in memory until it is saved, so the limit protects the browser: the download or recording stops at this size. Raise it only if you have enough memory."
+    "message": "Upper limit for one HLS/DASH download or recording that is not saved in parts. The data is kept in memory until it is saved, so the limit protects the browser: the download or recording stops at this size. Recordings in parts are limited by the part size instead."
   },
   "hintYtRecordUi": {
     "message": "Shows the Record from the player button for ordinary YouTube videos, as a last resort when direct links are unavailable. Live streams and recordings already running are not affected. Off by default."
@@ -1198,5 +1198,47 @@
   },
   "capPreview": {
     "message": "Preview (current frame of the player):"
+  },
+  "splitTitle": {
+    "message": "Saving in parts"
+  },
+  "optSplitLive": {
+    "message": "Save live recordings in parts"
+  },
+  "hintSplitLive": {
+    "message": "A long live recording is saved piece by piece: when a part reaches the size or the length below (whichever comes first), it is saved at once and the recording goes on without a gap. Memory is freed after every part, and a crash costs at most the current part. File names get the part's start time: \"Stream (01-00-00).mp4\"."
+  },
+  "optSplitVideo": {
+    "message": "Save long videos (HLS/DASH) in parts"
+  },
+  "hintSplitVideo": {
+    "message": "The same for long HLS/DASH videos that are not live: each part is downloaded, joined and saved before the next one. Off by default."
+  },
+  "optPartMB": {
+    "message": "Part size (MB)"
+  },
+  "hintPartMB": {
+    "message": "A part ends at this size. MP4/MKV conversion of a TS stream is done in memory and works for parts up to about 700 MB; bigger TS parts are saved as TS."
+  },
+  "optPartMin": {
+    "message": "Part length (minutes)"
+  },
+  "hintPartMin": {
+    "message": "A part ends after this time."
+  },
+  "partN": {
+    "message": "Part {n}"
+  },
+  "convTgtCut": {
+    "message": "Video: cut a part (no re-encoding)"
+  },
+  "convCutHint": {
+    "message": "The part is copied without re-encoding, so it starts at the nearest keyframe at or before “From” (usually 0–2 s earlier); the end is cut at “To”."
+  },
+  "convCutDone": {
+    "message": "from {from} to {to}"
+  },
+  "convCutFailed": {
+    "message": "This file could not be cut without re-encoding."
   }
 }

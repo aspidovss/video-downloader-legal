@@ -387,7 +387,7 @@
     "message": "Flux en direct : l’enregistrement démarre maintenant et dure jusqu’à l’arrêt ou la fin du flux."
   },
   "optLiveMax": {
-    "message": "Limite d’enregistrement en direct (minutes)"
+    "message": "Limite d’un enregistrement en direct (minutes, 0 = sans limite)"
   },
   "perMinute": {
     "message": "min"
@@ -639,10 +639,10 @@
     "message": "Nombre de parties (segments) d'un flux HLS ou DASH téléchargées en même temps. Plus élevé = plus rapide, mais le site et votre connexion sont plus sollicités ; baissez-le si le site renvoie des erreurs. Aussi utilisé pour l'enregistrement des directs."
   },
   "hintLiveMax": {
-    "message": "Un enregistrement en direct s'arrête de lui-même après cette durée et le fichier est enregistré. S'applique à Twitch, aux autres directs HLS et à l'enregistrement depuis le lecteur YouTube."
+    "message": "Un enregistrement en direct s’arrête seul après ce temps et le fichier est enregistré ; 0 = sans limite (par défaut : avec les parties, la mémoire ne grossit pas). S’applique à Twitch, aux autres directs HLS et à l’enregistrement depuis le lecteur YouTube."
   },
   "hintMaxStream": {
-    "message": "Limite maximale d'un téléchargement ou enregistrement HLS/DASH. Les données restent en mémoire jusqu'à l'enregistrement, la limite protège donc le navigateur : à cette taille, le téléchargement ou l'enregistrement s'arrête. Ne l'augmentez que si vous avez assez de mémoire."
+    "message": "Limite haute d’un téléchargement ou d’un enregistrement HLS/DASH qui n’est pas enregistré en parties. Les données restent en mémoire jusqu’à l’enregistrement, la limite protège donc le navigateur : le téléchargement ou l’enregistrement s’arrête à cette taille. Les enregistrements en parties sont limités par la taille d’une partie."
   },
   "hintYtRecordUi": {
     "message": "Affiche le bouton d'enregistrement depuis le lecteur pour les vidéos YouTube ordinaires, en dernier recours quand les liens directs sont indisponibles. Les directs et les enregistrements déjà en cours ne sont pas touchés. Désactivé par défaut."
@@ -1198,5 +1198,47 @@
   },
   "capPreview": {
     "message": "Aperçu (image actuelle du lecteur) :"
+  },
+  "splitTitle": {
+    "message": "Enregistrement en parties"
+  },
+  "optSplitLive": {
+    "message": "Enregistrer les directs en parties"
+  },
+  "hintSplitLive": {
+    "message": "Un long enregistrement en direct est sauvegardé morceau par morceau : quand une partie atteint la taille ou la durée ci-dessous (la première atteinte), elle est enregistrée aussitôt et l’enregistrement continue sans coupure. La mémoire est libérée après chaque partie, et un plantage ne coûte que la partie en cours. Les noms de fichiers reçoivent l’heure de début de la partie : « Direct (01-00-00).mp4 »."
+  },
+  "optSplitVideo": {
+    "message": "Enregistrer les longues vidéos (HLS/DASH) en parties"
+  },
+  "hintSplitVideo": {
+    "message": "Idem pour les longues vidéos HLS/DASH qui ne sont pas en direct : chaque partie est téléchargée, assemblée et enregistrée avant la suivante. Désactivé par défaut."
+  },
+  "optPartMB": {
+    "message": "Taille d’une partie (Mo)"
+  },
+  "hintPartMB": {
+    "message": "Une partie se termine à cette taille. La conversion d’un flux TS en MP4/MKV se fait en mémoire et fonctionne pour des parties jusqu’à environ 700 Mo ; les parties TS plus grandes sont enregistrées en TS."
+  },
+  "optPartMin": {
+    "message": "Durée d’une partie (minutes)"
+  },
+  "hintPartMin": {
+    "message": "Une partie se termine après ce temps."
+  },
+  "partN": {
+    "message": "Partie {n}"
+  },
+  "convTgtCut": {
+    "message": "Vidéo : couper un extrait (sans réencodage)"
+  },
+  "convCutHint": {
+    "message": "L’extrait est copié sans réencodage : il commence donc à l’image clé la plus proche à « De » ou avant (en général 0–2 s plus tôt) ; la fin est coupée à « À »."
+  },
+  "convCutDone": {
+    "message": "de {from} à {to}"
+  },
+  "convCutFailed": {
+    "message": "Ce fichier n’a pas pu être coupé sans réencodage."
   }
 }

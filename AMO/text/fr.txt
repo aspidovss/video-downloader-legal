@@ -1,0 +1,38 @@
+LOCALE: fr
+
+=== NAME (max 50) [43] ===
+Video Downloader Legal – Télécharger vidéos
+
+=== SUMMARY (max 250) [213] ===
+Enregistrez vidéos et audio depuis la page que vous regardez : YouTube, Shorts, Instagram, Twitch, TikTok, VK, Bilibili, Dailymotion et plus. Convertissez toute vidéo en GIF. Gratuit, local, sans paywall ni suivi.
+
+=== DESCRIPTION ===
+Enregistrez vidéos et audio depuis la page que vous regardez : YouTube, Shorts, Instagram, Twitch, TikTok, VK, Bilibili, Dailymotion et plus. Convertissez toute vidéo en GIF. Gratuit, local, sans paywall ni suivi.
+
+VDL - Video Downloader Legal liste ce que la page ouverte diffuse et enregistre celui que vous choisissez. Tout se passe dans votre navigateur : aucun serveur externe, aucune analyse, aucun logiciel auxiliaire à installer. La vidéo et l'audio sont assemblés et le TS converti en MP4 par le code propre de l'extension, sans réencodage.
+
+FONCTIONNALITÉS
+- Téléchargement de vidéos — fichiers directs, flux HLS (m3u8) et DASH (mpd) sur n'importe quel site : choisissez la qualité, les pistes audio séparées sont fusionnées en un seul fichier.
+- Vidéo en GIF — les vidéos courtes (jusqu'à 3 min) deviennent un GIF animé directement dans le navigateur : largeur 640 / 480 / 320 / 240 px, 5 à 15 i/s, taille approximative affichée d'avance.
+- Convertisseur — choisissez un fichier vidéo ou audio sur votre ordinateur et créez un GIF (extrait « de–à », largeur, i/s) avec une légende facultative : bandeau blanc, texte sur la vidéo ou démotivateur, avec aperçu en direct. Aussi MP3, image PNG, TS → MP4 / MKV et MP4 fragmenté → MP4 sans réencodage. Le fichier ne quitte jamais votre navigateur.
+- YouTube et YouTube Shorts — choisissez le type (MP4, WEBM, AV1) et la résolution ; audio en MP3, M4A ou WEBM ; vidéo et audio dans un seul fichier.
+- Directs — enregistrez les directs Twitch et autres flux HLS jusqu'à l'appui sur Arrêter ; enregistrement des directs YouTube depuis le lecteur (bêta).
+- TS vers MP4 — les flux MPEG-TS sont enregistrés par défaut en MP4 classique (sans réencodage) ; MKV et TS aussi.
+- TikTok — la vidéo affichée à l'écran vient en premier, avec son titre et sa miniature ; le reste du fil est sous « Plus ».
+- Autres sites — Vimeo, Dailymotion, RuTube, Dzen, Instagram, Facebook, X (Twitter), Bilibili, Canva, OKru, VK et tout autre site grâce à la détection générale des flux (le résultat dépend de ce que fournit la page).
+- Téléchargement audio — MP3 (converti dans le navigateur), M4A ou WEBM.
+- Thème clair et sombre — suit votre système. 10 langues : anglais, russe, chinois, espagnol, hindi, français, arabe, portugais, allemand, japonais.
+- Pratique — historique des téléchargements, modèle de nom de fichier, notifications, raccourci Alt+Bas, entrée du menu contextuel, aide intégrée.
+- Diagnostic — un bouton enregistre un fichier local (liens masqués) à joindre à un rapport de bogue ; un journal de débogage facultatif (désactivé par défaut) consigne ce que fait l'extension. Rien n'est jamais envoyé automatiquement.
+
+CONFIDENTIALITÉ AVANT TOUT
+Aucun compte, aucune télémétrie, aucun serveur à nous. Les réglages et l'historique restent dans votre navigateur. L'extension ne contacte que les sites que vous utilisez déjà.
+
+MENTION SUR L'IA
+Ce projet contient du code généré par IA.
+Tous les commentaires et traductions sont générés par IA.
+
+BON À SAVOIR
+- Après l'installation, autorisez l'accès à tous les sites dans about:addons → l'extension → Autorisations, sinon l'analyseur de page ne peut pas voir les médias.
+- Les sites de streaming changent souvent ; YouTube et les réseaux sociaux sont pris en charge au mieux et peuvent cesser de fonctionner. En cas de problème, cliquez sur le bouton de bogue dans la fenêtre et envoyez le fichier de diagnostic.
+- Les services protégés par DRM (Netflix, Disney+ et similaires) ne sont pas pris en charge et ne le seront jamais.

@@ -5,6 +5,7 @@ import { makeRate } from '../lib/rate.js';
 import { jrParse, jrTitle, jrGifCandidates, isJoyreactorPage } from '../lib/joyreactor.js';
 import { videoToGif } from '../lib/gifvideo.js';
 import { gifPrefs, gifSiteAllowed, GIF_FPS } from '../lib/gifrules.js';
+import { splitPrefs, partSuffix, partStamp, planCuts, splitTrackParts } from '../lib/split.js';
 import {
   FILE_EXTS, SKIP_EXTS, urlExt, mediaExt, normalizeUrl, hashId, mimeToExt, hostOf, buildFilename, stripLlHls, refDomain,
 } from '../lib/util.js';
@@ -99,6 +100,14 @@ const ready = (async () => {
       const cur = (await browser.storage.local.get('settings')).settings;
       if (cur && cur.gifMake === 'off') await saveSettings({ gifEnabled: false });
       await browser.storage.local.set({ gifMigrated: true });
+    }
+  } catch { /* storage unavailable */ }
+  // 1.6.8: recordings go in parts, the live limit is off by default; the old default 180 min becomes "no limit", once
+  try {
+    if (!(await browser.storage.local.get('liveMaxMigrated')).liveMaxMigrated) {
+      const cur = (await browser.storage.local.get('settings')).settings;
+      if (cur && Number(cur.liveMaxMinutes) === 180) await saveSettings({ liveMaxMinutes: 0 });
+      await browser.storage.local.set({ liveMaxMigrated: true });
     }
   } catch { /* storage unavailable */ }
   settings = await getSettings();
@@ -765,7 +774,7 @@ function dashAudioVariants(it) {
 }
 
 function serializeJob(j) {
-  return { id: j.id, itemId: j.itemId || '', title: j.title, state: j.state, fileIndex: j.fileIndex, fileCount: j.fileCount, done: j.done, total: j.total, phase: j.phase || '', error: j.error || '', errorKey: j.errorKey || '', downloadId: j.downloadIds?.[0] ?? null, recording: !!j.recording, seconds: Math.round(j.seconds || 0), bytes: j.bytes || 0, speed: Math.round(j.speed || 0), eta: j.eta || 0, segments: j.segments || 0, stopping: !!j.stopping };
+  return { id: j.id, itemId: j.itemId || '', title: j.title, state: j.state, fileIndex: j.fileIndex, fileCount: j.fileCount, done: j.done, total: j.total, phase: j.phase || '', error: j.error || '', errorKey: j.errorKey || '', downloadId: j.downloadIds?.[0] ?? null, recording: !!j.recording, seconds: Math.round(j.seconds || 0), bytes: j.bytes || 0, speed: Math.round(j.speed || 0), eta: j.eta || 0, segments: j.segments || 0, stopping: !!j.stopping, part: j.part || 0, partCount: j.partCount || 0, partStart: Math.round(j.partStart || 0), partBytes: j.partBytes || 0 };
 }
 
 async function getState(tabId) {
@@ -1569,6 +1578,117 @@ async function runStreamJob(tabId, it, title, variantIdx, variantLabel, audioOpt
     if (it.ua) ytHdr.ua = it.ua;
     const site = it.site || hostOf(tabs.get(tabId)?.pageUrl || '') || hostOf(it.url); // the page's site, not the media server
     const files = []; // { parts, ext, type, suffix, quality }
+    const savedNames = [];
+    // subtitles with the video (YouTube): embedded into a .webm, otherwise a .srt next to the video
+    let subs = null;
+    let subsEmbedded = false;
+    let finalPartSec = null; // the last piece of a recording in parts: where it starts
+    let histFrom = 0; // names before this index went into History already (pieces saved one by one)
+    const processFiles = async (files, partSec = null) => {
+      job.fileCount = files.length;
+      const mergeGroup = files.length === 2 && files[0].role === 'video' && files[1].role === 'audio' && files[0].container === files[1].container;
+      let heldVideo = null;
+      // partSec: a piece of a recording / a long download saved in parts (1.6.8): " (01-00-00)" = where it starts
+      const saveOne = async (blob, f, i, ext = f.ext, suffix = f.suffix) => {
+        const filename = buildFilename(settings.template, { title, site, quality: f.quality, ext, suffix: `${partSec != null ? partSuffix(partSec) : ''}${suffix}` });
+        const result = await saveBlob(blob, filename, settings.saveAs && savedNames.length === 0 && i === 0, (id) => job.downloadIds.push(id), tabId);
+        if (result !== 'complete') throw new StreamError('http', 'Browser download was interrupted');
+        savedNames.push(filename);
+      };
+      for (let i = 0; i < files.length; i++) {
+        const f = files[i];
+        job.fileIndex = i + 1;
+        job.done = 0;
+        job.total = f.recorded ? 1 : f.parts.length;
+        if (f.recorded) job.done = 1;
+        job.rate.reset();
+        job.speed = 0;
+        job.eta = 0;
+        notifyUI(tabId);
+        let blobs;
+        if (f.recorded) blobs = f.recorded;
+        else if (f.tiktok) {
+          try { blobs = await downloadParts(f.parts, dlOpts); } catch (e) {
+            if (!(e instanceof StreamError) || e.code !== 'http') throw e;
+            // refused for the extension: ask the TikTok page itself (its cookies and Referer)
+            let res = null;
+            try { res = await browser.tabs.sendMessage(tabId, { type: 'tt_fetch', url: f.parts[0].url }, { frameId: 0 }); } catch { /* no page script */ }
+            if (!res || !res.ok || !res.blob) throw e;
+            blobs = [res.blob];
+          }
+        } else blobs = await getParts(f.parts);
+        const blob = joinBlobs(blobs, f.type);
+        if (mergeGroup && i === 0) { heldVideo = blob; continue; }
+        if (mergeGroup && i === 1) {
+          // Join video + audio into ONE file without re-encoding; fall back to two files.
+          const merged = await globalThis.__vdlMux.mergeBlobs(heldVideo, blob, files[0].container, subs ? { subs: [subs] } : undefined);
+          if (merged) {
+            subsEmbedded = !!merged.vdlSubs;
+            await saveOne(merged, files[0], 0, files[0].container, '');
+          } else {
+            await saveOne(heldVideo, files[0], 0);
+            await saveOne(blob, f, 1);
+            notify(tr('mergeFailedTwoFiles'));
+          }
+          heldVideo = null;
+          continue;
+        }
+        if (f.makeGif) {
+          // video -> GIF in the background page (no sound)
+          job.phase = 'gif';
+          job.done = 0;
+          job.total = 100;
+          notifyUI(tabId);
+          let gif;
+          try {
+            const gp = gifPrefs(settings);
+            // frame rate: the card's choice, else the settings'; time left from the pace of the frames (1.6.5)
+            job.rate.reset();
+            job.speed = 0;
+            job.eta = 0;
+            const gifOpts = {
+              maxWidth: f.makeGif, fps: gifFps || gp.fps, maxSeconds: gp.maxSec, signal: job.abort.signal,
+              onProgress: (x) => { job.done = Math.round(x * 100); job.rate.add(0, job.done); job.eta = job.rate.eta(100); notifyUI(tabId); },
+            };
+            gif = IS_CHROME ? await chromeGif(blob, gifOpts) : await videoToGif(blob, gifOpts);
+          } catch (e) {
+            if (e?.code === 'aborted') throw new StreamError('aborted');
+            throw new StreamError(e?.code === 'gifTooLong' ? 'gifTooLong' : 'gifDecode', String(e?.message || e));
+          }
+          job.phase = '';
+          dlog('job', 'GIF made from the video', { width: f.makeGif, bytes: gif.size, from: blob.size });
+          await saveOne(gif, f, i, 'gif', '');
+          continue;
+        }
+        if (f.mp3) {
+          const out = await toMp3(blob, title, job, tabId, f.kbps);
+          await saveOne(out, f, i, 'mp3', '');
+          continue;
+        }
+        let outBlob = blob;
+        let outExt = f.ext;
+        if (it.kind === 'hls' && f.ext === 'ts' && toMp4 && !mergeGroup) {
+          // MPEG-TS -> MP4 / MKV without re-encoding; when the stream is not convertible the TS file is saved as it is
+          job.phase = tsOut === 'mkv' ? 'mkv' : 'convert';
+          notifyUI(tabId);
+          const conv = tsOut === 'mkv' ? await tsToMkv(blob, globalThis.__vdlMux) : await tsToMp4(blob);
+          job.phase = '';
+          if (conv) { outBlob = conv; outExt = tsOut; } else {
+            dlog('job', 'TS kept as it is', { wanted: tsOut });
+            if (f.recorded) outBlob = joinBlobs(await rebaseTimestamps([blob], 'ts'), f.type);
+          }
+        } else if ((it.kind === 'hls' || it.kind === 'dash') && f.ext === 'mp4' && !mergeGroup) {
+          // fragmented MP4 pieces as they came (no index, bad seeking) -> an ordinary MP4 with the index first
+          job.phase = 'convert';
+          notifyUI(tabId);
+          let flat = null;
+          try { flat = await globalThis.__vdlMux.defragMp4(blob); } catch (e) { dlog('job', 'fragmented mp4 left as it is', { error: String(e?.message || e) }); }
+          job.phase = '';
+          if (flat) { outBlob = flat; dlog('job', 'fragmented mp4 written with an index', { bytes: flat.size }); }
+        }
+        await saveOne(outBlob, f, i, outExt);
+      }
+    };
 
     if (it.kind === 'hls') {
       let tracks = [{ url: it.url, suffix: '', quality: '' }];
@@ -1585,7 +1705,7 @@ async function runStreamJob(tabId, it, title, variantIdx, variantLabel, audioOpt
             audioUrl = best.audio?.url || '';
           }
         }
-        tracks = [{ url, suffix: '', quality: v.label }];
+        tracks = [{ url, suffix: '', quality: v.label, bandwidth: v.bandwidth || 0 }];
         if (audioUrl) tracks.push({ url: audioUrl, suffix: '.audio', quality: v.label });
       }
       if (it.live) {
@@ -1607,19 +1727,75 @@ async function runStreamJob(tabId, it, title, variantIdx, variantLabel, audioOpt
           }
           liveCred = liveStrategy.startsWith('plain-include') ? 'include' : 'omit';
         }
-        const agg = tracks.map(() => ({ seconds: 0, bytes: 0, segments: 0 }));
-        const maxBytes = (settings.maxStreamMB * 1024 * 1024) / tracks.length;
+        const agg = tracks.map(() => ({ seconds: 0, bytes: 0, segments: 0, clock: 0 }));
+        // 1.6.8: in parts of N MB / M minutes (whichever comes first), each saved at once; the recording goes on
+        const sp = splitPrefs(settings).live;
+        const cuts = []; // end of each finished part on the recording's clock
+        let bytesAtCut = 0;
+        const pending = new Map(); // part index -> the piece of every track
+        let chain = Promise.resolve();
+        const recFile = (r, tr) => ({ recorded: r.blobs, parts: [], ext: r.ext, type: r.ext === 'mp4' ? 'video/mp4' : 'video/mp2t', suffix: tr.suffix, quality: tr.quality || 'live', role: tr.suffix ? 'audio' : 'video', container: r.ext === 'mp4' ? 'mp4' : r.ext });
+        const savePart = async (arr) => {
+          const start = arr.find(Boolean)?.start || 0;
+          const pf = [];
+          for (const [i, p] of arr.entries()) {
+            if (!p || !p.blobs.length) continue;
+            const r = { blobs: p.blobs, ext: p.ext };
+            if (tracks.length === 1 && !(toMp4 && r.ext === 'ts')) r.blobs = await rebaseTimestamps(r.blobs, r.ext);
+            pf.push(recFile(r, tracks[i]));
+          }
+          if (!pf.length) return;
+          const before = savedNames.length;
+          await processFiles(pf, start);
+          const names = savedNames.slice(before);
+          histFrom = savedNames.length;
+          dlog('job', `#${job.id} part saved`, { at: partStamp(start), files: names.length });
+          if (settings.history) await addHistory({ title, url: it.url, kind: it.kind, filename: names.join(' + ') });
+          notify(`${tr('done')}: ${title}${partSuffix(start)}`);
+        };
+        const queuePart = (arr) => {
+          chain = chain.then(() => savePart(arr)).catch((e) => {
+            dlog('job', `#${job.id} part NOT saved`, { at: partStamp(arr.find(Boolean)?.start || 0), error: String(e?.message || e) });
+            notify(`${tr('failed')}: ${title}${partSuffix(arr.find(Boolean)?.start || 0)}`);
+          });
+        };
+        job.part = 1;
+        job.partStart = 0;
+        job.partBytes = 0;
+        const liveMax = Number(settings.liveMaxMinutes) > 0 ? Number(settings.liveMaxMinutes) * 60 : Infinity; // 0 = no limit (1.6.8 default)
         const recs = await Promise.all(tracks.map((tr, i) => recordLive(tr.url, {
-          signal: job.abort.signal, stopSignal: job.stopCtl.signal, maxBytes, credentials: liveCred, ...(it.via === 'page' ? { fetchFn: pageFetchFn(tabId) } : {}),
-          maxSeconds: Math.max(1, Number(settings.liveMaxMinutes) || 180) * 60, concurrency: settings.concurrency,
+          signal: job.abort.signal, stopSignal: job.stopCtl.signal, credentials: liveCred, ...(it.via === 'page' ? { fetchFn: pageFetchFn(tabId) } : {}),
+          maxBytes: sp ? Infinity : (settings.maxStreamMB * 1024 * 1024) / tracks.length,
+          maxSeconds: liveMax, concurrency: settings.concurrency,
+          ...(sp ? {
+            nextCut: (k) => (k < cuts.length ? cuts[k] : Infinity),
+            onPart: (p) => {
+              const arr = pending.get(p.index) || [];
+              arr[i] = p;
+              pending.set(p.index, arr);
+              if (tracks.every((_, j) => arr[j])) { pending.delete(p.index); queuePart(arr); }
+            },
+          } : {}),
           onProgress: (p) => {
             agg[i] = p;
             job.seconds = Math.max(...agg.map((a) => a.seconds));
             job.bytes = agg.reduce((n, a) => n + a.bytes, 0);
             job.segments = Math.max(...agg.map((a) => a.segments));
+            if (sp) {
+              const clock = Math.max(...agg.map((a) => a.clock || 0));
+              const from = cuts.length ? cuts[cuts.length - 1] : 0;
+              if (clock - from >= sp.seconds || job.bytes - bytesAtCut >= sp.bytes) { cuts.push(clock); bytesAtCut = job.bytes; }
+              job.part = cuts.length + 1;
+              job.partStart = cuts.length ? cuts[cuts.length - 1] : 0;
+              job.partBytes = job.bytes - bytesAtCut;
+            }
             notifyUI(tabId);
           },
         })));
+        // pieces one track finished but the other did not reach (the stream ended in between), then the saves in progress
+        for (const k of [...pending.keys()].sort((a, b) => a - b)) queuePart(pending.get(k));
+        pending.clear();
+        await chain;
         job.recording = false;
         ytHdr.live = false;
         job.liveLog = recs.map((r) => ({ strategy: liveStrategy, reason: r.reason, seconds: Math.round(r.seconds), segments: r.segments, missed: r.missed, gaps: r.gaps, bytes: r.bytes, lastError: r.lastError, polls: r.polls, plSegs: r.plSegs }));
@@ -1637,15 +1813,19 @@ async function runStreamJob(tabId, it, title, variantIdx, variantLabel, audioOpt
           job.liveLog[i].lastError = r.lastError;
         }
         for (const r of recs) { if (tracks.length === 1 && r.blobs.length && !(toMp4 && r.ext === 'ts')) r.blobs = await rebaseTimestamps(r.blobs, r.ext); } // the file starts at 0:00 (not at the stream's clock)
+        const split = recs.some((r) => r.parts > 0);
+        if (split) finalPartSec = Math.max(...recs.map((r) => r.partStart || 0));
         recs.forEach((r, i) => {
-          if (!r.blobs.length) throw new StreamError('empty', `Nothing was recorded (${recs[i].reason || 'no data'}${recs[i].lastError ? ': ' + recs[i].lastError : ''}; polls ${recs[i].polls}, in playlist ${recs[i].plSegs})`);
-          const tr = tracks[i];
-          files.push({ recorded: r.blobs, parts: [], ext: r.ext, type: r.ext === 'mp4' ? 'video/mp4' : 'video/mp2t', suffix: tr.suffix, quality: tr.quality || 'live', role: tr.suffix ? 'audio' : 'video', container: r.ext === 'mp4' ? 'mp4' : r.ext });
+          if (!r.blobs.length) {
+            if (split) return; // earlier parts are saved; this track has nothing after the last cut
+            throw new StreamError('empty', `Nothing was recorded (${recs[i].reason || 'no data'}${recs[i].lastError ? ': ' + recs[i].lastError : ''}; polls ${recs[i].polls}, in playlist ${recs[i].plSegs})`);
+          }
+          files.push(recFile(r, tracks[i]));
         });
       } else {
         for (const tr of tracks) {
           const { parts, ext } = await hlsParts(tr.url, { signal: job.abort.signal, ...(it.via === 'page' ? { fetchFn: pageFetchFn(tabId) } : {}) });
-          files.push({ parts, ext, type: ext === 'mp4' ? 'video/mp4' : 'video/mp2t', suffix: tr.suffix, quality: tr.quality, role: tr.suffix ? 'audio' : 'video', container: ext === 'mp4' ? 'mp4' : ext });
+          files.push({ parts, ext, type: ext === 'mp4' ? 'video/mp4' : 'video/mp2t', suffix: tr.suffix, quality: tr.quality, role: tr.suffix ? 'audio' : 'video', container: ext === 'mp4' ? 'mp4' : ext, bandwidth: tr.bandwidth || 0 });
         }
       }
     } else if (it.kind === 'file') {
@@ -1691,123 +1871,36 @@ async function runStreamJob(tabId, it, title, variantIdx, variantLabel, audioOpt
       } else {
       const v = dashParts(vrep);
       const cont = (r) => (/webm/.test(r.mime) ? 'webm' : 'mp4');
-      files.push({ ...v, type: vrep.mime, suffix: '', quality: vrep.label, role: mpd.videos.length ? 'video' : 'audio', container: cont(vrep) });
+      files.push({ ...v, type: vrep.mime, suffix: '', quality: vrep.label, role: mpd.videos.length ? 'video' : 'audio', container: cont(vrep), bandwidth: vrep.bandwidth || 0 });
       if (mpd.videos.length && mpd.audios.length) {
         // best audio track, so the video always comes WITH sound
         const arep = mpd.audios.slice().sort((x, y) => (y.bandwidth || 0) - (x.bandwidth || 0))[0];
         const a = dashParts(arep);
-        files.push({ ...a, type: arep.mime, suffix: '.audio', quality: vrep.label, role: 'audio', container: cont(arep) });
+        files.push({ ...a, type: arep.mime, suffix: '.audio', quality: vrep.label, role: 'audio', container: cont(arep), bandwidth: arep.bandwidth || 0 });
       }
       }
     }
 
-    job.fileCount = files.length;
-    const savedNames = [];
-    // subtitles with the video (YouTube): embedded into a .webm, otherwise a .srt next to the video
-    let subs = null;
     if (subsChoice) { try { subs = await fetchSubs(tabId, subsChoice); } catch (e) { dlog('subs', 'not fetched', { error: String(e?.message || e) }); notify(tr('subsFailed')); } }
-    let subsEmbedded = false;
-    const mergeGroup = files.length === 2 && files[0].role === 'video' && files[1].role === 'audio' && files[0].container === files[1].container;
-    let heldVideo = null;
-    const saveOne = async (blob, f, i, ext = f.ext, suffix = f.suffix) => {
-      const filename = buildFilename(settings.template, { title, site, quality: f.quality, ext, suffix });
-      const result = await saveBlob(blob, filename, settings.saveAs && savedNames.length === 0 && i === 0, (id) => job.downloadIds.push(id), tabId);
-      if (result !== 'complete') throw new StreamError('http', 'Browser download was interrupted');
-      savedNames.push(filename);
-    };
-    for (let i = 0; i < files.length; i++) {
-      const f = files[i];
-      job.fileIndex = i + 1;
-      job.done = 0;
-      job.total = f.recorded ? 1 : f.parts.length;
-      if (f.recorded) job.done = 1;
-      job.rate.reset();
-      job.speed = 0;
-      job.eta = 0;
-      notifyUI(tabId);
-      let blobs;
-      if (f.recorded) blobs = f.recorded;
-      else if (f.tiktok) {
-        try { blobs = await downloadParts(f.parts, dlOpts); } catch (e) {
-          if (!(e instanceof StreamError) || e.code !== 'http') throw e;
-          // refused for the extension: ask the TikTok page itself (its cookies and Referer)
-          let res = null;
-          try { res = await browser.tabs.sendMessage(tabId, { type: 'tt_fetch', url: f.parts[0].url }, { frameId: 0 }); } catch { /* no page script */ }
-          if (!res || !res.ok || !res.blob) throw e;
-          blobs = [res.blob];
-        }
-      } else blobs = await getParts(f.parts);
-      const blob = joinBlobs(blobs, f.type);
-      if (mergeGroup && i === 0) { heldVideo = blob; continue; }
-      if (mergeGroup && i === 1) {
-        // Join video + audio into ONE file without re-encoding; fall back to two files.
-        const merged = await globalThis.__vdlMux.mergeBlobs(heldVideo, blob, files[0].container, subs ? { subs: [subs] } : undefined);
-        if (merged) {
-          subsEmbedded = !!merged.vdlSubs;
-          await saveOne(merged, files[0], 0, files[0].container, '');
-        } else {
-          await saveOne(heldVideo, files[0], 0);
-          await saveOne(blob, f, 1);
-          notify(tr('mergeFailedTwoFiles'));
-        }
-        heldVideo = null;
-        continue;
+    // 1.6.8: a long HLS / DASH video (not live) in parts, when that is switched on: the cuts are planned from the
+    // segment lengths and the bitrate; every piece is downloaded, joined / converted and saved before the next one
+    const vp = splitPrefs(settings).video;
+    const vodCuts = vp && (it.kind === 'hls' || it.kind === 'dash') && !it.live && files.length && files.every((f) => !f.recorded && !f.mp3 && !f.makeGif && f.parts?.length)
+      ? planCuts(files.map((f) => ({ durations: f.parts.filter((x) => !x.init).map((x) => x.duration), bandwidth: f.bandwidth || 0 })), vp) : [];
+    if (vodCuts.length) {
+      const groups = files.map((f) => splitTrackParts(f.parts, vodCuts));
+      job.partCount = vodCuts.length + 1;
+      dlog('job', `#${job.id} in ${job.partCount} parts`, { cuts: vodCuts.map(partStamp) });
+      for (let k = 0; k <= vodCuts.length; k++) {
+        const fk = files.map((f, i) => ({ ...f, parts: groups[i][k] })).filter((f) => f.parts.some((x) => !x.init));
+        if (!fk.length) continue;
+        job.part = k + 1;
+        const start = k ? vodCuts[k - 1] : 0;
+        await processFiles(fk, start);
+        if (settings.history && savedNames.length > histFrom) await addHistory({ title, url: it.url, kind: it.kind, filename: savedNames.slice(histFrom).join(' + ') });
+        histFrom = savedNames.length;
       }
-      if (f.makeGif) {
-        // video -> GIF in the background page (no sound)
-        job.phase = 'gif';
-        job.done = 0;
-        job.total = 100;
-        notifyUI(tabId);
-        let gif;
-        try {
-          const gp = gifPrefs(settings);
-          // frame rate: the card's choice, else the settings'; time left from the pace of the frames (1.6.5)
-          job.rate.reset();
-          job.speed = 0;
-          job.eta = 0;
-          const gifOpts = {
-            maxWidth: f.makeGif, fps: gifFps || gp.fps, maxSeconds: gp.maxSec, signal: job.abort.signal,
-            onProgress: (x) => { job.done = Math.round(x * 100); job.rate.add(0, job.done); job.eta = job.rate.eta(100); notifyUI(tabId); },
-          };
-          gif = IS_CHROME ? await chromeGif(blob, gifOpts) : await videoToGif(blob, gifOpts);
-        } catch (e) {
-          if (e?.code === 'aborted') throw new StreamError('aborted');
-          throw new StreamError(e?.code === 'gifTooLong' ? 'gifTooLong' : 'gifDecode', String(e?.message || e));
-        }
-        job.phase = '';
-        dlog('job', 'GIF made from the video', { width: f.makeGif, bytes: gif.size, from: blob.size });
-        await saveOne(gif, f, i, 'gif', '');
-        continue;
-      }
-      if (f.mp3) {
-        const out = await toMp3(blob, title, job, tabId, f.kbps);
-        await saveOne(out, f, i, 'mp3', '');
-        continue;
-      }
-      let outBlob = blob;
-      let outExt = f.ext;
-      if (it.kind === 'hls' && f.ext === 'ts' && toMp4 && !mergeGroup) {
-        // MPEG-TS -> MP4 / MKV without re-encoding; when the stream is not convertible the TS file is saved as it is
-        job.phase = tsOut === 'mkv' ? 'mkv' : 'convert';
-        notifyUI(tabId);
-        const conv = tsOut === 'mkv' ? await tsToMkv(blob, globalThis.__vdlMux) : await tsToMp4(blob);
-        job.phase = '';
-        if (conv) { outBlob = conv; outExt = tsOut; } else {
-          dlog('job', 'TS kept as it is', { wanted: tsOut });
-          if (f.recorded) outBlob = joinBlobs(await rebaseTimestamps([blob], 'ts'), f.type);
-        }
-      } else if ((it.kind === 'hls' || it.kind === 'dash') && f.ext === 'mp4' && !mergeGroup) {
-        // fragmented MP4 pieces as they came (no index, bad seeking) -> an ordinary MP4 with the index first
-        job.phase = 'convert';
-        notifyUI(tabId);
-        let flat = null;
-        try { flat = await globalThis.__vdlMux.defragMp4(blob); } catch (e) { dlog('job', 'fragmented mp4 left as it is', { error: String(e?.message || e) }); }
-        job.phase = '';
-        if (flat) { outBlob = flat; dlog('job', 'fragmented mp4 written with an index', { bytes: flat.size }); }
-      }
-      await saveOne(outBlob, f, i, outExt);
-    }
+    } else await processFiles(files, finalPartSec);
     if (subs && !subsEmbedded && savedNames.length) {
       const srtName = `${savedNames[0].replace(/\.[^./\\]+$/, '')}.${subs.lang}.srt`;
       await saveBlob(new Blob([cuesToSrt(subs.cues)], { type: 'text/plain' }), srtName, false, (id) => job.downloadIds.push(id), tabId);
@@ -1816,7 +1909,7 @@ async function runStreamJob(tabId, it, title, variantIdx, variantLabel, audioOpt
     job.state = 'done';
     dlog('job', `#${job.id} done`, { files: savedNames.length, ms: Date.now() - job.startedAt });
     if (it.kind === 'yt') { const yy = tabs.get(tabId)?.yt; if (yy) { yy.dlFailed = false; yy.dlLimited = false; yy.dl429 = false; } }
-    if (settings.history) await addHistory({ title, url: it.url, kind: it.kind, filename: savedNames.join(' + ') });
+    if (settings.history && savedNames.length > histFrom) await addHistory({ title, url: it.url, kind: it.kind, filename: savedNames.slice(histFrom).join(' + ') });
     notify(`${tr('done')}: ${title}`);
   } catch (e) {
     if (e instanceof StreamError && e.code === 'aborted') {
@@ -2255,6 +2348,11 @@ function sanitizeRec(r) {
     draining: !!r.draining,
     seconds: Math.round(Number(r.seconds) || 0),
     interrupted: !!r.interrupted,
+    parts: (Array.isArray(r.parts) ? r.parts : []).slice(0, 20).map((x) => ({ id: Number(x.id) || 0, start: Math.max(0, Number(x.start) || 0) })).filter((x) => x.id > 0),
+    partsSaved: Number(r.partsSaved) || 0,
+    part: Number(r.part) || 0,
+    partStart: Math.max(0, Number(r.partStart) || 0),
+    partBytes: Number(r.partBytes) || 0,
     tracks: (Array.isArray(r.tracks) ? r.tracks : []).slice(0, 4).map((x) => ({
       kind: x.kind === 'audio' ? 'audio' : 'video',
       ext: ['mp4', 'webm', 'm4a', 'weba'].includes(x.ext) ? x.ext : 'mp4',
@@ -2277,6 +2375,19 @@ async function handleRecStatus(msg, sender) {
   t.yt.rec = rec;
   if (was !== rec.state) dlog('rec', `${was || '-'} -> ${rec.state}`, { error: rec.error || '', bytes: rec.bytes, tracks: rec.tracks.map((x) => `${x.kind}:${x.fragments}`), live: !!rec.live });
   if (rec.state === 'recording' || rec.state === 'saved' || rec.state === 'error') t.yt.recSaving = false;
+  // 1.6.8: a finished part of a recording in parts: the page waits for the file names
+  for (const part of rec.parts || []) {
+    t.yt.partsAsked ??= new Set();
+    if (t.yt.partsAsked.has(part.id)) continue;
+    t.yt.partsAsked.add(part.id);
+    const names = recFilenames(tabId);
+    dlog('rec', 'part ready', { at: partStamp(part.start) });
+    browser.tabs.sendMessage(tabId, { type: 'yt_rec_cmd', cmd: 'savepart', id: part.id, names }, { frameId: 0 }).catch(() => {});
+    if (settings.history && t.yt.summary) {
+      const shown = canMergeTracks(rec.tracks) ? names.slice(0, 1) : names;
+      addHistory({ title: t.yt.summary.title || 'YouTube', url: `https://www.youtube.com/watch?v=${t.yt.summary.videoId}`, kind: 'yt', filename: shown.map((n) => n.replace(/((?:\.audio)?\.[a-z0-9]{1,5})$/i, `${partSuffix(part.start)}$1`)).join(' + ') }).catch(() => {});
+    }
+  }
   // the recording reached its end by itself (not stopped by the user, not interrupted): the file is saved right away
   if (rec.state === 'done' && was === 'recording' && !rec.interrupted && !t.yt.recSaving && rec.tracks.length) {
     t.yt.recSaving = true;
@@ -2287,7 +2398,8 @@ async function handleRecStatus(msg, sender) {
       title: t.yt.summary.title || 'YouTube',
       url: `https://www.youtube.com/watch?v=${t.yt.summary.videoId}`,
       kind: 'yt',
-      filename: (canMergeTracks(rec.tracks) ? (t.yt.recNames || []).slice(0, 1) : (t.yt.recNames || [])).join(' + '),
+      filename: (canMergeTracks(rec.tracks) ? (t.yt.recNames || []).slice(0, 1) : (t.yt.recNames || []))
+        .map((n) => (rec.partsSaved ? n.replace(/((?:\.audio)?\.[a-z0-9]{1,5})$/i, `${partSuffix(rec.partStart)}$1`) : n)).join(' + '), // the last piece of a recording in parts
     });
   }
   if (t.yt.summary) refreshYoutube(tabId); else notifyUI(tabId);
@@ -2304,7 +2416,7 @@ function recFilenames(tabId) {
   const list = y?.rec?.tracks || [];
   const stamp = (() => { const d = new Date(); const p2 = (n) => String(n).padStart(2, '0'); return `${d.getFullYear()}-${p2(d.getMonth() + 1)}-${p2(d.getDate())}_${p2(d.getHours())}-${p2(d.getMinutes())}-${p2(d.getSeconds())}`; })();
   return list.map((tr) => buildFilename(settings.template, {
-    title: y?.summary?.isLive ? `youtube_${y.summary.videoId}_${stamp}` : (y?.summary?.title || 'youtube'),
+    title: y?.summary?.isLive ? `youtube_${y.summary.videoId}_${y.recStamp || stamp}` : (y?.summary?.title || 'youtube'),
     site: 'youtube.com',
     quality: tr.height ? `${tr.height}p` : '',
     ext: list.length === 2 && ((list[0].ext === 'webm' && list[1].ext === 'm4a') || (list[0].ext === 'mp4' && list[1].ext === 'weba')) && canMergeTracks(list) ? (tr.kind === 'video' ? (settings.joinFormat === 'mkv' ? 'mkv' : 'mp4') : tr.ext) : tr.ext, // VP9 + AAC and AV1 + Opus: MP4 (default) or Matroska
@@ -2322,7 +2434,12 @@ async function handleRecCommand({ tabId, cmd }) {
       if (!settings.ytRecordUi && !t.yt?.summary?.isLive) return { ok: false, error: 'rec_disabled' };
       t.yt ??= { summary: null, captured: [], diag: newDiag() };
       t.yt.rec = { state: 'recording', error: '', bytes: 0, progress: 0, duration: 0, tracks: [] };
-      await browser.tabs.sendMessage(tabId, { type: 'yt_rec_cmd', cmd: 'start', speed: settings.ytRecordSpeed, maxMB: settings.maxStreamMB, live: !!t.yt?.summary?.isLive, maxMin: Number(settings.liveMaxMinutes) || 180 }, { frameId: 0 });
+      // the same stamp in the names of every part of one live recording (1.6.8)
+      t.yt.recStamp = (() => { const d = new Date(); const p2 = (n) => String(n).padStart(2, '0'); return `${d.getFullYear()}-${p2(d.getMonth() + 1)}-${p2(d.getDate())}_${p2(d.getHours())}-${p2(d.getMinutes())}-${p2(d.getSeconds())}`; })();
+      t.yt.partsAsked = new Set();
+      const live = !!t.yt?.summary?.isLive;
+      const sp = live ? splitPrefs(settings).live : splitPrefs(settings).video;
+      await browser.tabs.sendMessage(tabId, { type: 'yt_rec_cmd', cmd: 'start', speed: settings.ytRecordSpeed, maxMB: settings.maxStreamMB, live, maxMin: Number(settings.liveMaxMinutes) || 0, split: sp ? { mb: sp.bytes / 1048576, min: sp.seconds / 60 } : null }, { frameId: 0 });
     } else if (cmd === 'save') {
       t.yt.recSaving = true;
       t.yt.recNames = recFilenames(tabId);

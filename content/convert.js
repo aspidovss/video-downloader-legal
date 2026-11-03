@@ -4,7 +4,7 @@
 import { t, translatePage, renderFooter, isAndroid } from '../utils/dom.js';
 import { loadUiLang } from '../utils/i18n.js';
 import '../lib/mux.js'; // publishes globalThis.__vdlMux
-import { sniffKind, mp4TopBoxes, isFragmented, convertTargets, targetTrims, trimRange, parseTime, formatTime, pcmSlice, outName, gifEstimateBytes } from '../lib/convert.js';
+import { sniffKind, mp4TopBoxes, isFragmented, convertTargets, cutExt, targetTrims, trimRange, parseTime, formatTime, pcmSlice, outName, gifEstimateBytes } from '../lib/convert.js';
 import { videoToGif } from '../lib/gifvideo.js';
 import { GIF_SIZES, GIF_FPS, GIF_LIMIT_SECONDS, gifPrefs } from '../lib/gifrules.js';
 import { encodeMp3, decodeToPcm, MP3_MAX_SECONDS, MP3_BITRATES } from '../lib/mp3.js';
@@ -21,7 +21,7 @@ const video = $('preview');
 const state = { file: null, kind: '', work: null, workUrl: '', duration: 0, width: 0, height: 0, playable: false, fragmented: false, last: null, abort: null, busy: false };
 let settings = {};
 
-const TARGET_LABEL = { gif: 'convTgtGif', mp3: 'convTgtMp3', png: 'convTgtPng', mp4: 'convTgtMp4', mkv: 'convTgtMkv', defrag: 'convTgtDefrag' };
+const TARGET_LABEL = { gif: 'convTgtGif', mp3: 'convTgtMp3', png: 'convTgtPng', cut: 'convTgtCut', mp4: 'convTgtMp4', mkv: 'convTgtMkv', defrag: 'convTgtDefrag' };
 const fill = (sel, values, label, chosen) => {
   sel.replaceChildren(...values.map((v) => { const o = document.createElement('option'); o.value = String(v); o.textContent = label(v); return o; }));
   if (chosen != null && values.map(String).includes(String(chosen))) sel.value = String(chosen);
@@ -233,6 +233,7 @@ async function convert() {
   try {
     let blob = null;
     let at;
+    let cutInfo = null;
     if (target === 'gif') {
       progress(t('convWorking').replace('{p}', '0'), 0);
       blob = await videoToGif(state.work, {
@@ -270,6 +271,17 @@ async function convert() {
       blob = await tsToMkv(state.file, globalThis.__vdlMux);
       if (!blob) throw new Error(t('convRemuxFailed'));
       blob = new Blob([blob], { type: 'video/x-matroska' });
+    } else if (target === 'cut') {
+      // 1.6.8: a part of the video without re-encoding; the start moves back to the nearest keyframe
+      progress(t('convWorking').replace('{p}', '0'), 0);
+      const mux = globalThis.__vdlMux;
+      const src = state.kind === 'ts' ? state.work : state.file; // TS: its MP4 copy (made for the player)
+      if (!src) throw new Error(t('convRemuxFailed'));
+      const r = state.kind === 'webm' ? await mux.trimMkv(src, range.start, range.end) : await mux.trimMp4(src, range.start, range.end);
+      if (!r) throw new Error(t('convCutFailed'));
+      const ext = cutExt(state.kind, state.file.name);
+      blob = new Blob([r.blob], { type: ext === 'webm' ? 'video/webm' : ext === 'mkv' ? 'video/x-matroska' : ext === 'm4a' ? 'audio/mp4' : 'video/mp4' });
+      cutInfo = { start: r.from, end: r.to, whole: false, ext };
     } else if (target === 'defrag') {
       progress(t('convWorking').replace('{p}', '0'), 0);
       blob = await globalThis.__vdlMux.defragMp4(state.file);
@@ -277,9 +289,9 @@ async function convert() {
       blob = new Blob([blob], { type: 'video/mp4' });
     }
     if (ac.signal.aborted) throw new Error('aborted');
-    const name = outName(state.file.name, target, { ...range, at });
+    const name = outName(state.file.name, target, cutInfo || { ...range, at });
     state.last = { blob, name };
-    finish(true, `${t('convDone')} · ${formatBytes(blob.size)}`);
+    finish(true, `${t('convDone')}${cutInfo ? ` · ${t('convCutDone').replace('{from}', formatTime(cutInfo.start)).replace('{to}', formatTime(cutInfo.end))}` : ''} · ${formatBytes(blob.size)}`);
     await save(blob, name);
     if (settings.history) {
       try { await addHistory({ title: name, url: `${t('convTitle')}: ${state.file.name}`, kind: 'file', filename: name }); } catch { /* ignore */ }

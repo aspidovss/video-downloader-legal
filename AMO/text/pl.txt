@@ -1,0 +1,38 @@
+LOCALE: pl
+
+=== NAME (max 50) [38] ===
+Video Downloader Legal – Pobierz wideo
+
+=== SUMMARY (max 250) [202] ===
+Zapisuj wideo i dźwięk ze strony, którą oglądasz: YouTube, Shorts, Instagram, Twitch, TikTok, VK, Bilibili, Dailymotion i inne. Zamień dowolne wideo na GIF. Za darmo, lokalnie, bez paywalla i śledzenia.
+
+=== DESCRIPTION ===
+Zapisuj wideo i dźwięk ze strony, którą oglądasz: YouTube, Shorts, Instagram, Twitch, TikTok, VK, Bilibili, Dailymotion i inne. Zamień dowolne wideo na GIF. Za darmo, lokalnie, bez paywalla i śledzenia.
+
+VDL - Video Downloader Legal wyświetla listę tego, co odtwarza otwarta strona, i zapisuje wybrany element. Wszystko dzieje się w przeglądarce: bez zewnętrznych serwerów, analityki i dodatkowych programów. Wideo i dźwięk są łączone, a TS zamieniany na MP4 własnym kodem rozszerzenia – bez ponownego kodowania.
+
+FUNKCJE
+- Pobieranie wideo — pliki bezpośrednie oraz strumienie HLS (m3u8) i DASH (mpd) na dowolnej stronie: wybierz jakość, osobne ścieżki dźwiękowe zostaną połączone w jeden plik.
+- Wideo na GIF — krótkie filmy (do 3 min) zamieniają się w animowany GIF bezpośrednio w przeglądarce: szerokość 640 / 480 / 320 / 240 px, 5–15 FPS, przybliżony rozmiar widoczny z góry.
+- Konwerter — wybierz plik wideo lub audio z komputera i utwórz GIF (fragment „od–do”, szerokość, FPS) z opcjonalnym podpisem: biały pasek, tekst na wideo lub demotywator, z podglądem na żywo. Także MP3, klatka PNG, TS → MP4 / MKV i pofragmentowany MP4 → MP4 bez ponownego kodowania. Plik nigdy nie opuszcza przeglądarki.
+- YouTube i YouTube Shorts — wybierz typ (MP4, WEBM, AV1) i rozdzielczość; dźwięk jako MP3, M4A lub WEBM; wideo i dźwięk w jednym pliku.
+- Transmisje na żywo — nagrywaj transmisje z Twitcha i inne HLS do momentu naciśnięcia Stop; nagrywanie transmisji YouTube z odtwarzacza (beta).
+- TS na MP4 — strumienie MPEG-TS są domyślnie zapisywane jako zwykłe MP4 (bez ponownego kodowania); dostępne także MKV i TS.
+- TikTok — wideo widoczne na ekranie jest pierwsze, z tytułem i okładką; reszta kanału znajduje się w „Więcej”.
+- Inne strony — Vimeo, Dailymotion, RuTube, Dzen, Instagram, Facebook, X (Twitter), Bilibili, Canva, OKru, VK oraz każda inna strona dzięki ogólnemu wykrywaniu strumieni (wynik zależy od tego, co udostępnia strona).
+- Pobieranie dźwięku — MP3 (konwersja w przeglądarce), M4A lub WEBM.
+- Jasny i ciemny motyw — zgodnie z systemem. 10 języków: angielski, rosyjski, chiński, hiszpański, hindi, francuski, arabski, portugalski, niemiecki, japoński.
+- Wygoda — historia pobierania, szablon nazwy pliku, powiadomienia, skrót Alt+strzałka w dół, pozycja w menu kontekstowym, wbudowana pomoc.
+- Diagnostyka — jeden przycisk zapisuje lokalny plik (linki zamaskowane), który możesz dołączyć do zgłoszenia błędu; opcjonalny dziennik debugowania (domyślnie wyłączony) rejestruje działania rozszerzenia. Nic nie jest wysyłane automatycznie.
+
+PRYWATNOŚĆ PRZEDE WSZYSTKIM
+Bez kont, telemetrii i własnych serwerów. Ustawienia i historia zostają w Twojej przeglądarce. Rozszerzenie łączy się tylko ze stronami, z których już korzystasz.
+
+INFORMACJA O AI
+Ten projekt zawiera kod wygenerowany przez AI.
+Wszystkie komentarze i tłumaczenia zostały wygenerowane przez AI.
+
+WARTO WIEDZIEĆ
+- Po instalacji zezwól na dostęp do wszystkich stron w about:addons → rozszerzenie → Uprawnienia, w przeciwnym razie skaner strony nie zobaczy multimediów.
+- Serwisy streamingowe często się zmieniają; YouTube i media społecznościowe są obsługiwane w miarę możliwości i mogą przestać działać. Jeśli coś nie działa, kliknij przycisk błędu w oknie i wyślij plik diagnostyczny.
+- Usługi chronione DRM (Netflix, Disney+ i podobne) nie są obsługiwane i nigdy nie będą.

@@ -1,0 +1,38 @@
+LOCALE: nb-no
+
+=== NAME (max 50) [39] ===
+Video Downloader Legal – Last ned video
+
+=== SUMMARY (max 250) [213] ===
+Lagre video og lyd fra siden du ser på: YouTube, Shorts, Instagram, Twitch, TikTok, VK, Bilibili, Dailymotion og flere. Gjør om hvilken som helst video til GIF. Gratis, lokalt, ingen betalingsmur og ingen sporing.
+
+=== DESCRIPTION ===
+Lagre video og lyd fra siden du ser på: YouTube, Shorts, Instagram, Twitch, TikTok, VK, Bilibili, Dailymotion og flere. Gjør om hvilken som helst video til GIF. Gratis, lokalt, ingen betalingsmur og ingen sporing.
+
+VDL - Video Downloader Legal viser hva den åpne siden spiller av, og lagrer det du velger. Alt skjer i nettleseren: ingen eksterne servere, ingen analyse og ingen hjelpeprogrammer som må installeres. Video og lyd slås sammen, og TS konverteres til MP4 av utvidelsens egen kode, uten omkoding.
+
+FUNKSJONER
+- Videonedlasting — direkte filer samt HLS- (m3u8) og DASH-strømmer (mpd) på alle nettsteder: velg kvalitet, separate lydspor slås sammen til én fil.
+- Video til GIF — korte videoer (opptil 3 min) blir en animert GIF rett i nettleseren: bredde 640 / 480 / 320 / 240 px, 5–15 FPS, omtrentlig størrelse vises på forhånd.
+- Konverterer — velg en video- eller lydfil på datamaskinen og lag en GIF (utsnitt «fra–til», bredde, FPS) med valgfri bildetekst: hvit stolpe, tekst på videoen eller demotivator, med direkte forhåndsvisning. Også MP3, PNG-bilde, TS → MP4 / MKV og fragmentert MP4 → MP4 uten omkoding. Filen forlater aldri nettleseren din.
+- YouTube og YouTube Shorts — velg type (MP4, WEBM, AV1) og oppløsning; lyd som MP3, M4A eller WEBM; video og lyd i én fil.
+- Direktesendinger — ta opp Twitch og andre HLS-direktesendinger til du trykker Stopp; opptak av YouTube-direkte fra spilleren (beta).
+- TS til MP4 — MPEG-TS-strømmer lagres som vanlig MP4 som standard (uten omkoding); også MKV og TS.
+- TikTok — videoen på skjermen kommer først, med tittel og omslag; resten av strømmen ligger under «Mer».
+- Andre nettsteder — Vimeo, Dailymotion, RuTube, Dzen, Instagram, Facebook, X (Twitter), Bilibili, Canva, OKru, VK og alle andre nettsteder via generell strømgjenkjenning (resultatet avhenger av hva siden tilbyr).
+- Lydnedlasting — MP3 (konvertert i nettleseren), M4A eller WEBM.
+- Lyst og mørkt tema — følger systemet ditt. 10 språk: engelsk, russisk, kinesisk, spansk, hindi, fransk, arabisk, portugisisk, tysk, japansk.
+- Praktisk — nedlastingshistorikk, mal for filnavn, varsler, hurtigtast Alt+pil ned, valg i hurtigmenyen, innebygd hjelp.
+- Diagnostikk — én knapp lagrer en lokal fil (lenker maskert) du kan legge ved en feilrapport; en valgfri feilsøkingslogg (av som standard) registrerer hva utvidelsen gjør. Ingenting sendes noen gang automatisk.
+
+PERSONVERN FØRST
+Ingen kontoer, ingen telemetri, ingen egne servere. Innstillinger og historikk blir i nettleseren din. Utvidelsen kontakter bare nettsteder du allerede bruker.
+
+KI-OPPLYSNING
+Dette prosjektet inneholder kode generert av KI.
+Alle kommentarer og oversettelser er generert av KI.
+
+GOD Å VITE
+- Etter installasjon må du tillate tilgang til alle nettsteder i about:addons → utvidelsen → Tillatelser, ellers ser ikke sideskanneren mediene.
+- Strømmenettsteder endrer seg ofte; YouTube og sosiale nettverk støttes etter beste evne og kan slutte å fungere. Hvis noe ikke virker, trykk på feilknappen i vinduet og send diagnostikkfilen.
+- DRM-beskyttede tjenester (Netflix, Disney+ og lignende) støttes ikke og kommer aldri til å bli det.

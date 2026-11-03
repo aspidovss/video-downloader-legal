@@ -1,0 +1,38 @@
+LOCALE: ia
+
+=== NAME (max 50) [40] ===
+Video Downloader Legal – Discargar video
+
+=== SUMMARY (max 250) [208] ===
+Salva video e audio ab le pagina que tu guarda: YouTube, Shorts, Instagram, Twitch, TikTok, VK, Bilibili, Dailymotion e plus. Converte qualcunque video in GIF. Gratuite, local, sin paywall e sin tracciamento.
+
+=== DESCRIPTION ===
+Salva video e audio ab le pagina que tu guarda: YouTube, Shorts, Instagram, Twitch, TikTok, VK, Bilibili, Dailymotion e plus. Converte qualcunque video in GIF. Gratuite, local, sin paywall e sin tracciamento.
+
+VDL - Video Downloader Legal lista lo que le pagina aperte reproduce e salva lo que tu selige. Toto occurre intra tu navigator: nulle servitor externe, nulle analyse, nulle programma auxiliar a installar. Video e audio es unite e le TS es convertite in MP4 per le codice del extension, sin recodificar.
+
+FUNCTIONES
+- Discargamento de video — files directe e fluxos HLS (m3u8) e DASH (mpd) super qualcunque sito: selige le qualitate, le pistas audio separate es unite in un sol file.
+- Video in GIF — le videos curte (usque a 3 min) deveni un GIF animate directemente in le navigator: largor de 640 / 480 / 320 / 240 px, 5–15 FPS, con le dimension approximative monstrate ante.
+- Convertitor — selige un file video o audio de tu computator e crea un GIF (parte «de–a», largor, FPS) con un legenda optional: barra blanc, texto super le video o demotivator, con previsualisation in directo. Etiam MP3, un quadro PNG, TS → MP4 / MKV e MP4 fragmentate → MP4 sin recodificar. Le file jammais lassa tu navigator.
+- YouTube e YouTube Shorts — selige le typo (MP4, WEBM, AV1) e le resolution; audio como MP3, M4A o WEBM; video e audio in un sol file.
+- Directos — registra directos de Twitch e altere fluxos HLS usque a que tu preme Stoppar; registration de directos de YouTube ab le reproductor (beta).
+- TS a MP4 — le fluxos MPEG-TS es salvate per predefinition como MP4 ordinari (sin recodificar); etiam MKV e TS.
+- TikTok — le video in schermo veni primo, con su titulo e copertura; le resto del fluxo es sub «Plus».
+- Altere sitos — Vimeo, Dailymotion, RuTube, Dzen, Instagram, Facebook, X (Twitter), Bilibili, Canva, OKru, VK e qualcunque altere sito per detection general de fluxos (le resultato depende de lo que le pagina offere).
+- Discargamento de audio — MP3 (convertite in le navigator), M4A o WEBM.
+- Thema claie e obscur — seque tu systema. 10 linguas: anglese, russo, chinese, espaniol, hindi, francese, arabe, portugese, germano, japonese.
+- Comode — historia de discargamentos, patrono de nomine de file, notificationes, curtiata Alt+flecha infra, elemento in le menu contextual, adjuta integrate.
+- Diagnostico — un button salva un file local (ligamines celate) que tu pote annexar a un reporto de error; un registro de depuration optional (disactivate per predefinition) nota lo que le extension face. Nihil es jammais inviate automaticamente.
+
+PRIVATESSA ANTE TOTO
+Nulle contos, nulle telemetria, nulle servitores proprie. Parametros e historia remane in tu navigator. Le extension contacta solmente le sitos que tu jam usa.
+
+AVISO SUR IA
+Iste projecto contine codice generate per IA.
+Tote le commentos e traductiones es generate per IA.
+
+BON A SAPER
+- Post le installation, permitte accesso a tote le sitos in about:addons → le extension → Permissiones; si non, le scanner del pagina non vide le medios.
+- Le sitos de streaming cambia frequentemente; YouTube e le retes social es supportate al melior del possibilitates e pote cessar de functionar. Si alco non functiona, preme le button de errores in le fenestra e invia le file de diagnostico.
+- Le servicios protegite per DRM (Netflix, Disney+ e simile) non es supportate e jammais lo essera.

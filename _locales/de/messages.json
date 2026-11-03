@@ -387,7 +387,7 @@
     "message": "Livestream: Die Aufnahme startet jetzt und läuft, bis Sie auf Stopp drücken oder der Stream endet."
   },
   "optLiveMax": {
-    "message": "Limit für Live-Aufnahmen (Minuten)"
+    "message": "Limit für Live-Aufnahmen (Minuten, 0 = kein Limit)"
   },
   "perMinute": {
     "message": "Min."
@@ -639,10 +639,10 @@
     "message": "Wie viele Teile (Segmente) eines HLS- oder DASH-Streams gleichzeitig geladen werden. Mehr ist schneller, belastet aber Website und Verbindung stärker; bei Fehlern der Website verringern. Gilt auch für Live-Aufnahmen."
   },
   "hintLiveMax": {
-    "message": "Eine Live-Aufnahme endet nach dieser Zeit von selbst und die Datei wird gespeichert. Gilt für Twitch, andere HLS-Livestreams und die Aufnahme aus dem YouTube-Player."
+    "message": "Eine Live-Aufnahme stoppt nach dieser Zeit von selbst und die Datei wird gespeichert; 0 = kein Limit (Standard: mit Teilen wächst der Speicher nicht). Gilt für Twitch, andere HLS-Livestreams und die Aufnahme aus dem YouTube-Player."
   },
   "hintMaxStream": {
-    "message": "Obergrenze für einen HLS/DASH-Download oder eine Aufnahme. Die Daten liegen bis zum Speichern im Arbeitsspeicher, die Grenze schützt also den Browser: Bei dieser Größe stoppt der Download bzw. die Aufnahme. Nur erhöhen, wenn genug Speicher vorhanden ist."
+    "message": "Obergrenze für einen HLS/DASH-Download oder eine Aufnahme, die nicht in Teilen gespeichert wird. Die Daten liegen bis zum Speichern im Speicher, daher schützt das Limit den Browser: Download oder Aufnahme stoppen bei dieser Größe. Aufnahmen in Teilen begrenzt stattdessen die Teilgröße."
   },
   "hintYtRecordUi": {
     "message": "Zeigt die Schaltfläche zum Aufnehmen aus dem Player für normale YouTube-Videos, als letzte Möglichkeit, wenn keine direkten Links verfügbar sind. Livestreams und bereits laufende Aufnahmen sind nicht betroffen. Standardmäßig aus."
@@ -1198,5 +1198,47 @@
   },
   "capPreview": {
     "message": "Vorschau (aktuelles Bild des Players):"
+  },
+  "splitTitle": {
+    "message": "In Teilen speichern"
+  },
+  "optSplitLive": {
+    "message": "Live-Aufnahmen in Teilen speichern"
+  },
+  "hintSplitLive": {
+    "message": "Eine lange Live-Aufnahme wird stückweise gespeichert: Erreicht ein Teil die Größe oder Länge unten (was zuerst eintritt), wird er sofort gespeichert und die Aufnahme läuft ohne Lücke weiter. Nach jedem Teil wird Speicher frei, ein Absturz kostet höchstens den aktuellen Teil. Dateinamen erhalten die Startzeit des Teils: „Stream (01-00-00).mp4“."
+  },
+  "optSplitVideo": {
+    "message": "Lange Videos (HLS/DASH) in Teilen speichern"
+  },
+  "hintSplitVideo": {
+    "message": "Dasselbe für lange HLS/DASH-Videos, die nicht live sind: Jeder Teil wird vor dem nächsten heruntergeladen, zusammengefügt und gespeichert. Standardmäßig aus."
+  },
+  "optPartMB": {
+    "message": "Teilgröße (MB)"
+  },
+  "hintPartMB": {
+    "message": "Ein Teil endet bei dieser Größe. Die Umwandlung eines TS-Streams in MP4/MKV erfolgt im Speicher und klappt für Teile bis etwa 700 MB; größere TS-Teile werden als TS gespeichert."
+  },
+  "optPartMin": {
+    "message": "Teillänge (Minuten)"
+  },
+  "hintPartMin": {
+    "message": "Ein Teil endet nach dieser Zeit."
+  },
+  "partN": {
+    "message": "Teil {n}"
+  },
+  "convTgtCut": {
+    "message": "Video: Abschnitt ausschneiden (ohne Neukodierung)"
+  },
+  "convCutHint": {
+    "message": "Der Abschnitt wird ohne Neukodierung kopiert und beginnt daher beim nächsten Keyframe bei oder vor „Von“ (meist 0–2 s früher); das Ende wird bei „Bis“ geschnitten."
+  },
+  "convCutDone": {
+    "message": "von {from} bis {to}"
+  },
+  "convCutFailed": {
+    "message": "Diese Datei konnte nicht ohne Neukodierung geschnitten werden."
   }
 }

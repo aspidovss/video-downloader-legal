@@ -42,6 +42,9 @@ const clock = (sec) => `${Math.floor(sec / 3600)}:${String(Math.floor(sec / 60) 
 
 // "● Recording 0:00:44" / "4.5 MB": two lines, white on red
 const recStat = (sec, size) => h('div', { class: 'recstat' }, h('span', { class: 'rs-time' }, `● ${t('liveRecording')} ${clock(sec)}`), h('span', { class: 'rs-size' }, size || '0 MB'));
+// 1.6.8: a recording in parts: "Part 3 (02-00-00) · 1.2 GB" (the part being recorded and its size)
+const partStampOf = (sec) => { const s = Math.max(0, Math.round(sec || 0)); const p = (n) => String(n).padStart(2, '0'); return `${p(Math.floor(s / 3600))}-${p(Math.floor(s / 60) % 60)}-${p(s % 60)}`; };
+const recSize = (j) => (j.part > 1 ? `${t('partN').replace('{n}', j.part)} (${partStampOf(j.partStart)}) · ${formatBytes(j.partBytes || 0)}` : formatBytes(j.bytes || 0));
 
 let showSmall = false;
 const gifFpsPick = new Map(); // item id -> frame rate chosen in the card for a GIF made from the video (1.6.5)
@@ -140,7 +143,7 @@ function card(it) {
   const rj = liveJobs.get(it.id);
   if (rj) {
     videoRow = h('div', { class: 'rec' }, h('div', { class: 'row' },
-      recStat(rj.seconds || 0, formatBytes(rj.bytes || 0)),
+      recStat(rj.seconds || 0, recSize(rj)),
       h('button', { class: 'primary small', disabled: !!rj.stopping, onclick: () => browser.runtime.sendMessage({ type: 'stop_job', jobId: rj.id }) }, t('liveStop')),
       h('button', { class: 'small', onclick: () => browser.runtime.sendMessage({ type: 'cancel_job', jobId: rj.id }) }, t('cancel'))));
   }
@@ -290,7 +293,7 @@ function recControls(it) {
   if (r.state === 'recording' && r.live) {
     return h('div', { class: 'rec' },
       h('div', { class: 'row' },
-        recStat(r.seconds || 0, mb(r.bytes || 0)),
+        recStat(r.seconds || 0, r.part > 1 ? recSize(r) : mb(r.bytes || 0)),
         h('button', { class: 'primary small', onclick: () => send('stop_save') }, t('liveStop')),
         h('button', { class: 'small', onclick: () => send('cancel') }, t('cancel'))));
   }
@@ -299,7 +302,7 @@ function recControls(it) {
     return h('div', { class: 'rec' },
       h('div', { class: 'bar' }, h('div', { class: 'fill', style: `width:${pct}%` })),
       h('div', { class: 'row' },
-        h('span', { class: 'meta' }, `${t('ytRecording')}: ${pct}% · ${mb(r.bytes || 0)}`),
+        h('span', { class: 'meta' }, `${t('ytRecording')}: ${pct}% · ${r.part > 1 ? recSize(r) : mb(r.bytes || 0)}`),
         h('button', { class: 'primary small', onclick: () => send('stop_save') }, t('liveStop')),
         h('button', { class: 'small', onclick: () => send('cancel') }, t('cancel'))));
   }
@@ -359,8 +362,8 @@ function pace(j) {
 function renderJobs(jobs) {
   $jobs.replaceChildren(...jobs.map((j) => {
     const pct = j.total ? Math.round((j.done / j.total) * 100) : 0;
-    const label = j.recording ? `● ${t('liveRecording')} ${clock(j.seconds || 0)} · ${formatBytes(j.bytes || 0)}` : {
-      running: `${j.phase === 'mp3' ? 'MP3 ' : j.phase === 'convert' ? 'MP4 ' : j.phase === 'mkv' ? 'MKV ' : j.phase === 'gif' ? 'GIF ' : ''}${pct}%${j.fileCount > 1 ? ` (${j.fileIndex}/${j.fileCount})` : ''}${pace(j)}`,
+    const label = j.recording ? `● ${t('liveRecording')} ${clock(j.seconds || 0)} · ${recSize(j)}` : {
+      running: `${j.partCount > 1 ? `${t('partN').replace('{n}', `${j.part}/${j.partCount}`)} · ` : ''}${j.phase === 'mp3' ? 'MP3 ' : j.phase === 'convert' ? 'MP4 ' : j.phase === 'mkv' ? 'MKV ' : j.phase === 'gif' ? 'GIF ' : ''}${pct}%${j.fileCount > 1 ? ` (${j.fileIndex}/${j.fileCount})` : ''}${pace(j)}`,
       done: t('done'),
       canceled: t('canceled'),
       error: j.errorKey ? t(j.errorKey) : `${t('failed')}: ${j.error}`,
